@@ -63,7 +63,7 @@ int main()
 			Gizmos::addLine(vec3(10, 0, -10 + i),
 							vec3(-10, 0, -10 + i),
 							i == 10 ? white : black);
-		} 
+		}		
 		
 		// draws the current gizmo buffers
 		Gizmos::draw(projection * view);
