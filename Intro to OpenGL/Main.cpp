@@ -100,5 +100,6 @@ int main()
 	// terminates glfw
 	glfwTerminate();
 
+	// default return of the main application
 	return 0;
 }
