@@ -3,8 +3,6 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 #include <GLFW\glfw3.h>
-#include <stdio.h>
-#include <assert.h>
 
 using glm::vec3;
 using glm::vec4;
