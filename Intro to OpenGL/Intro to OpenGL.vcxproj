@@ -116,11 +116,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Gizmos.h" />
     <ClInclude Include="gl_core_4_4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="gl_core_4_4.c" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
