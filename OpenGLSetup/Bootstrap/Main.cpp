@@ -1,6 +1,4 @@
 #include "TestApp.h"
-#include <glm\glm.hpp>
-#include <glm\ext.hpp>
 
 int main()
 {

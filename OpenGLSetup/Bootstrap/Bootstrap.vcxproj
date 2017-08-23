@@ -72,6 +72,10 @@
     <IncludePath>$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glfw\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\glfw\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>C:\Users\facehead\Documents\GitHub\Graphics\OpenGLSetup\Dependencies\glfw\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glfw\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -88,6 +92,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -117,12 +124,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="FlyCamera.cpp" />
     <ClCompile Include="gl_core_4_4.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TestApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="FlyCamera.h" />
     <ClInclude Include="gl_core_4_4.h" />
     <ClInclude Include="TestApp.h" />
   </ItemGroup>

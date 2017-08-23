@@ -1,7 +1,9 @@
 #include "TestApp.h"
 #include "Application.h"
-
-
+#include <glm\glm.hpp>
+#include <glm\ext.hpp>
+#include <GLFW\glfw3.h>
+#include "FlyCamera.h"
 
 TestApp::TestApp()
 {
@@ -16,6 +18,9 @@ void TestApp::startup()
 {
 	// initializes glfw
 	glfwInit();
+
+	// creates a Camera pointer and assigns it to new FlyCamera
+	Camera* camera1 = new FlyCamera();
 }
 
 void TestApp::update(float deltaTime)
