@@ -36,7 +36,6 @@ void inputcheck(GLFWwindow* window)
 
 void Application::run(float width, float height, const char * title, bool fullscreen)
 {
-
 	// calls the concrete derived class startup() method
 	startup();	
 
