@@ -1,5 +1,6 @@
 #pragma once
-
+#include "gl_core_4_4.h"
+#include <GLFW\glfw3.h>
 class Application
 {
 public:
@@ -12,5 +13,9 @@ protected:
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
 	virtual void shutdown() = 0;
+	
+	float prevTime;
+	GLFWmonitor* monitor;
+	GLFWwindow* window;	
 };
 

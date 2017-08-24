@@ -13,5 +13,10 @@ public:
 	virtual void update(float) override;
 	virtual void draw() override;
 	virtual void shutdown() override;
+		
+	Camera* m_camera;
+	vec3 eye;
+	vec3 center;
+	vec3 up;
 };
 

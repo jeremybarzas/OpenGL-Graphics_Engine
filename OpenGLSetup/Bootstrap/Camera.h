@@ -1,9 +1,9 @@
 #pragma once
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
-using glm::mat4;
 using glm::vec3;
 using glm::vec4;
+using glm::mat4;
 
 class Camera
 {
@@ -18,8 +18,6 @@ public:
 	mat4 getView();
 	mat4 getProjection();
 	mat4 getProjectionView();
-
-protected:
 	mat4 m_world;
 	mat4 m_view;
 	mat4 m_projection;

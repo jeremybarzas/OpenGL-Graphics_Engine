@@ -12,18 +12,40 @@ CameraApp::~CameraApp()
 }
 
 void CameraApp::startup()
-{
+{	
+	m_camera = new Camera();
+	eye = vec3(10, 10, 10);
+	center = vec3(0);
+	up = vec3(0, 1, 0);
 }
 
-void CameraApp::update(float)
-{
-	Camera* testcam = new Camera();
+void CameraApp::update(float deltaTime)
+{	
+	//camera forward
+	if (glfwGetKey(window, GLFW_KEY_W))
+	{
+		m_camera->m_world;
+	}	
 
-	const vec3 eye = vec3(10, 10, 10);
-	const vec3 center = vec3(0);
-	const vec3 up = vec3(0, 1, 0);
+	//camera left
+	if (glfwGetKey(window, GLFW_KEY_A))
+	{
 
-	testcam->setLookat(eye, center, up);
+	}
+
+	//camera backward
+	if (glfwGetKey(window, GLFW_KEY_S))
+	{
+
+	}
+
+	//camera right
+	if (glfwGetKey(window, GLFW_KEY_D))
+	{
+
+	}
+
+	m_camera->setLookat(eye, center, up);
 }
 
 void CameraApp::draw()

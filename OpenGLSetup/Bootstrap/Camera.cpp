@@ -18,14 +18,6 @@ void Camera::setPerspective(float, float, float, float)
 
 void Camera::setLookat(vec3 eye, vec3 center, vec3 up)
 {
-	// normalizes more than it should
-	/*vec3 f = eye - center;
-	vec3 z = glm::normalize(f);
-	vec3 s = glm::cross(up, z);
-	vec3 x = glm::normalize(s);
-	vec3 u = glm::cross(z, x);
-	vec3 y = glm::normalize(u);*/
-
 	vec3 z = normalize(eye - center);
 	vec3 x = normalize(cross(up, z));
 	vec3 y = cross(z, x);

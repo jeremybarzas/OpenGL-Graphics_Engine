@@ -1,9 +1,8 @@
 #include "Application.h"
-#include "gl_core_4_4.h"
-#include <GLFW\glfw3.h>
+
 
 Application::Application()
-{
+{	
 }
 
 
@@ -13,25 +12,7 @@ Application::~Application()
 
 void inputcheck(GLFWwindow* window)
 {
-	// sets the loop condition to true if "escape" is pressed
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE))
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	// changes the clear color to red if 'r' is pressed
-	if (glfwGetKey(window, GLFW_KEY_R))
-		glClearColor(1, 0, 0, 1);
-
-	// change the clear color to green if 'g' is pressed
-	if (glfwGetKey(window, GLFW_KEY_G))
-		glClearColor(0, 1, 0, 1);
-
-	// change the clear color to blue if 'b' is pressed
-	if (glfwGetKey(window, GLFW_KEY_B))
-		glClearColor(0, 0, 1, 1);
-
-	// change the clear color to grey if "space" is pressed
-	if (glfwGetKey(window, GLFW_KEY_SPACE))
-		glClearColor(0.5f, 0.5f, 0.5f, 1);
+	
 }
 
 void Application::run(float width, float height, const char * title, bool fullscreen)
@@ -39,13 +20,15 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	// initializes glfw
 	glfwInit();
 
+	// sets control time
+	prevTime = glfwGetTime();
+
 	// calls the concrete derived class startup() method
 	startup();	
 
 	// creates a window to draw in with OpenGL
-	GLFWmonitor* monitor;
 	fullscreen == false ? monitor = nullptr : monitor = glfwGetPrimaryMonitor();
-	GLFWwindow* window = glfwCreateWindow(width, height, title, monitor, nullptr);
+	window = glfwCreateWindow(width, height, title, monitor, nullptr);
 
 	// makes the pased in window the current context
 	glfwMakeContextCurrent(window);
@@ -54,7 +37,7 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	ogl_LoadFunctions();
 
 	// set window clear color to grey
-	glClearColor(0.5f, 0, 0.5f, 1);	
+	glClearColor(0.5f, 0.5f, 0.5f, 1);	
 
 	// enables the depth test state
 	glEnable(GL_DEPTH_TEST);
@@ -62,14 +45,20 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	// main program loop
 	// loops until the passed in window is set to close
 	while (glfwWindowShouldClose(window) == GLFW_FALSE)
-	{
-		inputcheck(window);
+	{		
+		// sets the loop condition to true if "escape" is pressed
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+			glfwSetWindowShouldClose(window, GL_TRUE);
 
 		// clears both the color and depth buffer so the window doesn't fail to update visuals
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
+		// calculates delta time
+		float currTime = glfwGetTime();
+		float deltaTime = currTime - prevTime;
+		
 		// calls the concrete derived class update() method
-		update(1.0f);
+		update(deltaTime);
 
 		// calls the concrete derived class draw() method
 		draw();
