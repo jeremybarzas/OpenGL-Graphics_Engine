@@ -22,7 +22,7 @@ public:
 	mat4 m_world; 
 	mat4 m_local;
 	mat4 m_rotation;
-	mat4 m_positon;	
+	vec3 m_positon;	
 
 	void rotate(float radians, Axis rotationAxis);	
 	void translate(vec3 trans);

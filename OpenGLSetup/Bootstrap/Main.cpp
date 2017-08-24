@@ -47,7 +47,11 @@ void appswitcher()
 int main()
 {
 	// determines which application to run
-	appswitcher();
+	//appswitcher();
+
+	Transform* transform = new Transform();
+
+	transform->rotate(.25f, ZAXIS);
 		
 	// default main function return
 	return 0;

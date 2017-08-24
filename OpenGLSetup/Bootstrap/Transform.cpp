@@ -13,10 +13,12 @@ Transform::~Transform()
 
 void Transform::rotate(float radians, Axis rotationAxis)
 {
-	vec3 zAxis, yAxis, xAxis;
-	xAxis = vec3(1, 0, 0);
-	yAxis = vec3(0, 1, 0);
-	zAxis = vec3(0, 0, 1);
+	vec3 xAxis = vec3(1, 0, 0);
+	vec3 yAxis = vec3(0, 1, 0);
+	vec3 zAxis = vec3(0, 0, 1);
+
+	vec3 rotaxis = (rotationAxis == ZAXIS) ? vec3(0, 0, 1) 
+		: (rotationAxis == YAXIS) ? vec3(0, 1, 0) : vec3(1, 0, 0);
 
 	switch(rotationAxis)
 	{
@@ -42,7 +44,17 @@ void Transform::rotate(float radians, Axis rotationAxis)
 		break;
 	}
 
-	m_rotation;
+	m_rotation = mat4(
+		vec4(xAxis, 1),
+		vec4(yAxis, 1),
+		vec4(zAxis, 1),
+		vec4(0, 0, 0, 1)
+	);
+
+	m_world = m_rotation;
+
+	mat4 test = glm::rotate(radians, rotaxis);
+	assert(m_rotation == test);
 }
 
 void Transform::translate(vec3 trans)
