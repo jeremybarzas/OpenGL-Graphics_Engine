@@ -2,9 +2,6 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
 
 enum Axis
 {
@@ -19,12 +16,12 @@ class Transform
 public:
 	Transform();
 	~Transform();
-	mat4 m_world; 
-	mat4 m_local;
-	mat4 m_rotation;
-	vec3 m_positon;	
+	glm::mat4 m_world; 
+	glm::mat4 m_local;
+	glm::mat4 m_rotation;
+	glm::vec3 m_positon;
 
 	void rotate(float radians, Axis rotationAxis);	
-	void translate(vec3 trans);
+	void translate(glm::vec3 trans);
 };
 

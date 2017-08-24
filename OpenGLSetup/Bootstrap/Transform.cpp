@@ -13,54 +13,54 @@ Transform::~Transform()
 
 void Transform::rotate(float radians, Axis rotationAxis)
 {
-	vec3 xAxis = vec3(1, 0, 0);
-	vec3 yAxis = vec3(0, 1, 0);
-	vec3 zAxis = vec3(0, 0, 1);
+	glm::vec3 xAxis = glm::lowp_vec3(1, 0, 0);
+	glm::vec3 yAxis = glm::vec3(0, 1, 0);
+	glm::vec3 zAxis = glm::vec3(0, 0, 1);
 
-	vec3 rotaxis = (rotationAxis == ZAXIS) ? vec3(0, 0, 1) 
-		: (rotationAxis == YAXIS) ? vec3(0, 1, 0) : vec3(1, 0, 0);
+	glm::vec3 rotaxis = (rotationAxis == ZAXIS) ? glm::vec3(0, 0, 1) 
+				: (rotationAxis == YAXIS) ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0);
 
 	switch(rotationAxis)
 	{
 	case ZAXIS:
-		xAxis = vec3(cos(radians), sin(radians), 0);
-		yAxis = vec3(-sin(radians), cos(radians), 0);
-		zAxis = vec3(0, 0, 1);
+		xAxis = glm::vec3(glm::trunc(glm::cos(radians)), glm::sin(radians), 0);
+		yAxis = glm::vec3(-glm::sin(radians), glm::cos(radians), 0);
+		zAxis = glm::vec3(0, 0, 1);
 		break;
 
 	case YAXIS:
-		xAxis = vec3(cos(radians), 0, -sin(radians));
-		yAxis = vec3(0, 1, 0);
-		zAxis = vec3(sin(radians), 0, cos(radians));
+		xAxis = glm::vec3(glm::cos(radians), 0, -glm::sin(radians));
+		yAxis = glm::vec3(0, 1, 0);
+		zAxis = glm::vec3(glm::sin(radians), 0, glm::cos(radians));
 		break;
 
 	case XAXIS:
-		xAxis = vec3(1, 0, 0);
-		yAxis = vec3(0, cos(radians), sin(radians));
-		zAxis = vec3(0, -sin(radians), cos(radians));
+		xAxis = glm::vec3(1, 0, 0);
+		yAxis = glm::vec3(0, glm::cos(radians), glm::sin(radians));
+		zAxis = glm::vec3(0, -glm::sin(radians), glm::cos(radians));
 		break;
 
 	default: 
 		break;
 	}
 
-	m_rotation = mat4(
-		vec4(xAxis, 1),
-		vec4(yAxis, 1),
-		vec4(zAxis, 1),
-		vec4(0, 0, 0, 1)
+	m_rotation = glm::mat4(
+		glm::vec4(xAxis, 1),
+		glm::vec4(yAxis, 1),
+		glm::vec4(zAxis, 1),
+		glm::vec4(0, 0, 0, 1)
 	);
 
 	m_world = m_rotation;
 
-	mat4 test = glm::rotate(radians, rotaxis);
+	glm::mat4 test = glm::rotate(radians, rotaxis);
 	assert(m_rotation == test);
 }
 
-void Transform::translate(vec3 trans)
+void Transform::translate(glm::vec3 trans)
 {
 	// creates a new matrix4 that is the identity matrix
-	mat4 translation = mat4(1);
+	glm::mat4 translation = glm::mat4(1);
 
 	// set w column of the new matrix4 to the transform that was passed in
 	translation[3].x = trans.x;
@@ -71,7 +71,7 @@ void Transform::translate(vec3 trans)
 	m_world = m_world * translation;
 
 	// assert to test against glm's translate funtion
-	mat4 test = glm::translate(trans);
+	glm::mat4 test = glm::translate(trans);
 	assert(m_world == test);
 }
 
