@@ -36,6 +36,9 @@ void inputcheck(GLFWwindow* window)
 
 void Application::run(float width, float height, const char * title, bool fullscreen)
 {
+	// initializes glfw
+	glfwInit();
+
 	// calls the concrete derived class startup() method
 	startup();	
 
@@ -62,6 +65,9 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	{
 		inputcheck(window);
 
+		// clears both the color and depth buffer so the window doesn't fail to update visuals
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		// calls the concrete derived class update() method
 		update(1.0f);
 
@@ -74,6 +80,9 @@ void Application::run(float width, float height, const char * title, bool fullsc
 		// checks for inputs sent by the OS
 		glfwPollEvents();
 	}
+
+	// terminates glfw
+	glfwTerminate();
 
 	// calls the concrete derived class shutdown() method
 	shutdown();
