@@ -9,21 +9,21 @@ class Camera
 {
 public:
 	Camera();
-	virtual ~Camera();
-	virtual void update(float) = 0;
-	virtual void setPerspective(float, float, float, float) = 0;
-	virtual void setLookat(vec3, vec3, vec3) = 0;
-	virtual void setPostion(vec3) = 0;
+	~Camera();
+	void update(float);
+	void setPerspective(float, float, float, float);
+	void setLookat(vec3, vec3, vec3);
+	void setPostion(vec3);
 	mat4 getWorldTransform();
 	mat4 getView();
 	mat4 getProjection();
 	mat4 getProjectionView();
 
-private:
-	mat4 worldTransform;
-	mat4 viewTransform;
-	mat4 projectionTransform;
-	mat4 projectionViewTransform;
+protected:
+	mat4 m_world;
+	mat4 m_view;
+	mat4 m_projection;
+	mat4 m_projectionView;
 	void updateProjectionViewTransform();
 };
 

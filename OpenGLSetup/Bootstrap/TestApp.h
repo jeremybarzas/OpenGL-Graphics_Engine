@@ -1,5 +1,6 @@
 #pragma once
 #include "Application.h"
+
 class TestApp :
 	public Application
 {

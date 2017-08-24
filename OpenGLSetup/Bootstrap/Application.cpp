@@ -50,7 +50,7 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	// loads all of the OpenGL extenstions
 	ogl_LoadFunctions();
 
-	// set window clear color to purple
+	// set window clear color to grey
 	glClearColor(0.5f, 0, 0.5f, 1);	
 
 	// enables the depth test state
