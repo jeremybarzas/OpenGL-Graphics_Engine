@@ -51,8 +51,6 @@ void CameraApp::update(float deltaTime)
 	{
 
 	}	
-	
-	
 }
 
 void CameraApp::draw()

@@ -55,6 +55,7 @@ void Camera::setLookat(vec3 eye, vec3 center, vec3 up)
 	m_world = inverse(m_view);
 }
 
-void Camera::setPostion(vec3 position)
+void Camera::setPostion(vec3)
 {
 }
+
