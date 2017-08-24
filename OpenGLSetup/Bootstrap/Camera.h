@@ -23,5 +23,6 @@ public:
 	mat4 m_projection;
 	mat4 m_projectionView;
 	void updateProjectionViewTransform();
+	vec3 m_position;
 };
 

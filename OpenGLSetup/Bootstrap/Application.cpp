@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Gizmos.h"
 
 
 Application::Application()
@@ -35,6 +36,9 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 	// loads all of the OpenGL extenstions
 	ogl_LoadFunctions();
+
+	// initilizes the Gizmos
+	Gizmos::create();
 
 	// set window clear color to grey
 	glClearColor(0.5f, 0.5f, 0.5f, 1);	

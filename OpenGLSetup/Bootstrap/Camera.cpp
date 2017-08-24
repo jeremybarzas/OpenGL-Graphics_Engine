@@ -12,8 +12,10 @@ void Camera::update(float)
 {
 }
 
-void Camera::setPerspective(float, float, float, float)
+void Camera::setPerspective(float fovY, float aspect, float nearZ, float farZ)
 {
+	m_projection = glm::perspective(fovY, aspect, nearZ, farZ);
+	m_projectionView = m_projection * m_view;
 }
 
 void Camera::setLookat(vec3 eye, vec3 center, vec3 up)
@@ -46,14 +48,13 @@ void Camera::setLookat(vec3 eye, vec3 center, vec3 up)
 
 	m_view = view * trans;
 
+	// assert to test against glm's lookAt funtion
 	mat4 test = lookAt(eye, center, up);
 	assert(m_view == test);
 
 	m_world = inverse(m_view);
-	//m_projection = glm::perspective(1, 1, 1, 1);
-	//m_projectionView = m_projection * m_view;
 }
 
-void Camera::setPostion(vec3)
+void Camera::setPostion(vec3 position)
 {
 }

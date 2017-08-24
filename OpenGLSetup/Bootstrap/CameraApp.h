@@ -1,6 +1,8 @@
 #pragma once
 #include "Application.h"
 #include "Camera.h"
+#include "Gizmos.h"
+
 class CameraApp :
 	public Application
 {

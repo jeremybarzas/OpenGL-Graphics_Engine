@@ -2,6 +2,7 @@
 #include "CameraApp.h"
 #include "Camera.h"
 #include <iostream>
+#include "Transform.h"
 
 using std::cout;
 using std::cin;
@@ -45,6 +46,12 @@ int main()
 {
 	// determines which application to run
 	appswitcher();
+
+	//Transform* transform = new Transform();
+
+	//vec3 trans = vec3(1,1,1);
+
+	//transform->translate(trans);
 		
 	// default main function return
 	return 0;
