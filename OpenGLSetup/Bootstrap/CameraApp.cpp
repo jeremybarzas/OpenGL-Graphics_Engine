@@ -13,13 +13,16 @@ CameraApp::~CameraApp()
 
 void CameraApp::startup()
 {		
+	// camera object initialization
 	m_camera = new Camera();	
 
+	// sets the view and world transforms of the camera
 	eye = vec3(10, 10, 10);
 	center = vec3(0);
-	up = vec3(0, 1, 0);	
-
+	up = vec3(0, 1, 0);		
 	m_camera->setLookat(eye, center, up);
+
+	// sets the projection view of the camera
 	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);	
 }
 
@@ -49,6 +52,11 @@ void CameraApp::update(float deltaTime)
 
 	}	
 	
+	
+}
+
+void CameraApp::draw()
+{	
 	// removes all shapes and lines from the buffer
 	Gizmos::clear();
 
@@ -70,14 +78,13 @@ void CameraApp::update(float deltaTime)
 			vec3(-10, 0, -10 + i),
 			i == 10 ? white : black);
 	}
-}
-
-void CameraApp::draw()
-{	
+	
+	// what is current in the gizmos buffer
 	Gizmos::draw(m_camera->m_projectionView);
 }
 
 void CameraApp::shutdown()
 {
+	// destroys the gizmos object
 	Gizmos::destroy();
 }
