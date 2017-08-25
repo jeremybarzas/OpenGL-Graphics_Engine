@@ -1,14 +1,28 @@
+#define GLM_FORCE_SWIZZLE
 #include "Transform.h"
 
 
 
-Transform::Transform() : m_local(1), m_world(1), m_rotation(1), m_positon(1)
+Transform::Transform() : m_world(1), m_rotation(1), m_scale(1)
 {
 }
 
 
 Transform::~Transform()
 {
+}
+
+glm::mat4 Transform::getWorld()
+{
+	return m_world;
+}
+glm::mat4 Transform::getRotation()
+{
+	return glm::extractMatrixRotation(m_world);
+}
+glm::vec3 Transform::getPosition()
+{
+	return m_world[3].xyz;
 }
 
 void Transform::rotate(float radians, Axis rotationAxis)
@@ -51,27 +65,22 @@ void Transform::rotate(float radians, Axis rotationAxis)
 		glm::vec4(0, 0, 0, 1)
 	);
 
-	m_world = m_rotation;
-
-	//glm::mat4 test = glm::rotate(radians, rotaxis);
-	//assert(m_rotation == test);
+	m_world = m_translation = m_rotation;
 }
 
 void Transform::translate(glm::vec3 trans)
-{
-	// creates a new matrix4 that is the identity matrix
-	glm::mat4 translation = glm::mat4(1);
-
+{ 
 	// set w column of the new matrix4 to the transform that was passed in
-	translation[3].x = trans.x;
-	translation[3].y = trans.y;
-	translation[3].z = trans.z;
+	m_translation[3].x += trans.x;
+	m_translation[3].y += trans.y;
+	m_translation[3].z += trans.z;
 
-	// apply the new translation to the world transform
-	m_world = m_world * translation;
+	m_world = m_translation * m_rotation;	
+}
 
-	// assert to test against glm's translate funtion
-	glm::mat4 test = glm::translate(trans);
-	assert(m_world == test);
+void Transform::setWorld(glm::mat4 world)
+{
+	m_translation[3]= world[3];
+	m_rotation = glm::extractMatrixRotation(world);
 }
 

@@ -16,12 +16,19 @@ class Transform
 public:
 	Transform();
 	~Transform();
-	glm::mat4 m_world; 
-	glm::mat4 m_local;
+	
+	glm::mat4 m_translation;
 	glm::mat4 m_rotation;
-	glm::vec3 m_positon;
+	glm::mat4 m_scale;
+	glm::mat4 getWorld();
+	glm::mat4 getRotation();
+	glm::vec3 getPosition();
 
-	void rotate(float radians, Axis rotationAxis);	
+	void rotate(float radians, Axis rotationAxis);
 	void translate(glm::vec3 trans);
+	void setWorld(glm::mat4 world);
+
+private:
+	glm::mat4 m_world;	
 };
 

@@ -13,48 +13,58 @@ CameraApp::~CameraApp()
 }
 
 void CameraApp::startup()
-{		
+{
 	// camera object initialization
-	m_camera = new Camera();	
+	m_camera = new Camera();
 
 	// sets the view and world transforms of the camera
-	eye = glm::vec3(10, 10, 10);
+	eye = glm::vec3(5, 5, 5);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookat(eye, center, up);
-
+	m_camera->setPosition(glm::vec3(10, 10, 10));
 	// sets the perspective view of the camera
 	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 }
 
+glm::mat4 sun = glm::mat4(1);
+glm::mat4 earth = glm::mat4(1);
+float running_time = 0;
 void CameraApp::update(float deltaTime)
-{	
+{
+	running_time += deltaTime;
+	//sun = glm::rotate(running_time * deltaTime, glm::vec3(0, 1, 0));
 	// camera strafe forward
-	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
-	{	
+	glm::vec4 forward = m_camera->m_transform->getWorld()[2];
+	glm::vec4 right = m_camera->m_transform->getWorld()[0];
+	glm::vec4 up = m_camera->m_transform->getWorld()[1];
+	if (glfwGetKey(m_window, 'W') == GLFW_PRESS)
+	{
+		sun = glm::translate(glm::vec3(1, 0, 0)) * sun;
 		// calculate the forward vector of the cameras current rotation		
-
 		// apply movement along forward vector scaled by deltatime / multiplier
+		m_camera->setPosition(-forward);
 	}
 
 	// camera strafe backward
 	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-				
+		// apply movement along forward vector scaled by deltatime / multiplier
+		m_camera->setPosition(forward);
 	}
 
 	// camera strafe left
 	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		
-	}	
+		m_camera->setPosition(-right);
+	}
 
 	// camera strafe right
 	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
+		m_camera->setPosition(right);
+	}
 		
-	}	
-
 	// gets mouse input	
 	static bool mouseButtonDown = false;
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
@@ -78,14 +88,16 @@ void CameraApp::update(float deltaTime)
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
 		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
-	}	
+	}
+	m_camera->update(deltaTime);
 }
 
 void CameraApp::draw()
-{	
+{
 	// removes all shapes and lines from the buffer
 	Gizmos::clear();
-
+	Gizmos::addSphere(sun[3], 5, 20, 20, glm::vec4(.1, .1, .1, 1), &sun);
+	Gizmos::addSphere(earth[3], 5, 10, 20, glm::vec4(.1, .1, .1, 1), &earth);
 	// creates transform handles
 	Gizmos::addTransform(glm::mat4(1));
 
@@ -104,7 +116,7 @@ void CameraApp::draw()
 			glm::vec3(-10, 0, -10 + i),
 			i == 10 ? white : black);
 	}
-	
+
 	// what is current in the gizmos buffer
 	Gizmos::draw(m_camera->m_projectionView);
 }

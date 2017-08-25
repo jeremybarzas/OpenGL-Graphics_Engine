@@ -47,11 +47,12 @@ void appswitcher()
 
 int main()
 {
-	// determines which application to run
-	appswitcher();
 	
-	//Transform* transform = new Transform();	
-	//transform->rotate(glm::pi<float>() * .25, ZAXIS);	
+	Application* app = new CameraApp();
+	app->run(1600, 900, "Camera Application", false);
+	delete app;
+	// determines which application to run
+	//appswitcher();
 		
 	// default main function return
 	return 0;

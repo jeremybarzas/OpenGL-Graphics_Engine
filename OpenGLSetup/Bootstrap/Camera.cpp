@@ -2,24 +2,23 @@
 
 Camera::Camera()
 {
+	m_transform = new Transform();
 }
 
 Camera::~Camera()
 {
+	delete m_transform;
 }
 
 void Camera::update(float)
 {
-}
-
-void Camera::updateProjectionViewTransform()
-{
-	
+	m_view = inverse(m_transform->getWorld());
+	m_projectionView = m_projection * m_view;
 }
 
 void Camera::setPerspective(float fovY, float aspect, float nearZ, float farZ)
 {
-	glm::mat4 m_projection = glm::perspective(fovY, aspect, nearZ, farZ);
+	m_projection = glm::perspective(fovY, aspect, nearZ, farZ);
 	m_projectionView = m_projection * m_view;
 }
 
@@ -57,10 +56,17 @@ void Camera::setLookat(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
 	glm::mat4 test = lookAt(eye, center, up);
 	assert(m_view == test);
 
-	m_world = inverse(m_view);
+	m_transform->setWorld(inverse(m_view));	
+	
 }
 
-void Camera::setPostion(glm::vec3 vector)
+void Camera::setPosition(glm::vec3 vector)
 {
+	m_transform->translate(vector);	
+}
+
+glm::mat4 Camera::getProjectionView()
+{
+	return m_projectionView;
 }
 
