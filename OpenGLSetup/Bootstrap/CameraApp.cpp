@@ -33,18 +33,8 @@ void CameraApp::update(float deltaTime)
 	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
 	{	
 		// calculate the forward vector of the cameras current rotation		
-		glm::vec3 forward = m_camera->m_world[2];
 
-		//// creates a new matrix4 that is the identity matrix
-		//glm::mat4 translation = glm::mat4(1);		
-
-		//// set w column of the new matrix4 to the transform that was passed in
-		//translation[3].x = forward.x;
-		//translation[3].y = forward.y;
-		//translation[3].z = forward.z;
-
-		//// apply the new translation to the world transform
-		//m_camera->m_world = m_camera->m_world * translation;
+		// apply movement along forward vector scaled by deltatime / multiplier
 	}
 
 	// camera strafe backward
