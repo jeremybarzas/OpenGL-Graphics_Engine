@@ -23,12 +23,48 @@ void CameraApp::startup()
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookat(eye, center, up);
 
-	// sets the projection view of the camera
-	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);	
+	// sets the perspective view of the camera
+	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 }
 
 void CameraApp::update(float deltaTime)
 {	
+	// camera strafe forward
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
+	{	
+		// calculate the forward vector of the cameras current rotation		
+		glm::vec3 forward = m_camera->m_world[2];
+
+		//// creates a new matrix4 that is the identity matrix
+		//glm::mat4 translation = glm::mat4(1);		
+
+		//// set w column of the new matrix4 to the transform that was passed in
+		//translation[3].x = forward.x;
+		//translation[3].y = forward.y;
+		//translation[3].z = forward.z;
+
+		//// apply the new translation to the world transform
+		//m_camera->m_world = m_camera->m_world * translation;
+	}
+
+	// camera strafe backward
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+				
+	}
+
+	// camera strafe left
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		
+	}	
+
+	// camera strafe right
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		
+	}	
+
 	// gets mouse input	
 	static bool mouseButtonDown = false;
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
@@ -52,34 +88,6 @@ void CameraApp::update(float deltaTime)
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
 		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
-	}
-
-	// camera strafe forward
-	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
-	{	
-		// calculate the forward vector		
-
-		// scale by delta time or multiplier
-
-		// apply vector to camera.
-	}
-
-	// camera strafe backward
-	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		
-	}
-
-	// camera strafe left
-	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		
-	}	
-
-	// camera strafe right
-	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		
 	}	
 }
 

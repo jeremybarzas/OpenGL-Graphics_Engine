@@ -14,13 +14,13 @@ void Camera::update(float)
 
 void Camera::updateProjectionViewTransform()
 {
+	
 }
 
 void Camera::setPerspective(float fovY, float aspect, float nearZ, float farZ)
 {
-	glm::mat4 m_projectionTest = glm::perspective(fovY, aspect, nearZ, farZ);
-
-	m_projectionView = m_projectionTest * m_view;
+	glm::mat4 m_projection = glm::perspective(fovY, aspect, nearZ, farZ);
+	m_projectionView = m_projection * m_view;
 }
 
 void Camera::setLookat(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
@@ -63,6 +63,4 @@ void Camera::setLookat(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
 void Camera::setPostion(glm::vec3 vector)
 {
 }
-
-
 

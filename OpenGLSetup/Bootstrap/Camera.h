@@ -23,6 +23,6 @@ public:
 	glm::mat4 m_projection;
 	glm::mat4 m_projectionView;
 
-	Transform m_transform;	
+	Transform* m_transform;	
 };
 
