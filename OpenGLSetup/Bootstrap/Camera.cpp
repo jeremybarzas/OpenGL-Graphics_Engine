@@ -12,6 +12,10 @@ void Camera::update(float)
 {
 }
 
+void Camera::updateProjectionViewTransform()
+{
+}
+
 void Camera::setPerspective(float fovY, float aspect, float nearZ, float farZ)
 {
 	glm::mat4 m_projectionTest = glm::perspective(fovY, aspect, nearZ, farZ);
@@ -56,7 +60,7 @@ void Camera::setLookat(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
 	m_world = inverse(m_view);
 }
 
-void Camera::setPostion(glm::vec3)
+void Camera::setPostion(glm::vec3 vector)
 {
 }
 

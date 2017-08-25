@@ -29,6 +29,7 @@ void CameraApp::startup()
 
 void CameraApp::update(float deltaTime)
 {	
+	// gets mouse input	
 	static bool mouseButtonDown = false;
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
 
@@ -41,7 +42,8 @@ void CameraApp::update(float deltaTime)
 			glfwGetCursorPos(m_window, &prevMouseX, &PrevMouseY);
 		}
 
-		double currMouseX = 0, currMouseY = 0;
+		double currMouseX = 0;
+		double currMouseY = 0;
 		glfwGetCursorPos(m_window, &currMouseX, &currMouseY);
 
 		double deltaX = currMouseX - prevMouseX;
@@ -52,24 +54,29 @@ void CameraApp::update(float deltaTime)
 		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
 	}
 
-	//camera forward
+	// camera strafe forward
 	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
-	{		
+	{	
+		// calculate the forward vector		
+
+		// scale by delta time or multiplier
+
+		// apply vector to camera.
 	}
 
-	//camera backward
+	// camera strafe backward
 	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		
 	}
 
-	//camera left
+	// camera strafe left
 	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		
 	}	
 
-	//camera right
+	// camera strafe right
 	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		
