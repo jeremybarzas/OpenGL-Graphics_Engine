@@ -13,7 +13,7 @@ Transform::~Transform()
 
 void Transform::rotate(float radians, Axis rotationAxis)
 {
-	glm::vec3 xAxis = glm::lowp_vec3(1, 0, 0);
+	glm::vec3 xAxis = glm::vec3(1, 0, 0);
 	glm::vec3 yAxis = glm::vec3(0, 1, 0);
 	glm::vec3 zAxis = glm::vec3(0, 0, 1);
 
@@ -23,7 +23,7 @@ void Transform::rotate(float radians, Axis rotationAxis)
 	switch(rotationAxis)
 	{
 	case ZAXIS:
-		xAxis = glm::vec3(glm::trunc(glm::cos(radians)), glm::sin(radians), 0);
+		xAxis = glm::vec3(glm::cos(radians), glm::sin(radians), 0);
 		yAxis = glm::vec3(-glm::sin(radians), glm::cos(radians), 0);
 		zAxis = glm::vec3(0, 0, 1);
 		break;
@@ -53,8 +53,8 @@ void Transform::rotate(float radians, Axis rotationAxis)
 
 	m_world = m_rotation;
 
-	glm::mat4 test = glm::rotate(radians, rotaxis);
-	assert(m_rotation == test);
+	//glm::mat4 test = glm::rotate(radians, rotaxis);
+	//assert(m_rotation == test);
 }
 
 void Transform::translate(glm::vec3 trans)

@@ -1,5 +1,6 @@
 #include "CameraApp.h"
 using glm::pi;
+#include <iostream>
 
 
 CameraApp::CameraApp()
@@ -17,9 +18,9 @@ void CameraApp::startup()
 	m_camera = new Camera();	
 
 	// sets the view and world transforms of the camera
-	eye = vec3(10, 10, 10);
-	center = vec3(0);
-	up = vec3(0, 1, 0);		
+	eye = glm::vec3(10, 10, 10);
+	center = glm::vec3(0);
+	up = glm::vec3(0, 1, 0);
 	m_camera->setLookat(eye, center, up);
 
 	// sets the projection view of the camera
@@ -28,28 +29,50 @@ void CameraApp::startup()
 
 void CameraApp::update(float deltaTime)
 {	
+	static bool mouseButtonDown = false;
+	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
+
+		static double prevMouseX = 0;
+		static double PrevMouseY = 0;
+
+		if (mouseButtonDown == false)
+		{
+			mouseButtonDown = true;
+			glfwGetCursorPos(m_window, &prevMouseX, &PrevMouseY);
+		}
+
+		double currMouseX = 0, currMouseY = 0;
+		glfwGetCursorPos(m_window, &currMouseX, &currMouseY);
+
+		double deltaX = currMouseX - prevMouseX;
+		double deltaY = currMouseY - PrevMouseY;
+
+		prevMouseX = currMouseX;
+		PrevMouseY = currMouseY;
+		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
+	}
+
 	//camera forward
-	if (glfwGetKey(window, GLFW_KEY_W))
-	{
-		m_camera->m_world;
-	}	
-
-	//camera left
-	if (glfwGetKey(window, GLFW_KEY_A))
-	{
-
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
+	{		
 	}
 
 	//camera backward
-	if (glfwGetKey(window, GLFW_KEY_S))
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-
+		
 	}
 
-	//camera right
-	if (glfwGetKey(window, GLFW_KEY_D))
+	//camera left
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
+		
+	}	
 
+	//camera right
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		
 	}	
 }
 
@@ -62,18 +85,18 @@ void CameraApp::draw()
 	Gizmos::addTransform(glm::mat4(1));
 
 	// colors to be used
-	vec4 white(1);
-	vec4 black(0, 0, 0, 1);
+	glm::vec4 white(1);
+	glm::vec4 black(0, 0, 0, 1);
 
 	// generates a grid of lines
 	for (int i = 0; i < 21; ++i)
 	{
-		Gizmos::addLine(vec3(-10 + i, 0, 10),
-			vec3(-10 + i, 0, -10),
+		Gizmos::addLine(glm::vec3(-10 + i, 0, 10),
+			glm::vec3(-10 + i, 0, -10),
 			i == 10 ? white : black);
 
-		Gizmos::addLine(vec3(10, 0, -10 + i),
-			vec3(-10, 0, -10 + i),
+		Gizmos::addLine(glm::vec3(10, 0, -10 + i),
+			glm::vec3(-10, 0, -10 + i),
 			i == 10 ? white : black);
 	}
 	

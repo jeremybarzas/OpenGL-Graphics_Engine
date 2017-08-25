@@ -14,31 +14,31 @@ void appswitcher()
 	int input = -1;
 	bool closeApp = false;	
 	
-	while (closeApp == false && input > 0)
+	while (closeApp == false)
 	{
-		cout << "1) - Test Application\n";
-		cout << "2) - Camera Application\n\n";
+		cout << "0) - Camera Application\n";
+		cout << "1) - Test Application\n\n";		
 		cout << "Enter the number of the application to run. ";
 		cin >> input;		
 		system("CLS");
 		
 		switch (input)
 		{
+		case 0:
+			app = new CameraApp();
+			app->run(1600, 900, "Camera Application", false);
+			delete app;
+			break;
+
 		case 1:
 			app = new TestApp();
 			app->run(800, 450, "Test Application", false);
 			delete app;
 			break;
-
-		case 2:
-			app = new CameraApp();
-			app->run(1600, 900, "Camera Application", false);
-			delete app;
-			break;
 		}		
 		
-		cout << "1) - Yes\n";
 		cout << "0) - No\n";
+		cout << "1) - Yes\n";
 		cout << "Do you want to close the application? ";		
 		cin >> closeApp;
 		system("CLS");
@@ -50,10 +50,8 @@ int main()
 	// determines which application to run
 	appswitcher();
 	
-	Transform* transform = new Transform();	
-	transform->rotate(glm::pi<float>() * .25, ZAXIS);
-
-	
+	//Transform* transform = new Transform();	
+	//transform->rotate(glm::pi<float>() * .25, ZAXIS);	
 		
 	// default main function return
 	return 0;

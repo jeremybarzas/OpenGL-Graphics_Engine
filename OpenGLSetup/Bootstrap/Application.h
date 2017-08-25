@@ -15,7 +15,7 @@ protected:
 	virtual void shutdown() = 0;
 	
 	float prevTime;
-	GLFWmonitor* monitor;
-	GLFWwindow* window;	
+	GLFWmonitor* m_monitor;
+	GLFWwindow* m_window;	
 };
 

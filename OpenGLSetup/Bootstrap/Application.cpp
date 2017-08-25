@@ -28,11 +28,11 @@ void Application::run(float width, float height, const char * title, bool fullsc
 	startup();	
 
 	// creates a window to draw in with OpenGL
-	fullscreen == false ? monitor = nullptr : monitor = glfwGetPrimaryMonitor();
-	window = glfwCreateWindow(width, height, title, monitor, nullptr);
+	fullscreen == false ? m_monitor = nullptr : m_monitor = glfwGetPrimaryMonitor();
+	m_window = glfwCreateWindow(width, height, title, m_monitor, nullptr);
 
 	// makes the pased in window the current context
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(m_window);
 
 	// loads all of the OpenGL extenstions
 	ogl_LoadFunctions();
@@ -48,18 +48,18 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 	// main program loop
 	// loops until the passed in window is set to close
-	while (glfwWindowShouldClose(window) == GLFW_FALSE)
-	{		
-		// sets the loop condition to true if "escape" is pressed
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
-			glfwSetWindowShouldClose(window, GL_TRUE);
-
-		// clears both the color and depth buffer so the window doesn't fail to update visuals
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+	while (glfwWindowShouldClose(m_window) == GLFW_FALSE)
+	{	
 		// calculates delta time
 		float currTime = glfwGetTime();
 		float deltaTime = currTime - prevTime;
+
+		// sets the loop condition to true if "escape" is pressed
+		if (glfwGetKey(m_window, GLFW_KEY_ESCAPE))
+			glfwSetWindowShouldClose(m_window, GL_TRUE);
+
+		// clears both the color and depth buffer so the window doesn't fail to update visuals
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		
 		
 		// calls the concrete derived class update() method
 		update(deltaTime);
@@ -68,7 +68,7 @@ void Application::run(float width, float height, const char * title, bool fullsc
 		draw();
 
 		// swaps the buffers of the passed in window
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(m_window);
 
 		// checks for inputs sent by the OS
 		glfwPollEvents();

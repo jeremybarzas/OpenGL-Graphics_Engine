@@ -17,8 +17,8 @@ public:
 	virtual void shutdown() override;
 		
 	Camera* m_camera;
-	vec3 eye;
-	vec3 center;
-	vec3 up;
+	glm::vec3 eye;
+	glm::vec3 center;
+	glm::vec3 up;
 };
 
