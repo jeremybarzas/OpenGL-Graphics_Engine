@@ -23,24 +23,21 @@ void CameraApp::startup()
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookat(eye, center, up);
 	m_camera->setPosition(glm::vec3(10, 10, 10));
+
 	// sets the perspective view of the camera
 	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 }
 
-glm::mat4 sun = glm::mat4(1);
-glm::mat4 earth = glm::mat4(1);
-float running_time = 0;
 void CameraApp::update(float deltaTime)
-{
-	running_time += deltaTime;
-	//sun = glm::rotate(running_time * deltaTime, glm::vec3(0, 1, 0));
+{	
 	// camera strafe forward
 	glm::vec4 forward = m_camera->m_transform->getWorld()[2];
 	glm::vec4 right = m_camera->m_transform->getWorld()[0];
 	glm::vec4 up = m_camera->m_transform->getWorld()[1];
+
 	if (glfwGetKey(m_window, 'W') == GLFW_PRESS)
 	{
-		sun = glm::translate(glm::vec3(1, 0, 0)) * sun;
+		//sun = glm::translate(glm::vec3(1, 0, 0)) * sun;
 		// calculate the forward vector of the cameras current rotation		
 		// apply movement along forward vector scaled by deltatime / multiplier
 		m_camera->setPosition(-forward);
