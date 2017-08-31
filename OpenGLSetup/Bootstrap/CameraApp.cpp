@@ -93,8 +93,6 @@ void CameraApp::draw()
 {
 	// removes all shapes and lines from the buffer
 	Gizmos::clear();
-	Gizmos::addSphere(sun[3], 5, 20, 20, glm::vec4(.1, .1, .1, 1), &sun);
-	Gizmos::addSphere(earth[3], 5, 10, 20, glm::vec4(.1, .1, .1, 1), &earth);
 	// creates transform handles
 	Gizmos::addTransform(glm::mat4(1));
 
