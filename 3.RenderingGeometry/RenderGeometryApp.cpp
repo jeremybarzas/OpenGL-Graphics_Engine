@@ -141,6 +141,10 @@ void RenderGeometryApp::draw()
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
 	glBindVertexArray(m_VAO);
+
+	// makes flat plane into a wireframe grid
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
 }
