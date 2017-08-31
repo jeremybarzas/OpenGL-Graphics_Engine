@@ -23,10 +23,7 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 	// sets control time
 	prevTime = glfwGetTime();
-
-	// calls the concrete derived class startup() method
-	startup();	
-
+	
 	// creates a window to draw in with OpenGL
 	fullscreen == false ? m_monitor = nullptr : m_monitor = glfwGetPrimaryMonitor();
 	m_window = glfwCreateWindow(width, height, title, m_monitor, nullptr);
@@ -36,9 +33,9 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 	// loads all of the OpenGL extenstions
 	ogl_LoadFunctions();
-
-	// initilizes the Gizmos
-	Gizmos::create();
+	
+	// calls the concrete derived class startup() method
+	startup();	
 
 	// set window clear color to grey
 	glClearColor(0.5f, 0.5f, 0.5f, 1);	

@@ -67,6 +67,8 @@ void RenderGeometryApp::startup()
 	}
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
+
+	generateGrid(10, 10);
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -137,42 +139,12 @@ void RenderGeometryApp::draw()
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
 	glBindVertexArray(m_VAO);
-	unsigned int indexCount = (rows - 1) * (cols - 1) * 6;
+	unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
-#pragma region Gizmos
-	// removes all shapes and lines from the buffer
-	Gizmos::clear();
-
-	// creates transform handles
-	Gizmos::addTransform(glm::mat4(1));
-
-	// colors to be used
-	glm::vec4 white(1);
-	glm::vec4 black(0, 0, 0, 1);
-
-	// generates a grid of lines
-	for (int i = 0; i < 21; ++i)
-	{
-		Gizmos::addLine(glm::vec3(-10 + i, 0, 10),
-			glm::vec3(-10 + i, 0, -10),
-			i == 10 ? white : black);
-
-		Gizmos::addLine(glm::vec3(10, 0, -10 + i),
-			glm::vec3(-10, 0, -10 + i),
-			i == 10 ? white : black);
-	}
-
-	// what is current in the gizmos buffer
-	Gizmos::draw(m_camera->m_projectionView);
-
-#pragma endregion Gizmos
 }
 
 void RenderGeometryApp::shutdown()
-{
-	// destroys the gizmos object
-	Gizmos::destroy();
+{	
 }
 
 void RenderGeometryApp::generateGrid(unsigned int rows, unsigned int cols)
