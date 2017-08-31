@@ -93,6 +93,7 @@ void CameraApp::draw()
 {
 	// removes all shapes and lines from the buffer
 	Gizmos::clear();
+
 	// creates transform handles
 	Gizmos::addTransform(glm::mat4(1));
 
