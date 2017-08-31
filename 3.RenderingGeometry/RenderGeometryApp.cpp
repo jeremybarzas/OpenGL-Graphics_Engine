@@ -4,6 +4,8 @@
 
 RenderGeometryApp::RenderGeometryApp()
 {
+	m_rows = 10;
+	m_cols = 10;
 }
 
 
@@ -28,11 +30,11 @@ void RenderGeometryApp::startup()
 
 	// ========== Create Shaders ==========
 	const char* vsSource = "#version 410\n \
-							layout(location=0) in vec4 positon; \
+							layout(location=0) in vec4 position; \
 							layout(location=1) in vec4 colour; \
 							out vec4 vColour; \
 							uniform mat4 projectionViewWorldMatrix; \
-							void main() { vColour = colour; gl_Postion = projectionViewWorldMatrix * position; }";
+							void main() { vColour = colour; gl_Position = projectionViewWorldMatrix * position; }";
 
 	const char * fsSource = "#version 410\n \
 							in vec4 vColour; \
@@ -68,7 +70,7 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 
-	generateGrid(10, 10);
+	generateGrid(m_rows, m_cols);
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -140,7 +142,7 @@ void RenderGeometryApp::draw()
 
 	glBindVertexArray(m_VAO);
 	unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
 }
 
 void RenderGeometryApp::shutdown()
