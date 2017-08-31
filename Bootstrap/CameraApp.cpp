@@ -1,5 +1,4 @@
 #include "CameraApp.h"
-using glm::pi;
 #include <iostream>
 
 
@@ -25,10 +24,7 @@ void CameraApp::startup()
 	m_camera->setPosition(glm::vec3(10, 10, 10));
 
 	// sets the perspective view of the camera
-	m_camera->setPerspective(pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
-	//fghfh
-	
-	std::cout << "startup complete";
+	m_camera->setPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);	
 }
 
 void CameraApp::update(float deltaTime)

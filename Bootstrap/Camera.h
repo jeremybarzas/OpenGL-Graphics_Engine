@@ -14,7 +14,6 @@ public:
 	void setPosition(glm::vec3);
 	glm::mat4 getProjectionView();		
 
-	//glm::mat4 m_world;
 	glm::mat4 m_view;
 	glm::mat4 m_projection;
 	glm::mat4 m_projectionView;
