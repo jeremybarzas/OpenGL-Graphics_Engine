@@ -37,11 +37,11 @@ void Mesh::create_buffers()
 	// buffer the Index Buffer Object's data
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_index_count * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
 	
-	// enable vertex attribute array indices 0 and 1
+	// enable and assign vertex attribute array index 0
 	glEnableVertexAttribArray(0);	
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
-	// assign vertex attribute array indices 0 and 1
+	// enable and assign vertex attribute array index 1
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4)));
 
@@ -84,7 +84,7 @@ void Mesh::unbind()
 	glBindVertexArray(0);	
 }
 
-void Mesh::startup_portion()
+void Mesh::meshStartup()
 {
 	// populate vert and index arrays
 	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
@@ -95,13 +95,13 @@ void Mesh::startup_portion()
 
 	std::vector<Vertex> vertices{ a,b,c,d,e };
 	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
-
+		
 	this->initialize(vertices, indices);
 
 	this->create_buffers();	
 }
 
-void Mesh::draw_portion()
+void Mesh::meshDraw()
 {
 	this->bind();
 	// set to draw wireframe

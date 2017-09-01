@@ -23,8 +23,8 @@ public:
 	void unbind();		
 
 	// custom functions
-	void startup_portion();
-	void draw_portion();
+	void meshStartup();
+	void meshDraw();
 
 private:
 	unsigned int m_vao;

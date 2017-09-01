@@ -68,11 +68,11 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 	
-	// Mesh object initialization
+	// Mesh object pointer initialization
 	m_mesh = new Mesh();	
 
 	// Mesh object startup function calls	
-	m_mesh->startup_portion();	
+	m_mesh->meshStartup();
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -138,13 +138,17 @@ void RenderGeometryApp::update(float deltaTime)
 
 void RenderGeometryApp::draw()
 {
+	// use given shader program
 	glUseProgram(m_programID);
+
+	// create and assign uniform
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
 	// Mesh object draw function calls	
-	m_mesh->draw_portion();	
+	m_mesh->meshDraw();
 
+	// clear shader program
 	glUseProgram(0);
 }
 
