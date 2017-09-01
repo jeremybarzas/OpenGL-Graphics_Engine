@@ -70,7 +70,7 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 
-	generateGrid(m_rows, m_cols);
+	generateGrid(10, 10);
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -140,6 +140,7 @@ void RenderGeometryApp::draw()
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 	
+	// bind the Vertex Array Object
 	glBindVertexArray(m_VAO);
 
 	// makes flat plane into a wireframe grid
@@ -147,8 +148,11 @@ void RenderGeometryApp::draw()
 
 	unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
+
+	// clears the Vertex Array Object bind
 	glBindVertexArray(0);
 
+	// translates the plane and draws another one
 	glm::mat4 upALittle = glm::translate(glm::vec3(0, 5, 0));
 	glBindVertexArray(m_VAO);
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView * upALittle));
@@ -163,36 +167,40 @@ void RenderGeometryApp::shutdown()
 
 void RenderGeometryApp::generateGrid(unsigned int rows, unsigned int cols)
 {
-	// fill array of verts for a grid
-	Vertex* vertArray = new Vertex[rows * cols];
-	for (unsigned int r = 0; r < rows; ++r)
-	{
-		for (unsigned int c = 0; c < cols; ++c)
-		{
-			vertArray[r * cols + c].position = glm::vec4((float)c, 0, (float)r, 1);
+	// sets the variables that control the girds length and width
+	m_rows = rows;
+	m_cols = cols;
 
-			glm::vec3 color = glm::vec3(sinf((c / (float)(cols - 1)) * (r / (float)(rows - 1))));
-			vertArray[r * cols + c].color = glm::vec4(color, 1);
+	// fill array of verts for a grid
+	Vertex* vertArray = new Vertex[m_rows * m_cols];
+	for (unsigned int r = 0; r < m_rows; ++r)
+	{
+		for (unsigned int c = 0; c < m_cols; ++c)
+		{
+			vertArray[r * m_cols + c].position = glm::vec4((float)c, 0, (float)r, 1);
+
+			glm::vec3 color = glm::vec3(sinf((c / (float)(m_cols - 1)) * (r / (float)(m_rows - 1))));
+			vertArray[r * m_cols + c].color = glm::vec4(color, 1);
 		}
 	}
 
 	// fill array with indices of the verts of the 2 triangles
 	// defining index count based off quad count (2 triangles per quad)
-	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) * 6];
+	unsigned int* auiIndices = new unsigned int[(m_rows - 1) * (m_cols - 1) * 6];
 	unsigned int index = 0;
-	for (unsigned int r = 0; r < (rows - 1); ++r)
+	for (unsigned int r = 0; r < (m_rows - 1); ++r)
 	{
-		for (unsigned int c = 0; c < (cols - 1); ++c)
+		for (unsigned int c = 0; c < (m_cols - 1); ++c)
 		{
 			// triangle 1
-			auiIndices[index++] = r * cols + c;
-			auiIndices[index++] = (r + 1) * cols + c;
-			auiIndices[index++] = (r + 1) * cols + (c + 1);
+			auiIndices[index++] = r * m_cols + c;
+			auiIndices[index++] = (r + 1) * m_cols + c;
+			auiIndices[index++] = (r + 1) * m_cols + (c + 1);
 
 			// triangle 2
-			auiIndices[index++] = r * cols + c;
-			auiIndices[index++] = (r + 1) * cols + (c + 1);
-			auiIndices[index++] = r * cols + (c + 1);		
+			auiIndices[index++] = r * m_cols + c;
+			auiIndices[index++] = (r + 1) * m_cols + (c + 1);
+			auiIndices[index++] = r * m_cols + (c + 1);		
 		}	
 	}
 
@@ -214,7 +222,7 @@ void RenderGeometryApp::generateGrid(unsigned int rows, unsigned int cols)
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);	
 
 	// buffer the Vertex Buffer Object's data
-	glBufferData(GL_ARRAY_BUFFER, (rows* cols) * sizeof(Vertex), vertArray, GL_STATIC_DRAW);	
+	glBufferData(GL_ARRAY_BUFFER, (m_rows* m_cols) * sizeof(Vertex), vertArray, GL_STATIC_DRAW);	
 
 	// enable vertex attribute array indices 0 and 1
 	glEnableVertexAttribArray(0);
@@ -228,7 +236,7 @@ void RenderGeometryApp::generateGrid(unsigned int rows, unsigned int cols)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
 	
 	// buffer the Index Buffer Object's data
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STATIC_DRAW);	
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (m_rows - 1) * (m_cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STATIC_DRAW);	
 
 	// ========== Cleanup Buffer Objects ==========
 	// clear the Vertex Array Object bind
