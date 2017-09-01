@@ -64,7 +64,7 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 	// assign the vertex count
 	this->m_vertex_count = m_vertices.size();
 
-	// populate vertex array with passed values
+	// populate index array with passed values
 	for (auto i : indices)
 		this->m_indices.push_back(i);
 
