@@ -27,15 +27,13 @@ public:
 	// order of operations templates
 	void startup_portion();
 	void draw_portion();
-
-	// extra functions		
-	void set_vertex_and_index_data();		
 		
 	// get & set value methods
 	std::vector<Vertex> getVertices();
 	std::vector<unsigned int> getIndices();
 	void setVertices(std::vector<Vertex>);
-	void setIndices(std::vector<unsigned int>);	
+	void setIndices(std::vector<unsigned int>);
+	void set_vertex_and_index_data();
 
 	// experiment functions
 	void binder(unsigned int, bool);
