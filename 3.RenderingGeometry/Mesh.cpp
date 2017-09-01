@@ -45,6 +45,7 @@ void Mesh::create_buffers()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4)));
 
+	// ========== Cleanup ==========
 	// clear the Vertex Array Object bind
 	glBindVertexArray(0);
 
