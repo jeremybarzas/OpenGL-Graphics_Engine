@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <glm\glm.hpp>
-#include <glm\ext.hpp>
 
 struct Vertex
 {
@@ -15,24 +14,27 @@ public:
 	Mesh();
 	~Mesh();
 
+	unsigned int m_index_count;
+	unsigned int m_vertex_count;
+
 	void create_buffers();
 	void initialize(std::vector<Vertex> &verts, std::vector<unsigned int> &indices);
 	void bind();
-	void unbind();
+	void unbind();	
 
-	unsigned int index_count;
-	unsigned int vertex_count;
+	// extra functions		
+	void set_vertex_and_index_data();
+	void draw_portion_of_code();
 
-	// generate vertices and indices of the teacher given geometry
-	void makeGeometry();
-
-	// set value methods
-	void setVertices(std::vector<Vertex>);
-	void setIndices(std::vector<unsigned int>);
-
-	// get value methods
+	// order of operations template
+	void execution_order();
+	
+	/* ===== helper functions =====*/
+	// get & set value methods
 	std::vector<Vertex> getVertices();
 	std::vector<unsigned int> getIndices();
+	void setVertices(std::vector<Vertex>);
+	void setIndices(std::vector<unsigned int>);	
 
 private:
 	unsigned int m_vao;

@@ -3,9 +3,7 @@
 
 
 RenderGeometryApp::RenderGeometryApp()
-{
-	m_rows = 10;
-	m_cols = 10;
+{	
 }
 
 
@@ -70,7 +68,7 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 
-	generateGrid(10, 10);
+	generateGrid(10, 10);	
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -139,9 +137,9 @@ void RenderGeometryApp::draw()
 	glUseProgram(m_programID);
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
-	
+
 	// bind the Vertex Array Object
-	glBindVertexArray(m_VAO);
+	glBindVertexArray(m_VAO);	
 
 	// makes flat plane into a wireframe grid
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -152,12 +150,6 @@ void RenderGeometryApp::draw()
 	// clears the Vertex Array Object bind
 	glBindVertexArray(0);
 
-	// translates the plane and draws another one
-	glm::mat4 upALittle = glm::translate(glm::vec3(0, 5, 0));
-	glBindVertexArray(m_VAO);
-	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView * upALittle));
-	
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 	glUseProgram(0);
 }
 

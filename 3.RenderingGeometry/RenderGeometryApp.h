@@ -2,12 +2,8 @@
 #include <Application.h>
 #include "Camera.h"
 #include "Gizmos.h"
+#include "Mesh.h"
 
-struct Vertex
-{
-	glm::vec4 position;
-	glm::vec4 color;
-};
 
 class RenderGeometryApp : public Application
 {
@@ -35,5 +31,7 @@ public:
 	int m_cols;
 
 	void generateGrid(unsigned int rows, unsigned int cols);	
+
+	Mesh* m_mesh;
 };
 
