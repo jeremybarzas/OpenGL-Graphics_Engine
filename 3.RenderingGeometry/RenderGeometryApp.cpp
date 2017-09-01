@@ -67,9 +67,11 @@ void RenderGeometryApp::startup()
 	}
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
-
+	
 	//generateGrid(10, 10);	
-	m_mesh->startup_portion();
+
+	// Mesh object start up functionality
+	m_mesh->startup_portion();	
 }							
 
 void RenderGeometryApp::update(float deltaTime)

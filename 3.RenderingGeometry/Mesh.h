@@ -39,7 +39,7 @@ public:
 	void binder(unsigned int, bool);	
 	void vao_binder(bool);
 	void vbo_binder(bool);
-	void ibo_binder(bool);
+	void ibo_binder(bool); 
 
 private:
 	unsigned int m_vao;

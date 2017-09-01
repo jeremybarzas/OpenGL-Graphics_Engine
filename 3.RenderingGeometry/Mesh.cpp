@@ -30,15 +30,31 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 
 void Mesh::bind()
 {
-	/*========== Bind Buffer Objects ==========*/
+	// VAO
 	// bind Vertex Array Object
 	glBindVertexArray(m_vao);
 
+	// VBO
 	// bind Vertex Buffer Object
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
+	// buffer the Vertex Buffer Object's data
+	glBufferData(GL_ARRAY_BUFFER, m_vertex_count * sizeof(Vertex), &m_vertices, GL_STATIC_DRAW);
+
+	// enable vertex attribute array indices 0 and 1
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	// assign vertex attribute array indices 0 and 1
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4)));
+
+	// IBO
 	// bind Index Buffer Object
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+
+	// buffer the Index Buffer Object's data
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_index_count * sizeof(unsigned int), &m_indices, GL_STATIC_DRAW);
 }
 
 void Mesh::unbind()
