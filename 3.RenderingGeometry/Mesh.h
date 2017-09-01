@@ -28,15 +28,15 @@ public:
 	void startup_portion();
 	void draw_portion();
 		
-	// get & set value methods
+	// get & set value functions
 	std::vector<Vertex> getVertices();
 	std::vector<unsigned int> getIndices();
 	void setVertices(std::vector<Vertex>);
-	void setIndices(std::vector<unsigned int>);
-	void set_vertex_and_index_data();
+	void setIndices(std::vector<unsigned int>);	
 
-	// experiment functions
-	void binder(unsigned int, bool);
+	// helper functions
+	void set_vertex_and_index_data();
+	void binder(unsigned int, bool);	
 	void vao_binder(bool);
 	void vbo_binder(bool);
 	void ibo_binder(bool);

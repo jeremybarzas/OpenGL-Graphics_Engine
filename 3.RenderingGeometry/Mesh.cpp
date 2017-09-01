@@ -94,7 +94,7 @@ void Mesh::startup_portion()
 
 void Mesh::draw_portion()
 {
-	// bind Vertex Array Object
+	// bind vertex array object
 	glBindVertexArray(m_vao);
 
 	// set to draw wireframe
