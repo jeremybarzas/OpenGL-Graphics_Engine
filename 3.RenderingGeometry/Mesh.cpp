@@ -11,15 +11,14 @@ Mesh::~Mesh()
 
 void Mesh::create_buffers()
 {
-	/*========== Generate Buffer Objects ==========*/
+	// generate Vertex Array Object
+	glGenVertexArrays(1, &m_vao);
+
 	// generate Vertex Buffer Object
 	glGenBuffers(1, &m_vbo);
 
 	// generate Index Buffer Object
-	glGenBuffers(1, &m_ibo);
-
-	// generate Vertex Array Object
-	glGenVertexArrays(1, &m_vao);
+	glGenBuffers(1, &m_ibo);	
 }
 
 void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& indices)
@@ -117,8 +116,7 @@ void Mesh::draw_portion()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// draws each element
-	unsigned int indexCount = m_index_count;
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_index_count, GL_UNSIGNED_INT, 0);
 
 	// unbind vertex array object
 	glBindVertexArray(0);

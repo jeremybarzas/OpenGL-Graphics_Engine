@@ -14,7 +14,7 @@ RenderGeometryApp::~RenderGeometryApp()
 void RenderGeometryApp::startup()
 {
 	// camera object initialization
-	m_camera = new Camera();
+	m_camera = new Camera();	
 
 	// sets the view and world transforms of the camera
 	eye = glm::vec3(5, 5, 5);
@@ -70,7 +70,10 @@ void RenderGeometryApp::startup()
 	
 	//generateGrid(10, 10);	
 
-	// Mesh object start up functionality
+	// mesh object initialization
+	m_mesh = new Mesh();
+
+	// Mesh object start up functionality	
 	m_mesh->startup_portion();	
 }							
 
@@ -202,14 +205,15 @@ void RenderGeometryApp::generateGrid(unsigned int rows, unsigned int cols)
 	}
 
 	// ========== Generate Buffer Objects ==========
+
+	// generate Vertex Array Object
+	glGenVertexArrays(1, &m_VAO);
+
 	// generate Vertex Buffer Object
 	glGenBuffers(1, &m_VBO);
 
 	// generate Index Buffer Object
-	glGenBuffers(1, &m_IBO);
-
-	// generate Vertex Array Object
-	glGenVertexArrays(1, &m_VAO);
+	glGenBuffers(1, &m_IBO);	
 
 	// ========== Bind Buffer Objects ==========
 	// bind Vertex Array Object
