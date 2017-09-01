@@ -22,19 +22,27 @@ public:
 	void bind();
 	void unbind();	
 
-	// extra functions		
-	void set_vertex_and_index_data();
-	void draw_portion_of_code();
+	/*===== custom functions =====*/
 
 	// order of operations template
 	void execution_order();
+
+	// extra functions		
+	void set_vertex_and_index_data();
+	void draw_portion_of_code();	
 	
-	/* ===== helper functions =====*/
+	/*===== helper functions =====*/
 	// get & set value methods
 	std::vector<Vertex> getVertices();
 	std::vector<unsigned int> getIndices();
 	void setVertices(std::vector<Vertex>);
 	void setIndices(std::vector<unsigned int>);	
+
+	/*===== experiment functions =====*/
+	void binder(unsigned int, bool);
+	void vao_binder(bool);
+	void vbo_binder(bool);
+	void ibo_binder(bool);
 
 private:
 	unsigned int m_vao;

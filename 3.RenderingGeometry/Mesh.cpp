@@ -11,7 +11,7 @@ Mesh::~Mesh()
 
 void Mesh::create_buffers()
 {
-	// ========== Generate Buffer Objects ==========
+	/*========== Generate Buffer Objects ==========*/
 	// generate Vertex Buffer Object
 	glGenBuffers(1, &m_vbo);
 
@@ -30,20 +30,20 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 
 void Mesh::bind()
 {
-	// ========== Bind Buffer Objects ==========
-	// ===== bind Vertex Array Object
+	/*========== Bind Buffer Objects ==========*/
+	// bind Vertex Array Object
 	glBindVertexArray(m_vao);
 
-	// ===== bind Vertex Buffer Object
+	// bind Vertex Buffer Object
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-	// ===== bind Index Buffer Object
+	// bind Index Buffer Object
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }
 
 void Mesh::unbind()
 {
-	// ========== Cleanup Buffer Objects ==========
+	/*========== Cleanup Buffer Objects ==========*/
 	// clear the Vertex Array Object bind
 	glBindVertexArray(0);
 
@@ -70,7 +70,7 @@ void Mesh::execution_order()
 	// buffer objects data
 	//	- m_vbo
 	//	- m_ibo
-	bind();	
+	bind();
 
 	// vertex specification
 	//  - pos
@@ -110,8 +110,11 @@ void Mesh::draw_portion_of_code()
 	// bind Vertex Array Object
 	glBindVertexArray(m_vao);
 
+	// set to draw wireframe
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	// draws each element
-	unsigned int indexCount = m_index_count * 6;
+	unsigned int indexCount = m_index_count;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 }
 
@@ -137,4 +140,81 @@ std::vector<Vertex> Mesh::getVertices()
 std::vector<unsigned int> Mesh::getIndices()
 {
 	return m_indices;
+}
+
+void Mesh::binder(unsigned int bind, bool check)
+{
+	/*========== Bind Buffer Objects ==========*/
+
+	// bind or unbind Vertex Array Object
+	if (bind == m_vao)
+	{
+		if(check == true)
+			glBindVertexArray(m_vao);
+		else
+			glBindVertexArray(0);
+		return;
+	}
+
+	// bind or unbind Vertex Buffer Object
+	if (bind == m_vao)
+	{
+		if (check == true)
+			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		else
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return;
+	}
+
+	// bind  or unbind Index Buffer Object
+	if (bind == m_vao)
+	{
+		if (check == true)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+		else
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return;
+	}
+}
+
+void Mesh::vao_binder(bool check)
+{
+	if (check == true)
+	{
+		// bind Vertex Array Object
+		glBindVertexArray(m_vao);	
+	}
+	else
+	{
+		// clear vertex array object bind
+		glBindVertexArray(0);
+	}	
+}
+
+void Mesh::vbo_binder(bool check)
+{
+	if (check == true)
+	{
+		// bind vertex buffer object
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	}
+	else
+	{
+		// clear vertex buffer object bind
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+}
+
+void Mesh::ibo_binder(bool check)
+{
+	if (check == true)
+	{
+		// bind index buffer object
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+	}
+	else
+	{
+		// clear index buffer object bind
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 }
