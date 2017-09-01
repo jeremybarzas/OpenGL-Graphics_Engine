@@ -114,4 +114,3 @@ void Mesh::draw_portion()
 	this->unbind();
 }
 
-
