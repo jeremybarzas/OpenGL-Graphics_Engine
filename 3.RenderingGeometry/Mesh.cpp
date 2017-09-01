@@ -23,19 +23,19 @@ void Mesh::create_buffers()
 
 	// ========== Bind Objects ==========
 	// bind Vertex Array Object
-	glBindVertexArray(m_vao);
+	glBindVertexArray(this->m_vao);
 
 	// bind Vertex Buffer Object
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, this->m_vbo);
 		
 	// buffer the Vertex Buffer Object's data
-	glBufferData(GL_ARRAY_BUFFER, m_vertex_count * sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);	
+	glBufferData(GL_ARRAY_BUFFER, this->m_vertex_count * sizeof(Vertex), this->m_vertices.data(), GL_STATIC_DRAW);
 
 	// bind Index Buffer Object
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_ibo);
 		
 	// buffer the Index Buffer Object's data
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_index_count * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->m_index_count * sizeof(unsigned int), this->m_indices.data(), GL_STATIC_DRAW);
 	
 	// enable and assign vertex attribute array index 0
 	glEnableVertexAttribArray(0);	
@@ -59,14 +59,14 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 {
 	// populate vertex array with passed values
 	for (auto v : verts)
-		m_vertices.push_back(v);
+		this->m_vertices.push_back(v);
 
 	// assign the vertex count
 	this->m_vertex_count = m_vertices.size();
 
 	// populate vertex array with passed values
 	for (auto i : indices)
-		m_indices.push_back(i);
+		this->m_indices.push_back(i);
 
 	// assign the index count
 	this->m_index_count = m_indices.size();
