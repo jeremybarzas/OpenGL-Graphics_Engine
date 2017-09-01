@@ -68,12 +68,10 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 	
-	//generateGrid(10, 10);	
+	// Mesh object initialization
+	m_mesh = new Mesh();	
 
-	// mesh object initialization
-	m_mesh = new Mesh();
-
-	// Mesh object start up functionality	
+	// Mesh object startup function calls	
 	m_mesh->startup_portion();	
 }							
 
@@ -144,19 +142,8 @@ void RenderGeometryApp::draw()
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
-	m_mesh->draw_portion();
-
-	//// bind the Vertex Array Object
-	//glBindVertexArray(m_VAO);	
-
-	//// makes flat plane into a wireframe grid
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	//unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
-	//glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
-
-	//// clears the Vertex Array Object bind
-	//glBindVertexArray(0);
+	// Mesh object draw function calls	
+	m_mesh->draw_portion();	
 
 	glUseProgram(0);
 }

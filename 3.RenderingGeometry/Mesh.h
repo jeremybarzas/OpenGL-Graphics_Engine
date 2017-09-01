@@ -20,26 +20,11 @@ public:
 	void create_buffers();
 	void initialize(std::vector<Vertex> &verts, std::vector<unsigned int> &indices);
 	void bind();
-	void unbind();	
+	void unbind();		
 
-	/*===== custom functions =====*/
-
-	// order of operations templates
+	// custom functions
 	void startup_portion();
 	void draw_portion();
-		
-	// get & set value functions
-	std::vector<Vertex> getVertices();
-	std::vector<unsigned int> getIndices();
-	void setVertices(std::vector<Vertex>);
-	void setIndices(std::vector<unsigned int>);	
-
-	// helper functions
-	void set_vertex_and_index_data();
-	void binder(unsigned int, bool);	
-	void vao_binder(bool);
-	void vbo_binder(bool);
-	void ibo_binder(bool); 
 
 private:
 	unsigned int m_vao;
