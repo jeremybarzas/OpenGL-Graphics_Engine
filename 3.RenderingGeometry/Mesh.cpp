@@ -103,6 +103,9 @@ void Mesh::draw_portion()
 	// draws each element
 	unsigned int indexCount = m_index_count;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+
+	// unbind vertex array object
+	glBindVertexArray(0);
 }
 
 void Mesh::set_vertex_and_index_data()
