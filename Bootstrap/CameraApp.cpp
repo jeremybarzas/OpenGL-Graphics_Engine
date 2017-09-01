@@ -13,6 +13,8 @@ CameraApp::~CameraApp()
 
 void CameraApp::startup()
 {
+	Gizmos::create();
+
 	// camera object initialization
 	m_camera = new Camera();
 
