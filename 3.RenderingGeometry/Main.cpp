@@ -1,5 +1,4 @@
 #include "RenderGeometryApp.h"
-#include <CameraApp.h>
 
 int main()
 {
