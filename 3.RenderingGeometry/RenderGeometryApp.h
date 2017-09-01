@@ -21,6 +21,8 @@ public:
 	glm::vec3 eye;
 	glm::vec3 center;
 	glm::vec3 up;	
+	
+	unsigned int m_programID;
 
 	Mesh* m_mesh;
 };
