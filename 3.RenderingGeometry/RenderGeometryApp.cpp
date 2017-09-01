@@ -68,7 +68,8 @@ void RenderGeometryApp::startup()
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
 
-	generateGrid(10, 10);	
+	//generateGrid(10, 10);	
+	m_mesh->startup_portion();
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -138,17 +139,19 @@ void RenderGeometryApp::draw()
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
-	// bind the Vertex Array Object
-	glBindVertexArray(m_VAO);	
+	m_mesh->draw_portion();
 
-	// makes flat plane into a wireframe grid
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//// bind the Vertex Array Object
+	//glBindVertexArray(m_VAO);	
 
-	unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
+	//// makes flat plane into a wireframe grid
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	// clears the Vertex Array Object bind
-	glBindVertexArray(0);
+	//unsigned int indexCount = (m_rows - 1) * (m_cols - 1) * 6;
+	//glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);	
+
+	//// clears the Vertex Array Object bind
+	//glBindVertexArray(0);
 
 	glUseProgram(0);
 }

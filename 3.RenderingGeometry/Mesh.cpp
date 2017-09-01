@@ -54,7 +54,7 @@ void Mesh::unbind()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Mesh::execution_order()
+void Mesh::startup_portion()
 {
 	/*========== Order ==========*/
 
@@ -92,6 +92,19 @@ void Mesh::execution_order()
 	//	- m_indices
 }
 
+void Mesh::draw_portion()
+{
+	// bind Vertex Array Object
+	glBindVertexArray(m_vao);
+
+	// set to draw wireframe
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// draws each element
+	unsigned int indexCount = m_index_count;
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+}
+
 void Mesh::set_vertex_and_index_data()
 {
 	// populate vert and index arrays
@@ -103,19 +116,6 @@ void Mesh::set_vertex_and_index_data()
 
 	std::vector<Vertex> m_vertices{ a,b,c,d,e };
 	std::vector<unsigned int> m_indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
-}
-
-void Mesh::draw_portion_of_code()
-{
-	// bind Vertex Array Object
-	glBindVertexArray(m_vao);
-
-	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// draws each element
-	unsigned int indexCount = m_index_count;
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 }
 
 void Mesh::setVertices(std::vector<Vertex> vertices)
