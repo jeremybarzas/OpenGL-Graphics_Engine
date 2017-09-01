@@ -14,17 +14,13 @@ public:
 	Mesh();
 	~Mesh();
 
-	unsigned int m_index_count;
-	unsigned int m_vertex_count;
-
 	void create_buffers();
 	void initialize(std::vector<Vertex> &verts, std::vector<unsigned int> &indices);
 	void bind();
-	void unbind();		
+	void unbind();
 
-	// custom functions
-	void meshStartup();
-	void meshDraw();
+	unsigned int m_index_count;
+	unsigned int m_vertex_count;
 
 private:
 	unsigned int m_vao;

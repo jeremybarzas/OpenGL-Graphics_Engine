@@ -84,37 +84,3 @@ void Mesh::unbind()
 	glBindVertexArray(0);	
 }
 
-void Mesh::meshStartup()
-{
-	// create vertex and index arrays to pas to initialize
-	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
-	Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
-	Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
-	Vertex d = { glm::vec4(-5, -5, 0, 1)		, glm::vec4(1, 0, 0, 1) }; //top right
-	Vertex e = { glm::vec4(-5,  5, 0, 1)		, glm::vec4(0, 0, 1, 1) }; //top right	
-
-	std::vector<Vertex> vertices{ a,b,c,d,e };
-	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
-		
-	// pass created arrays to assign mesh member variables 
-	this->initialize(vertices, indices);
-
-	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
-	this->create_buffers();	
-}
-
-void Mesh::meshDraw()
-{
-	// bind vertex array object
-	this->bind();
-
-	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// draws each element
-	glDrawElements(GL_TRIANGLES, this->m_index_count, GL_UNSIGNED_INT, 0);
-
-	// unbind vertex array object
-	this->unbind();
-}
-

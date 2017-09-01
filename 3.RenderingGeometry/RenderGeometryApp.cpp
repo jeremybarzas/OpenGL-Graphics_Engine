@@ -71,8 +71,22 @@ void RenderGeometryApp::startup()
 	// Mesh object pointer initialization
 	m_mesh = new Mesh();	
 
-	// Mesh object startup function calls	
-	m_mesh->meshStartup();
+	// Mesh object startup function calls
+	// create vertex and index arrays to pas to initialize
+	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
+	Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
+	Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
+	Vertex d = { glm::vec4(-5, -5, 0, 1)		, glm::vec4(1, 0, 0, 1) }; //top right
+	Vertex e = { glm::vec4(-5,  5, 0, 1)		, glm::vec4(0, 0, 1, 1) }; //top right	
+
+	std::vector<Vertex> vertices{ a,b,c,d,e };
+	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
+
+	// pass created arrays to assign mesh member variables 
+	m_mesh->initialize(vertices, indices);
+
+	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
+	m_mesh->create_buffers();	
 }							
 
 void RenderGeometryApp::update(float deltaTime)
@@ -145,8 +159,17 @@ void RenderGeometryApp::draw()
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
 
-	// Mesh object draw function calls	
-	m_mesh->meshDraw();
+	// bind vertex array object
+	m_mesh->bind();
+
+	// set to draw wireframe
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// draws each element
+	glDrawElements(GL_TRIANGLES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+
+	// unbind vertex array object
+	m_mesh->unbind();
 
 	// clear shader program
 	glUseProgram(0);
