@@ -66,10 +66,7 @@ void RenderGeometryApp::startup()
 		delete[] infoLog;
 	}
 	glDeleteShader(fragmentShader);
-	glDeleteShader(vertexShader);
-	
-	// Mesh object pointer initialization
-	m_mesh = new Mesh();	
+	glDeleteShader(vertexShader);	
 
 	// Mesh object startup function calls
 	// create vertex and index arrays to pas to initialize
@@ -81,6 +78,9 @@ void RenderGeometryApp::startup()
 
 	std::vector<Vertex> vertices{ a,b,c,d,e };
 	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
+
+	// Mesh object pointer initialization
+	m_mesh = new Mesh();
 
 	// pass created arrays to assign mesh member variables 
 	m_mesh->initialize(vertices, indices);
