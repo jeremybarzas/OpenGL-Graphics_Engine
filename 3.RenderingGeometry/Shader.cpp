@@ -26,8 +26,8 @@ void Shader::unbind()
 
 void Shader::load(const char * filename, unsigned int type)
 {
-	std::ifstream in(filename);
-	std::string line, contents;		
+	std::string line, contents;
+	std::ifstream in(filename);		
 
 	// while file is not empty
 	while (std::getline(in, line))
