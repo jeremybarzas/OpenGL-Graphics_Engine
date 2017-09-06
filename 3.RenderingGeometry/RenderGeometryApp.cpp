@@ -9,6 +9,9 @@ RenderGeometryApp::RenderGeometryApp()
 
 RenderGeometryApp::~RenderGeometryApp()
 {
+	delete m_camera;
+	delete m_mesh;
+	delete m_shader;
 }
 
 void RenderGeometryApp::startup()
@@ -26,47 +29,15 @@ void RenderGeometryApp::startup()
 	// sets the perspective view of the camera
 	m_camera->setPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);	
 
-	// ========== Create Shaders ==========
-	const char* vsSource = "#version 410\n \
-							layout(location=0) in vec4 position; \
-							layout(location=1) in vec4 colour; \
-							out vec4 vColour; \
-							uniform mat4 projectionViewWorldMatrix; \
-							void main() { vColour = colour; gl_Position = projectionViewWorldMatrix * position; }";
+	// Shader object pointer initialization
+	m_shader = new Shader();
 
-	const char * fsSource = "#version 410\n \
-							in vec4 vColour; \
-							out vec4 fragColor; \
-							void main() { fragColor = vColour; }";
+	// create and complie shaders passed by filename
+	m_shader->load("$(SolutionDir)bin\Shaders\DefaultVertexShader.vert", GL_VERTEX_SHADER);
+	m_shader->load("$(SolutionDir)bin\Shaders\DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);	
 
-	// ========== Complie Shaders ==========
-	int success = GL_FALSE;
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(vertexShader, 1, (const char **)&vsSource, 0);
-	glCompileShader(vertexShader);
-	glShaderSource(fragmentShader, 1, (const char **)&fsSource, 0);
-	glCompileShader(fragmentShader);
-
-	m_programID = glCreateProgram();
-	glAttachShader(m_programID, vertexShader);
-	glAttachShader(m_programID, fragmentShader);
-	glLinkProgram(m_programID);
-
-	glGetProgramiv(m_programID, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		int infoLogLength = 0;
-		glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-		char* infoLog = new char[infoLogLength];
-		glGetProgramInfoLog(m_programID, infoLogLength, 0, infoLog);
-		printf("Error: Failed to link shader program!\n");
-		printf("%s\n", infoLog);
-		delete[] infoLog;
-	}
-	glDeleteShader(fragmentShader);
-	glDeleteShader(vertexShader);	
+	// attach shaders and link program
+	m_shader->attach();
 
 	// Mesh object startup function calls
 	// create vertex and index arrays to pas to initialize
@@ -152,12 +123,11 @@ void RenderGeometryApp::update(float deltaTime)
 
 void RenderGeometryApp::draw()
 {
-	// use given shader program
-	glUseProgram(m_programID);
+	// use shader program
+	m_shader->bind();
 
-	// create and assign uniform
-	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "projectionViewWorldMatrix");
-	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_camera->m_projectionView));
+	// create and assign uniform	
+	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorldMatrix"), 1, false, glm::value_ptr(m_camera->m_projectionView));
 
 	// bind vertex array object
 	m_mesh->bind();
@@ -171,8 +141,8 @@ void RenderGeometryApp::draw()
 	// unbind vertex array object
 	m_mesh->unbind();
 
-	// clear shader program
-	glUseProgram(0);
+	//clear shader program
+	m_shader->unbind();
 }
 
 void RenderGeometryApp::shutdown()

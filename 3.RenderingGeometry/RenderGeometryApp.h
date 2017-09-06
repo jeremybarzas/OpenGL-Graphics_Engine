@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Gizmos.h"
 #include "Mesh.h"
+#include "Shader.h"
 
 
 class RenderGeometryApp : public Application
@@ -21,9 +22,8 @@ public:
 	glm::vec3 eye;
 	glm::vec3 center;
 	glm::vec3 up;	
-	
-	unsigned int m_programID;
 
 	Mesh* m_mesh;
+	Shader* m_shader;
 };
 
