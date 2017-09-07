@@ -32,6 +32,6 @@ public:
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	
 	// to be used later
-	std::vector<unsigned int> assignIndices(std::vector<glm::vec4>, unsigned int);
+	std::vector<unsigned int> genIndices(std::vector<glm::vec4>, unsigned int);
 };
 

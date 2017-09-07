@@ -213,18 +213,17 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
 		}				
 	}
-	 // return the array of points that make up the entire sphere
+	// return the array of points that make up the entire sphere
 	return wholeSphere;
 }
 
-std::vector<unsigned int> RenderGeometryApp::assignIndices(std::vector<glm::vec4> vertices, unsigned int numOfM)
+std::vector<unsigned int> RenderGeometryApp::genIndices(std::vector<glm::vec4> vertices, unsigned int numOfM)
 {
 	// create array of unsigned ints the size of the amount of vertices
 	int indicesCount = vertices.size() + (numOfM - 1);
 	std::vector<unsigned int> indices = std::vector<unsigned int>(indicesCount);
 
-	// define how to setup indices to be drawn
-		
+	// define how to setup indices to be drawn		
 
 
 	// return array of indices in order to be drawn
