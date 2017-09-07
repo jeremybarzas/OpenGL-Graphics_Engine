@@ -167,7 +167,10 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 	// loop per point to generate each slice
 	for (int i = 0; i < points; i++)
 	{
+		// calculate slice
 		float slice = PI / (points - 1);
+
+		// calculate theta
 		float theta = i * slice;
 
 		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
@@ -186,19 +189,22 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
 {		
 	// will be used to store enitre sphere to be returned
-	std::vector<glm::vec4> wholeSphere = std::vector<glm::vec4>(numOfMeridians);	
-
-	// calculate phi (2PI / number of meridians)
-	float phi = (PI * 2.0f) / numOfMeridians;
+	std::vector<glm::vec4> wholeSphere;	
 	
 	// loop per meridian
-	for (int i = 0; i < numOfMeridians; i++)
+	for (int i = 0; i < numOfMeridians + 1; i++)
 	{
+		// calculate slice
+		float slice = (PI * 2.0f) / numOfMeridians;
+
+		// calculate phi
+		float phi = i * slice;
+
 		// loop per point
 		for (int j = 0; j < points.size(); j++)
 		{
 			// calculate each new value of the new vec4
-			float newX = points[j].x * cos(phi) - points[j].z * sin(phi);
+			float newX = points[j].x * cos(phi) + points[j].z * sin(phi);
 			float newY = points[j].y;
 			float newZ = points[j].z * cos(phi) - points[j].x * sin(phi);;
 			float newW = points[j].w = 1.0f;
