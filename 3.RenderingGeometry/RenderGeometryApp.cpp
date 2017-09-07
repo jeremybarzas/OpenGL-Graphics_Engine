@@ -179,7 +179,7 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 		halfCircle[i].z = 0.0f;
 		halfCircle[i].w = 1.0f;
 	}
-	//return the array of the poitns that make up the half circle
+	//return the array of the points that make up the half circle
 	return halfCircle;
 }
 
