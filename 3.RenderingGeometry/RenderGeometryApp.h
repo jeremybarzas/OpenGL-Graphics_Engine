@@ -30,8 +30,6 @@ public:
 	// to be placed elsewhere later
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
-	
-	// to be used later
 	std::vector<unsigned int> genIndices(std::vector<glm::vec4>, unsigned int);
 };
 
