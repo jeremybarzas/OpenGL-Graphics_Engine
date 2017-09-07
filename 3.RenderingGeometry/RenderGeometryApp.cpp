@@ -217,7 +217,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 	return wholeSphere;
 }
 
-std::vector<unsigned int> RenderGeometryApp::assignedIndices(std::vector<glm::vec4> vertices, unsigned int numOfM)
+std::vector<unsigned int> RenderGeometryApp::assignIndices(std::vector<glm::vec4> vertices, unsigned int numOfM)
 {
 	// create array of unsigned ints the size of the amount of vertices
 	int indicesCount = vertices.size() + (numOfM - 1);
