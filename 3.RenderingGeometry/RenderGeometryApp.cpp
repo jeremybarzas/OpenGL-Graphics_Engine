@@ -41,7 +41,7 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
-	/*========== Default Geometry ==========*/
+	/*========== Generate Default Geometry ==========*/
 	// Mesh object startup function calls
 	// create vertex and index arrays to pas to initialize
 	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
