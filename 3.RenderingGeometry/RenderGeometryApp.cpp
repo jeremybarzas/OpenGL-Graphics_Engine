@@ -171,7 +171,7 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 		float theta = i * slice;
 
 		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
-		// but since we are generating trianglestrips and need to be rotating this half circle differently.
+		// but since we are generating triangle strips and need to be rotating this half circle differently,
 		// you would reverse it to orient the half circle vertically.
 		// to be correctly oriented with how we want to draw the triangle strips.		
 		halfCircle[i].x = sin(theta) * radius;
