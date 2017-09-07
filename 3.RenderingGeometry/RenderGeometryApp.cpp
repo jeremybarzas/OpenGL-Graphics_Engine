@@ -192,7 +192,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 	glm::vec4 tmpVec4;
 
 	// calculate phi (2PI / number of meridians)
-	float phi = (PI * 2.0f) / (numOfMeridians - 1);
+	float phi = (PI * 2.0f) / numOfMeridians;
 	
 	// loop per meridian
 	for (int i = 0; i < numOfMeridians; i++)
@@ -206,11 +206,9 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 			float newZ = points[j].z * cos(phi) - points[j].x * sin(phi);;
 			float newW = points[j].w = 1.0f;
 
-			// make nwe vec4 out of new float values
-			tmpVec4 = glm::vec4(newX, newY, newZ, newW);
-		}		
-		// push new vec4 onto list of points that make up entire sphere
-		wholeSphere.push_back(tmpVec4);
+			// push new vec4 onto list of points that make up entire sphere
+			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
+		}				
 	}
 	 // return the array of points that make up the entire sphere
 	return wholeSphere;
