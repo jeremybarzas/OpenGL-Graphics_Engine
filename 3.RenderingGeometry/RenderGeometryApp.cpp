@@ -1,5 +1,6 @@
 #include "RenderGeometryApp.h"
 
+#define PI 3.14f
 
 
 RenderGeometryApp::RenderGeometryApp()
@@ -40,6 +41,7 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
+	/*========== Default Geometry ==========*/
 	// Mesh object startup function calls
 	// create vertex and index arrays to pas to initialize
 	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
@@ -50,6 +52,13 @@ void RenderGeometryApp::startup()
 
 	std::vector<Vertex> vertices{ a,b,c,d,e };
 	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
+
+	/*========== Generate Sphere ==========*/
+	// generate verts for half of a circle
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(1.0f, 3);
+
+	// rotate half circle around to generate entire sphere verts
+	std::vector<glm::vec4> wholeSphereVerts = rotatePoints(halfCircleVerts, 4);
 
 	// Mesh object pointer initialization
 	m_mesh = new Mesh();
@@ -153,21 +162,21 @@ void RenderGeometryApp::shutdown()
 std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsigned int points)
 {
 	// will be used the store the points of a half circle
-	std::vector<glm::vec4> halfCircle;
+	std::vector<glm::vec4> halfCircle = std::vector<glm::vec4>(points);
 
 	// loop per point to generate each slice
 	for (int i = 0; i < points; i++)
 	{
-		float slice = 3.14 / (points - 1);
+		float slice = PI / (points - 1);
 		float theta = i * slice;
 
 		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
 		// but since we are generating trianglestrips and need to be rotating this half circle differently.
-		// you would reverse it to orient the half circle vertically 
-		// to be correctly oriented with how we want to draw the triangle strips.
+		// you would reverse it to orient the half circle vertically.
+		// to be correctly oriented with how we want to draw the triangle strips.		
 		halfCircle[i].x = sin(theta) * radius;
 		halfCircle[i].y = cos(theta) * radius;
-		halfCircle[i].z = 0;
+		halfCircle[i].z = 0.0f;
 		halfCircle[i].w = 1.0f;
 	}
 	//return the array of the poitns that make up the half circle
@@ -175,26 +184,26 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 }
 
 std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
-{
+{		
 	// will be used to store enitre sphere to be returned
-	std::vector<glm::vec4> wholeSphere;
+	std::vector<glm::vec4> wholeSphere = std::vector<glm::vec4>(numOfMeridians);
 	
 	// will be used to make creating new vec4 easier for me
 	glm::vec4 tmpVec4;
 
 	// calculate phi (2PI / number of meridians)
-	float phi = (3.14 * 2) / (numOfMeridians - 1);
-
+	float phi = (PI * 2.0f) / (numOfMeridians - 1);
+	
 	// loop per meridian
 	for (int i = 0; i < numOfMeridians; i++)
 	{
 		// loop per point
-		for (int j = 0; i < points.size; j++)
+		for (int j = 0; j < points.size(); j++)
 		{
 			// calculate each new value of the new vec4
-			float newX = points[j].x;
+			float newX = points[j].x * cos(phi) - points[j].z * sin(phi);
 			float newY = points[j].y;
-			float newZ = points[j].z;
+			float newZ = points[j].z * cos(phi) - points[j].x * sin(phi);;
 			float newW = points[j].w = 1.0f;
 
 			// make nwe vec4 out of new float values
