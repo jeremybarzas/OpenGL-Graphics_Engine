@@ -186,10 +186,7 @@ std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsig
 std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
 {		
 	// will be used to store enitre sphere to be returned
-	std::vector<glm::vec4> wholeSphere = std::vector<glm::vec4>(numOfMeridians);
-	
-	// will be used to make creating new vec4 easier for me
-	glm::vec4 tmpVec4;
+	std::vector<glm::vec4> wholeSphere = std::vector<glm::vec4>(numOfMeridians);	
 
 	// calculate phi (2PI / number of meridians)
 	float phi = (PI * 2.0f) / numOfMeridians;
