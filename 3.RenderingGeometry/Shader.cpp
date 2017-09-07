@@ -2,6 +2,7 @@
 #include <gl_core_4_4.h>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 Shader::Shader()
 {
@@ -27,17 +28,21 @@ void Shader::unbind()
 void Shader::load(const char * filename, unsigned int type)
 {
 	std::string line, contents;
-	std::ifstream in(filename);		
+	std::ifstream in(filename);
 
 	// while file is not empty
 	while (std::getline(in, line))
 	{	
 		//add that line to the total contents
-		contents += line + "\n";	
-	}
+		contents += line;	
+	}	
 
 	// convert to a c-string
 	const char * data = contents.c_str();	
+
+	std::cout << "below is the contents of the file that was read into data.\n";
+	std::cout << data;
+	std::cout << "\nend of the contents.\n";
 
 	switch (type)
 	{

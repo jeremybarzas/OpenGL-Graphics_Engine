@@ -4,6 +4,7 @@
 #include "Gizmos.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include <glm\glm.hpp>
 
 
 class RenderGeometryApp : public Application
@@ -25,5 +26,8 @@ public:
 
 	Mesh* m_mesh;
 	Shader* m_shader;
+
+	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
+	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 };
 

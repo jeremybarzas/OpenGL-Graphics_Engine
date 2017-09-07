@@ -33,8 +33,9 @@ void RenderGeometryApp::startup()
 	m_shader = new Shader();
 
 	// create and complie shaders passed by filename
-	m_shader->load("$(SolutionDir)bin\Shaders\DefaultVertexShader.vert", GL_VERTEX_SHADER);
-	m_shader->load("$(SolutionDir)bin\Shaders\DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);	
+	m_shader->defaultLoad();
+	//m_shader->load("$(SolutionDir)/bin/Shaders/DefaultVertexShader.vert", GL_VERTEX_SHADER);
+	//m_shader->load("$(SolutionDir)\bin\Shaders\DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);	
 
 	// attach shaders and link program
 	m_shader->attach();
@@ -147,5 +148,62 @@ void RenderGeometryApp::draw()
 
 void RenderGeometryApp::shutdown()
 {	
+}
+
+std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsigned int points)
+{
+	// will be used the store the points of a half circle
+	std::vector<glm::vec4> halfCircle;
+
+	// loop per point to generate each slice
+	for (int i = 0; i < points; i++)
+	{
+		float slice = 3.14 / (points - 1);
+		float theta = i * slice;
+
+		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
+		// but since we are generating trianglestrips and need to be rotating this half circle differently.
+		// you would reverse it to orient the half circle vertically 
+		// to be correctly oriented with how we want to draw the triangle strips.
+		halfCircle[i].x = sin(theta) * radius;
+		halfCircle[i].y = cos(theta) * radius;
+		halfCircle[i].z = 0;
+		halfCircle[i].w = 1.0f;
+	}
+	//return the array of the poitns that make up the half circle
+	return halfCircle;
+}
+
+std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
+{
+	// will be used to store enitre sphere to be returned
+	std::vector<glm::vec4> wholeSphere;
+	
+	// will be used to make creating new vec4 easier for me
+	glm::vec4 tmpVec4;
+
+	// calculate phi (2PI / number of meridians)
+	float phi = (3.14 * 2) / (numOfMeridians - 1);
+
+	// loop per meridian
+	for (int i = 0; i < numOfMeridians; i++)
+	{
+		// loop per point
+		for (int j = 0; i < points.size; j++)
+		{
+			// calculate each new value of the new vec4
+			float newX = points[j].x;
+			float newY = points[j].y;
+			float newZ = points[j].z;
+			float newW = points[j].w = 1.0f;
+
+			// make nwe vec4 out of new float values
+			tmpVec4 = glm::vec4(newX, newY, newZ, newW);
+		}		
+		// push new vec4 onto list of points that make up entire sphere
+		wholeSphere.push_back(tmpVec4);
+	}
+	 // return the array of points that make up the entire sphere
+	return wholeSphere;
 }
 
