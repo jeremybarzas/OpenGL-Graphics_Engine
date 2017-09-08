@@ -27,7 +27,6 @@ public:
 	Mesh* m_mesh;
 	Shader* m_shader;
 
-	// to be placed elsewhere later
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	std::vector<unsigned int> genIndices(unsigned int, unsigned int);
