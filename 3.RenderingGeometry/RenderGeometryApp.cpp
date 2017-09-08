@@ -48,7 +48,7 @@ void RenderGeometryApp::startup()
 
 	/*========== Generate Sphere ==========*/
 	// parameters = radius, points, meridians
-	genSphere(1.0f, 3, 4);
+	genSphere(5.0f, 3, 4);
 	
 	///*========== Generate Default Geometry ==========*/
 	////Mesh object startup function calls
@@ -79,7 +79,6 @@ void RenderGeometryApp::update(float deltaTime)
 
 	if (glfwGetKey(m_window, 'W') == GLFW_PRESS)
 	{
-		//sun = glm::translate(glm::vec3(1, 0, 0)) * sun;
 		// calculate the forward vector of the cameras current rotation		
 		// apply movement along forward vector scaled by deltatime / multiplier
 		m_camera->setPosition(-forward);
