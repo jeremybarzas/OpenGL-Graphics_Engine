@@ -35,7 +35,7 @@ void RenderGeometryApp::startup()
 	m_camera->setPosition(glm::vec3(10, 10, 10));
 
 	// sets the perspective view of the camera
-	m_camera->setPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);		
+	m_camera->setPerspective(PI * 0.25f, 16 / 9.f, 0.1f, 1000.f);		
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename
@@ -46,25 +46,10 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
-	/*========== Generate Sphere ==========*/
+	/*========== Mesh Startup ==========*/
 	// parameters = radius, points, meridians
-	genSphere(5.0f, 3, 4);
-	
-	///*========== Generate Default Geometry ==========*/
-	////Mesh object startup function calls
-	////create vertex and index arrays to pas to initialize
-	//Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
-	//Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
-	//Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
-	//Vertex d = { glm::vec4(-5, -5, 0, 1)		, glm::vec4(1, 0, 0, 1) }; //top right
-	//Vertex e = { glm::vec4(-5,  5, 0, 1)		, glm::vec4(0, 0, 1, 1) }; //top right	
-
-	//std::vector<Vertex> vertices{ a,b,c,d,e };
-	//std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
-
-	///*========== Mesh Startup ==========*/
-	////pass created arrays to assign mesh member variables 
-	//m_mesh->initialize(vertices, indices);
+	// generates verts and indices of sphere and pass them into m_mesh->initialize()
+	genSphere(5.0f, 30, 40);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
 	m_mesh->create_buffers();	
