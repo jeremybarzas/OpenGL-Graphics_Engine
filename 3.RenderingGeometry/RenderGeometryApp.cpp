@@ -257,6 +257,7 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 	// generate indices
 	std::vector<unsigned int> indices = genIndices(numOfMeridians, numOfPoints);
 
+	// break point 
 	return;
 }
 

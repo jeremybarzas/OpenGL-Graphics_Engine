@@ -31,8 +31,8 @@ public:
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	std::vector<unsigned int> genIndices(unsigned int, unsigned int);
-
-	// encapsulating functions
+		
+	// takes in Radius, Point count of half circle and Merdian count for sphere
 	void genSphere(float, unsigned int, unsigned int);
 };
 
