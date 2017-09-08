@@ -47,15 +47,15 @@ void Shader::load(const char * filename, unsigned int type)
 	switch (type)
 	{
 	case GL_VERTEX_SHADER:
-		vsSource = data;
+		m_vsSource = data;
 		m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(m_vertexShader, 1, (const char **)&vsSource, 0);
+		glShaderSource(m_vertexShader, 1, (const char **)&m_vsSource, 0);
 		glCompileShader(m_vertexShader);
 
 	case GL_FRAGMENT_SHADER:
-		fsSource = data;
+		m_fsSource = data;
 		m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(m_fragmentShader, 1, (const char **)&fsSource, 0);
+		glShaderSource(m_fragmentShader, 1, (const char **)&m_fsSource, 0);
 		glCompileShader(m_fragmentShader);	
 	}
 }
@@ -86,14 +86,14 @@ void Shader::attach()
 void Shader::defaultLoad()
 {
 	// ========== Create Shaders ==========
-	vsSource = "#version 410\n \
+	m_vsSource = "#version 410\n \
 							layout(location=0) in vec4 position; \
 							layout(location=1) in vec4 colour; \
 							out vec4 vColour; \
 							uniform mat4 projectionViewWorldMatrix; \
 							void main() { vColour = colour; gl_Position = projectionViewWorldMatrix * position; }";
 
-	fsSource = "#version 410\n \
+	m_fsSource = "#version 410\n \
 							in vec4 vColour; \
 							out vec4 fragColor; \
 							void main() { fragColor = vColour; }";
@@ -102,9 +102,9 @@ void Shader::defaultLoad()
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(m_vertexShader, 1, (const char **)&vsSource, 0);
+	glShaderSource(m_vertexShader, 1, (const char **)&m_vsSource, 0);
 	glCompileShader(m_vertexShader);
-	glShaderSource(m_fragmentShader, 1, (const char **)&fsSource, 0);
+	glShaderSource(m_fragmentShader, 1, (const char **)&m_fsSource, 0);
 	glCompileShader(m_fragmentShader);
 }
 
