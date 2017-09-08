@@ -46,25 +46,25 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
+	/*========== Generate Sphere ==========*/
+	// parameters = radius, points, meridians
+	genSphere(1.0f, 3, 4);
+
 	/*========== Generate Default Geometry ==========*/
 	// Mesh object startup function calls
 	// create vertex and index arrays to pas to initialize
-	Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
-	Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
-	Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
-	Vertex d = { glm::vec4(-5, -5, 0, 1)		, glm::vec4(1, 0, 0, 1) }; //top right
-	Vertex e = { glm::vec4(-5,  5, 0, 1)		, glm::vec4(0, 0, 1, 1) }; //top right	
+	//Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
+	//Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
+	//Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
+	//Vertex d = { glm::vec4(-5, -5, 0, 1)		, glm::vec4(1, 0, 0, 1) }; //top right
+	//Vertex e = { glm::vec4(-5,  5, 0, 1)		, glm::vec4(0, 0, 1, 1) }; //top right	
 
-	std::vector<Vertex> vertices{ a,b,c,d,e };
-	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
-
-	/*========== Generate Sphere ==========*/
-	// generate Sphere
-	genSphere(1.0f, 3, 4);
+	//std::vector<Vertex> vertices{ a,b,c,d,e };
+	//std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
 
 	/*========== Mesh Startup ==========*/
 	// pass created arrays to assign mesh member variables 
-	m_mesh->initialize(vertices, indices);
+	//m_mesh->initialize(vertices, indices);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
 	m_mesh->create_buffers();	
@@ -248,6 +248,7 @@ std::vector<unsigned int> RenderGeometryApp::genIndices(unsigned int nm, unsigne
 
 void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsigned int numOfMeridians)
 {
+	/*========== Generate Sphere Information ==========*/
 	// generate verts for half of a circle
 	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, numOfPoints);
 
@@ -255,7 +256,19 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 	std::vector<glm::vec4> wholeSphereVerts = rotatePoints(halfCircleVerts, numOfMeridians);
 
 	// generate indices
-	std::vector<unsigned int> indices = genIndices(numOfMeridians, numOfPoints);
+	std::vector<unsigned int> sphereIndices = genIndices(numOfMeridians, numOfPoints);
+	
+	/*========== Initialize Mesh with Sphere Information ==========*/
+	// convert wholeSphereVerts into a std::vector<Vertex>
+	std::vector<Vertex> sphereVerts;
+
+
+
+
+
+
+	// pass verts and indices into mesh->initalize() function
+	m_mesh->initialize(sphereVerts, sphereIndices);
 
 	// break point 
 	return;
