@@ -262,10 +262,11 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 	// convert wholeSphereVerts into a std::vector<Vertex>
 	std::vector<Vertex> sphereVerts;
 
-
-
-
-
+	for (int i = 0; i < wholeSphereVerts.size(); i++)
+	{
+		Vertex newVert = Vertex{ wholeSphereVerts[i], glm::vec4(.75, 0, .75, 1) };
+		sphereVerts.push_back(newVert);	
+	}
 
 	// pass verts and indices into mesh->initalize() function
 	m_mesh->initialize(sphereVerts, sphereIndices);
