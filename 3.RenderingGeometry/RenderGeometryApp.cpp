@@ -20,6 +20,13 @@ void RenderGeometryApp::startup()
 	// camera object initialization
 	m_camera = new Camera();	
 
+	// Mesh object pointer initialization
+	m_mesh = new Mesh();
+
+	// Shader object pointer initialization
+	m_shader = new Shader();
+
+	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
 	eye = glm::vec3(5, 5, 5);
 	center = glm::vec3(0);
@@ -28,11 +35,9 @@ void RenderGeometryApp::startup()
 	m_camera->setPosition(glm::vec3(10, 10, 10));
 
 	// sets the perspective view of the camera
-	m_camera->setPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);	
+	m_camera->setPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);		
 
-	// Shader object pointer initialization
-	m_shader = new Shader();
-
+	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename
 	m_shader->defaultLoad();
 	//m_shader->load("$(SolutionDir)/bin/Shaders/DefaultVertexShader.vert", GL_VERTEX_SHADER);
@@ -54,15 +59,10 @@ void RenderGeometryApp::startup()
 	std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
 
 	/*========== Generate Sphere ==========*/
-	// generate verts for half of a circle
-	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(1.0f, 3);
+	// generate Sphere
+	genSphere(1.0f, 3, 4);
 
-	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> wholeSphereVerts = rotatePoints(halfCircleVerts, 4);
-
-	// Mesh object pointer initialization
-	m_mesh = new Mesh();
-
+	/*========== Mesh Startup ==========*/
 	// pass created arrays to assign mesh member variables 
 	m_mesh->initialize(vertices, indices);
 
@@ -217,16 +217,46 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 	return wholeSphere;
 }
 
-std::vector<unsigned int> RenderGeometryApp::genIndices(std::vector<glm::vec4> vertices, unsigned int numOfM)
-{
-	// create array of unsigned ints the size of the amount of vertices
-	int indicesCount = vertices.size() + (numOfM - 1);
-	std::vector<unsigned int> indices = std::vector<unsigned int>(indicesCount);
+std::vector<unsigned int> RenderGeometryApp::genIndices(unsigned int nm, unsigned int np)
+{	
+	// calculate the coutn of indices
+	int indicesCount = np + (nm - 1);
 
-	// define how to setup indices to be drawn		
+	// create array of unsigned ints to store the index information
+	std::vector<unsigned int> indices;
+	
+	unsigned int start;
+	unsigned int botLeft;
+	unsigned int botRight;
 
+	for (int i = 0; i < nm; i++)
+	{
+		start = i * np;
+		
+		for (int j = 0; j < np; j++)
+		{
+			botLeft = start + j;
+			botRight = botLeft + np;
+			indices.push_back(botLeft);
+			indices.push_back(botRight);
+		}
+	}
 
 	// return array of indices in order to be drawn
 	return indices;
+}
+
+void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsigned int numOfMeridians)
+{
+	// generate verts for half of a circle
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, numOfPoints);
+
+	// rotate half circle around to generate entire sphere verts
+	std::vector<glm::vec4> wholeSphereVerts = rotatePoints(halfCircleVerts, numOfMeridians);
+
+	// generate indices
+	std::vector<unsigned int> indices = genIndices(numOfMeridians, numOfPoints);
+
+	return;
 }
 
