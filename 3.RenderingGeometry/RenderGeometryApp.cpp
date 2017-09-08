@@ -49,10 +49,10 @@ void RenderGeometryApp::startup()
 	/*========== Generate Sphere ==========*/
 	// parameters = radius, points, meridians
 	genSphere(1.0f, 3, 4);
-
-	/*========== Generate Default Geometry ==========*/
-	// Mesh object startup function calls
-	// create vertex and index arrays to pas to initialize
+	
+	///*========== Generate Default Geometry ==========*/
+	////Mesh object startup function calls
+	////create vertex and index arrays to pas to initialize
 	//Vertex a = { glm::vec4(-5,  0, 0, 1)		, glm::vec4(.1, .1, .1, 1) }; //bottom left	
 	//Vertex b = { glm::vec4(5,  0, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //bottom right
 	//Vertex c = { glm::vec4(5, -5, 0, 1)			, glm::vec4(.1, .1, .1, 1) }; //top left
@@ -62,8 +62,8 @@ void RenderGeometryApp::startup()
 	//std::vector<Vertex> vertices{ a,b,c,d,e };
 	//std::vector<unsigned int> indices{ 0, 1, 2, 0, 2, 3, 0, 4, 1 };
 
-	/*========== Mesh Startup ==========*/
-	// pass created arrays to assign mesh member variables 
+	///*========== Mesh Startup ==========*/
+	////pass created arrays to assign mesh member variables 
 	//m_mesh->initialize(vertices, indices);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
