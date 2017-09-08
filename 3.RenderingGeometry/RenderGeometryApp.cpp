@@ -49,7 +49,7 @@ void RenderGeometryApp::startup()
 	/*========== Mesh Startup ==========*/
 	// parameters = radius, points, meridians
 	// generates verts and indices of sphere and pass them into m_mesh->initialize()
-	genSphere(5.0f, 30, 40);
+	genSphere(1.0f, 3, 4);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
 	m_mesh->create_buffers();	
