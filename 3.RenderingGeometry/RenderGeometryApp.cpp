@@ -261,10 +261,9 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 	/*========== Initialize Mesh with Sphere Information ==========*/
 	// convert wholeSphereVerts into a std::vector<Vertex>
 	std::vector<Vertex> sphereVerts;
-
 	for (int i = 0; i < wholeSphereVerts.size(); i++)
 	{
-		Vertex newVert = Vertex{ wholeSphereVerts[i], glm::vec4(.75, 0, .75, 1) };
+		Vertex newVert = Vertex {wholeSphereVerts[i], glm::vec4(.75, 0, .75, 1)};
 		sphereVerts.push_back(newVert);	
 	}
 
