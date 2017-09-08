@@ -135,22 +135,31 @@ void RenderGeometryApp::draw()
 {
 	// use shader program
 	m_shader->bind();
-
+	
 	// create and assign uniform	
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorldMatrix"), 1, false, glm::value_ptr(m_camera->m_projectionView));
-
+	
 	// bind vertex array object
 	m_mesh->bind();
-
+	
 	// set to draw wireframe
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	// draws each element
-	glDrawElements(GL_TRIANGLES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+	// enable primitive restart
+	glEnable(GL_PRIMITIVE_RESTART);
 
+	// assign what the restart index is
+	glPrimitiveRestartIndex(0xFFFF);
+	
+	// draws the buffered data of the currently bound VAO
+	glDrawElements(GL_TRIANGLE_STRIP, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+
+	// disable the primitive restart 
+	glDisable(GL_PRIMITIVE_RESTART);
+	
 	// unbind vertex array object
 	m_mesh->unbind();
-
+	
 	//clear shader program
 	m_shader->unbind();
 }
@@ -219,9 +228,6 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 
 std::vector<unsigned int> RenderGeometryApp::genIndices(unsigned int nm, unsigned int np)
 {	
-	// calculate the coutn of indices
-	int indicesCount = np + (nm - 1);
-
 	// create array of unsigned ints to store the index information
 	std::vector<unsigned int> indices;
 	
@@ -240,6 +246,7 @@ std::vector<unsigned int> RenderGeometryApp::genIndices(unsigned int nm, unsigne
 			indices.push_back(botLeft);
 			indices.push_back(botRight);
 		}
+		indices.push_back(0xFFFF);
 	}
 
 	// return array of indices in order to be drawn
