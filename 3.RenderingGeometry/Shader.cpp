@@ -88,15 +88,51 @@ void Shader::defaultLoad()
 	// ========== Create Shaders ==========
 	m_vsSource = "#version 410\n \
 							layout(location=0) in vec4 position; \
-							layout(location=1) in vec4 colour; \
-							out vec4 vColour; \
+							layout(location=1) in vec4 color; \
+							out vec4 vColor; \
 							uniform mat4 projectionViewWorldMatrix; \
-							void main() { vColour = colour; gl_Position = projectionViewWorldMatrix * position; }";
+							void main() { vColor = color; gl_Position = projectionViewWorldMatrix * position; }";
 
 	m_fsSource = "#version 410\n \
-							in vec4 vColour; \
+							in vec4 vColor; \
 							out vec4 fragColor; \
-							void main() { fragColor = vColour; }";
+							void main() { fragColor = vColor; }";
+
+	// ========== Complie Shaders ==========
+	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(m_vertexShader, 1, (const char **)&m_vsSource, 0);
+	glCompileShader(m_vertexShader);
+	glShaderSource(m_fragmentShader, 1, (const char **)&m_fsSource, 0);
+	glCompileShader(m_fragmentShader);
+}
+
+void Shader::lightingLoad()
+{
+	// ========== Create Shaders ==========
+	m_vsSource = "#version 410\n \
+							layout(location=0) in vec4 position; \
+							layout(location=1) in vec4 color; \
+							layout(location=1) in vec4 normal; \
+							layout(location=1) in vec4 UV; \
+							out vec4 vPositon; \
+							out vec4 vColor; \
+							out vec4 vNormal; \
+							out vec4 vUv; \
+							uniform mat4 projectionViewWorld; \
+							uniform vec4 ka; \
+							uniform vec4 kd; \
+							uniform vec4 ks; \
+							void main() { vColor = color; gl_Position = projectionViewWorld * position; }";
+
+	m_fsSource = "#version 410\n \
+							in vec4 vColor; \
+							in vec4 vPositon; \
+							in vec4 vNormal; \
+							in vec4 vUv; \
+							out vec4 fragColor; \
+							void main() { fragColor = vColor; }";
 
 	// ========== Complie Shaders ==========
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);

@@ -7,7 +7,6 @@ RenderGeometryApp::RenderGeometryApp()
 {	
 }
 
-
 RenderGeometryApp::~RenderGeometryApp()
 {
 	delete m_camera;
@@ -39,17 +38,16 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename
-	m_shader->defaultLoad();
-	//m_shader->load("$(SolutionDir)/bin/Shaders/DefaultVertexShader.vert", GL_VERTEX_SHADER);
-	//m_shader->load("$(SolutionDir)\bin\Shaders\DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);	
-
+	//m_shader->defaultLoad();
+	m_shader->lightingLoad();
+	
 	// attach shaders and link program
 	m_shader->attach();
 
 	/*========== Mesh Startup ==========*/
 	// parameters = radius, points, meridians
 	// generates verts and indices of sphere and pass them into m_mesh->initialize()
-	genSphere(1.0f, 3, 4);
+	genSphere(5.0f, 12, 16);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
 	m_mesh->create_buffers();	
@@ -63,29 +61,27 @@ void RenderGeometryApp::update(float deltaTime)
 	glm::vec4 up = m_camera->m_transform->getWorld()[1];
 
 	if (glfwGetKey(m_window, 'W') == GLFW_PRESS)
-	{
-		// calculate the forward vector of the cameras current rotation		
-		// apply movement along forward vector scaled by deltatime / multiplier
-		m_camera->setPosition(-forward);
+	{		
+		m_camera->setPosition(-forward * .33);
 	}
 
 	// camera strafe backward
 	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		// apply movement along forward vector scaled by deltatime / multiplier
-		m_camera->setPosition(forward);
+		m_camera->setPosition(forward * .33);
 	}
 
 	// camera strafe left
 	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		m_camera->setPosition(-right);
+		m_camera->setPosition(-right * .33);
 	}
 
 	// camera strafe right
 	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		m_camera->setPosition(right);
+		m_camera->setPosition(right * .33);
 	}
 
 	// gets mouse input	
@@ -121,13 +117,13 @@ void RenderGeometryApp::draw()
 	m_shader->bind();
 	
 	// create and assign uniform	
-	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorldMatrix"), 1, false, glm::value_ptr(m_camera->m_projectionView));
+	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
 	
 	// bind vertex array object
 	m_mesh->bind();
 	
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -249,7 +245,6 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 	// generate indices
 	std::vector<unsigned int> sphereIndices = genIndices(numOfMeridians, numOfPoints);
 	
-	/*========== Initialize Mesh with Sphere Information ==========*/
 	// convert wholeSphereVerts into a std::vector<Vertex>
 	std::vector<Vertex> sphereVerts;
 	for (int i = 0; i < wholeSphereVerts.size(); i++)
@@ -257,11 +252,11 @@ void RenderGeometryApp::genSphere(float radius, unsigned int numOfPoints, unsign
 		Vertex newVert = Vertex {wholeSphereVerts[i], glm::vec4(.75, 0, .75, 1)};
 		sphereVerts.push_back(newVert);	
 	}
-
+	
+	/*========== Initialize Mesh with Sphere Information ==========*/
 	// pass verts and indices into mesh->initalize() function
 	m_mesh->initialize(sphereVerts, sphereIndices);
 
 	// break point 
 	return;
 }
-
