@@ -39,8 +39,8 @@ void RenderGeometryApp::startup()
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename
 	//m_shader->defaultLoad();
-	m_shader->load("./Shaders/VertexShader.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/FragmentShader.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/DefaultVertexShader.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);
 	
 	// attach shaders and link program
 	m_shader->attach();
