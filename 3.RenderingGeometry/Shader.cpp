@@ -34,16 +34,11 @@ void Shader::load(const char * filename, unsigned int type)
 	while (std::getline(in, line))
 	{	
 		//add that line to the total contents
-		contents += line;	
+		contents += line + "\n";	
 	}
 
 	// convert to a c-string
-	const char * data = contents.c_str();	
-
-	// prints data to console
-	std::cout << "below is the contents of the file that was read into data.\n";
-	std::cout << data;
-	std::cout << "\nend of the contents.\n";
+	const char * data = contents.c_str();		
 
 	switch (type)
 	{
@@ -96,42 +91,6 @@ void Shader::defaultLoad()
 
 	m_fsSource = "#version 410\n \
 							in vec4 vColor; \
-							out vec4 fragColor; \
-							void main() { fragColor = vColor; }";
-
-	// ========== Complie Shaders ==========
-	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(m_vertexShader, 1, (const char **)&m_vsSource, 0);
-	glCompileShader(m_vertexShader);
-	glShaderSource(m_fragmentShader, 1, (const char **)&m_fsSource, 0);
-	glCompileShader(m_fragmentShader);
-}
-
-void Shader::lightingLoad()
-{
-	// ========== Create Shaders ==========
-	m_vsSource = "#version 410\n \
-							layout(location=0) in vec4 position; \
-							layout(location=1) in vec4 color; \
-							layout(location=2) in vec4 normal; \
-							layout(location=3) in vec4 UV; \
-							out vec4 vPositon; \
-							out vec4 vColor; \
-							out vec4 vNormal; \
-							out vec4 vUv; \
-							uniform mat4 projectionViewWorld; \
-							uniform vec4 ka; \
-							uniform vec4 kd; \
-							uniform vec4 ks; \
-							void main() { vColor = color; gl_Position = projectionViewWorld * position; }";
-
-	m_fsSource = "#version 410\n \
-							in vec4 vColor; \
-							in vec4 vPositon; \
-							in vec4 vNormal; \
-							in vec4 vUV; \
 							out vec4 fragColor; \
 							void main() { fragColor = vColor; }";
 

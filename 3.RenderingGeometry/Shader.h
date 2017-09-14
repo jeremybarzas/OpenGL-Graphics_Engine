@@ -10,7 +10,6 @@ public:
 	void load(const char*, unsigned int);
 	void attach();
 	void defaultLoad();
-	void lightingLoad();
 	unsigned int getUniform(const char*);
 
 	unsigned int m_vertexShader;
