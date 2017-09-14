@@ -8,7 +8,7 @@ layout(location=3) in vec4 UV;
 out vec4 vPositon;
 out vec4 vColor;
 out vec4 vNormal;
-out vec4 vUv;
+out vec4 vUV;
 
 uniform mat4 projectionViewWorld;
 uniform vec4 ka;
