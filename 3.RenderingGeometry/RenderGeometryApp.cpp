@@ -51,32 +51,28 @@ void RenderGeometryApp::startup()
 	unsigned np, nm;
 	radius = 5.f;
 	np = 12;
-	nm = 16;
+	nm = 16;	
 
+	// generate vertex info for a half circle
 	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
 
 	// rotate half circle around to generate entire sphere verts
 	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
 
-	// generate indices
-	std::vector<unsigned int> sphereIndices = genIndices(nm, np);
+	// generate indices for triangle strip
+	std::vector<unsigned int> sphereIndices = genIndices(nm, np);	
 
-	// convert wholeSphereVerts into a std::vector<Vertex>
+	// convert spherePoints into a std::vector<Vertex>
 	std::vector<Vertex> verts;
-	std::vector<unsigned> indices;
-
 	for (auto p : spherePoints)
 	{
 		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
 		verts.push_back(vert);
-	}		
-
-	for (auto i : sphereIndices)	
-		indices.push_back(i);	
+	}
 		
 	/*========== Mesh Startup ==========*/	
 	// pass verts and indices into mesh->initalize() function
-	m_mesh->initialize(verts, indices);
+	m_mesh->initialize(verts, sphereIndices);
 
 	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
 	m_mesh->create_buffers();
@@ -153,7 +149,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
