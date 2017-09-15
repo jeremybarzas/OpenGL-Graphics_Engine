@@ -40,9 +40,9 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	//m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
-	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
-	m_shader->defaultLoad();
+	m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
+	//m_shader->defaultLoad();
 	
 	// attach shaders and link program
 	m_shader->attach();
@@ -50,65 +50,152 @@ void RenderGeometryApp::startup()
 	/*========== Mesh Startup ==========*/
 
 	/*========== Generate Sphere Information ==========*/	
-	//float radius;
-	//unsigned np, nm;
-	//radius = 5.f;
-	//np = 12;
-	//nm = 16;	
+	float radius;
+	unsigned np, nm;
+	radius = 5.f;
+	np = 12;
+	nm = 16;	
 
-	//// generate vertex info for a half circle
-	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
+	// generate vertex info for a half circle
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
 
-	//// rotate half circle around to generate entire sphere verts
-	//std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
+	// rotate half circle around to generate entire sphere verts
+	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
 
-	//// generate indices for triangle strip
-	//std::vector<unsigned int> sphereIndices = genIndices(nm, np);	
+	// generate indices for triangle strip
+	std::vector<unsigned int> sphereIndices = genIndices(nm, np);	
 
-	//// convert spherePoints into a std::vector<Vertex>
-	//std::vector<Vertex> verts;
-	//for (auto p : spherePoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	verts.push_back(vert);
-	//}
-
-	// initialize with sphere vertex and index information
-	//m_mesh->initialize(verts, sphereIndices);	
-
-	/*========== Generate Plane Information ==========*/
-	std::vector<glm::vec4> planePoints;
-	std::vector<unsigned int> planeIndices;
-	unsigned int width, length;
-	width = 5;
-	length = 5;
-
-	// bottom left
-	planePoints.push_back(glm::vec4(0, 0, 0, 0));
-
-	// bottom right
-	planePoints.push_back(glm::vec4(width, 0, 0, 0));
-
-	// top left
-	planePoints.push_back(glm::vec4(0, 0, length, 0));
-
-	// top right
-	planePoints.push_back(glm::vec4(width, 0, length, 0));
-
-	std::vector<Vertex> planeVerts;
-	for (auto p : planePoints)
+	// convert spherePoints into a std::vector<Vertex>
+	std::vector<Vertex> verts;
+	for (auto p : spherePoints)
 	{
 		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-		planeVerts.push_back(vert);
+		verts.push_back(vert);
 	}
 
-	for (int i = 0; i < planePoints.size(); i++)
-	{
-		planeIndices.push_back(i);
-	}
-	
-	// initialize with plane vertex and index information
-	m_mesh->initialize(planeVerts, planeIndices);	
+	// initialize with sphere vertex and index information
+	m_mesh->initialize(verts, sphereIndices);
+
+	/*========== Generate Plane Information ==========*/
+	//std::vector<glm::vec4> planePoints;
+	//std::vector<unsigned int> planeIndices;
+	//unsigned int width, length;
+	//width = 5;
+	//length = 5;
+
+	//// near left
+	//planePoints.push_back(glm::vec4(0, 0, 0, 1));
+
+	//// near right
+	//planePoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	//// far left
+	//planePoints.push_back(glm::vec4(0, 0, length, 1));
+
+	//// far right
+	//planePoints.push_back(glm::vec4(width, 0, length, 1));
+
+	//std::vector<Vertex> planeVerts;
+	//for (auto p : planePoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	planeVerts.push_back(vert);
+	//}
+
+	//planeIndices.push_back(0);
+	//planeIndices.push_back(1);
+	//planeIndices.push_back(2);
+	//planeIndices.push_back(3);
+	//planeIndices.push_back(0xFFFF);
+	//
+	//// initialize with plane vertex and index information
+	//m_mesh->initialize(planeVerts, planeIndices);
+
+	/*========== Generate Cube Information ==========*/
+	//std::vector<glm::vec4> cubePoints;
+	//std::vector<unsigned int> cubeIndices;
+	//unsigned int width, length, size;
+	//width = 5;
+	//length = 5;
+	//size = 5;
+
+	///*===== Bottom Points =====*/
+	//// near left
+	//cubePoints.push_back(glm::vec4(0, 0, 0, 1));
+
+	//// near right
+	//cubePoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	//// far left
+	//cubePoints.push_back(glm::vec4(0, 0, length, 1));
+
+	//// far right
+	//cubePoints.push_back(glm::vec4(width, 0, length, 1));
+
+	///*===== Top Points =====*/
+	//// near left
+	//cubePoints.push_back(glm::vec4(0, size, 0, 1));
+
+	//// near right
+	//cubePoints.push_back(glm::vec4(width, size, 0, 1));
+
+	//// far left
+	//cubePoints.push_back(glm::vec4(0, size, length, 1));
+
+	//// far right
+	//cubePoints.push_back(glm::vec4(width, size, length, 1));
+
+	//std::vector<Vertex> cubeVerts;
+	//for (auto p : cubePoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	cubeVerts.push_back(vert);
+	//}
+
+	//// bottom face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// top face
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// front face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// back face
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// right face
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// left face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(0xFFFF);
+
+	//// initialize with plane vertex and index information
+	//m_mesh->initialize(cubeVerts, cubeIndices);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -165,16 +252,21 @@ void RenderGeometryApp::update(float deltaTime)
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
 		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";		
+		
+		//m_camera->m_transform->rotate(deltaX, YAXIS);
 	}
 
 	m_camera->update(deltaTime);
 }
 
 void RenderGeometryApp::draw()
-{
+{	
+	// start imgui
+	ImGui::Begin("hello");	
 
-	ImGui::Begin("hello");
+	// end imgui
 	ImGui::End();
+
 	// use shader program
 	m_shader->bind();
 
@@ -194,7 +286,7 @@ void RenderGeometryApp::draw()
 	glPrimitiveRestartIndex(0xFFFF);
 
 	// draws the buffered data of the currently bound VAO
-	glDrawElements(GL_LINES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLE_STRIP, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
 
 	// disable the primitive restart 
 	glDisable(GL_PRIMITIVE_RESTART);
@@ -204,6 +296,9 @@ void RenderGeometryApp::draw()
 
 	//clear shader program
 	m_shader->unbind();
+
+	// set polygon mode for imgui
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void RenderGeometryApp::shutdown()

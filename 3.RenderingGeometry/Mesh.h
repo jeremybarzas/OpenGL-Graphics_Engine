@@ -29,8 +29,8 @@ private:
 	unsigned int m_ibo;
 	
 	std::vector<Vertex> m_vertices;
-	std::vector<Vertex> m_color;
-	std::vector<Vertex> m_normals;
 	std::vector<unsigned int> m_indices;
+	std::vector<Vertex> m_color;
+	std::vector<Vertex> m_normals;	
 };
 
