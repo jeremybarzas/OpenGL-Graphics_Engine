@@ -1,4 +1,5 @@
 #include "RenderGeometryApp.h"
+#include <iostream>
 
 #define PI 3.14159265359
 
@@ -134,7 +135,7 @@ void RenderGeometryApp::update(float deltaTime)
 
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
-		//std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";		
+		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";		
 	}
 
 	m_camera->update(deltaTime);
@@ -217,8 +218,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 
 		// calculate phi
 		float phi = i * slice;
-		if (phi > 5)
-			printf("almost");
+
 		// loop per point
 		for (int j = 0; j < points.size(); j++)
 		{
