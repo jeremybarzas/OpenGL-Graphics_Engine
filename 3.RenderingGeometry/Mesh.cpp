@@ -37,20 +37,19 @@ void Mesh::create_buffers()
 	// buffer the Index Buffer Object's data
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->m_index_count * sizeof(unsigned int), this->m_indices.data(), GL_STATIC_DRAW);
 	
-	// enable and assign vertex attribute array index 0
-	//position
+	// ========== enable and assign vertex attribute array indices ==========	
+	// position
 	glEnableVertexAttribArray(0);	
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-
-
-	// enable and assign vertex attribute array index 1
-	//color
+		
+	// color
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4)));
 
-	//noramls
+	// normal
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), (void*)(sizeof(glm::vec4) * 2));
+	
 	// ========== Cleanup ==========
 	// clear the Vertex Array Object bind
 	glBindVertexArray(0);

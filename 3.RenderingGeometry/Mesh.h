@@ -7,7 +7,6 @@ struct Vertex
 	glm::vec4 position;
 	glm::vec4 color;	
 	glm::vec4 normal;
-
 };
 
 class Mesh

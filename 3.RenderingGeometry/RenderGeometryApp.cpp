@@ -47,8 +47,6 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
-	/*========== Mesh Startup ==========*/	
-	
 	/*========== Generate Sphere Information ==========*/	
 	float radius;
 	unsigned np, nm;
@@ -77,7 +75,7 @@ void RenderGeometryApp::startup()
 	for (auto i : sphereIndices)	
 		indices.push_back(i);	
 		
-	/*========== Initialize Mesh with Sphere Information ==========*/
+	/*========== Mesh Startup ==========*/	
 	// pass verts and indices into mesh->initalize() function
 	m_mesh->initialize(verts, indices);
 
