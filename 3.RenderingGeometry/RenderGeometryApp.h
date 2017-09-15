@@ -29,6 +29,9 @@ public:
 
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
-	std::vector<unsigned int> genIndices(unsigned int, unsigned int);	
+	std::vector<unsigned int> genIndicesTriStrip(unsigned int, unsigned int);
+	
+	// generate a sphere using triangles
+	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);	
 };
 

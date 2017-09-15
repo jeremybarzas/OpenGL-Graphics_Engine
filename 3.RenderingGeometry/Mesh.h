@@ -23,11 +23,11 @@ public:
 	unsigned int m_index_count;
 	unsigned int m_vertex_count;
 
-private:
 	unsigned int m_vao;
 	unsigned int m_vbo;
 	unsigned int m_ibo;
-	
+
+private:	
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<Vertex> m_color;
