@@ -37,13 +37,11 @@ void RenderGeometryApp::startup()
 	m_camera->setPerspective(PI * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 
 	/*========== Shader Startup ==========*/
-	// create and complie shaders passed by filename
-	//m_shader->defaultLoad();
-	//m_shader->load("./Shaders/DefaultVertexShader.vert", GL_VERTEX_SHADER);
-	//m_shader->load("./Shaders/DefaultFragmentShader.frag", GL_FRAGMENT_SHADER);
-
+	// create and complie shaders passed by filename	
 	m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
 	m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
+	//m_shader->defaultLoad();
+	
 	// attach shaders and link program
 	m_shader->attach();
 
