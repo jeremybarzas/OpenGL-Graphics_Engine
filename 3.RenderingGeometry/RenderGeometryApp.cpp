@@ -1,6 +1,7 @@
 #include "RenderGeometryApp.h"
 #include <iostream>
-
+#include "imgui.h"
+#include <imgui_impl_glfw_gl3.h>
 #define PI 3.14159265359
 
 
@@ -97,7 +98,7 @@ void RenderGeometryApp::startup()
 	std::vector<Vertex> planeVerts;
 	for (auto p : planePoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1)};
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
 		planeVerts.push_back(vert);
 	}
 
@@ -171,6 +172,9 @@ void RenderGeometryApp::update(float deltaTime)
 
 void RenderGeometryApp::draw()
 {
+
+	ImGui::Begin("hello");
+	ImGui::End();
 	// use shader program
 	m_shader->bind();
 

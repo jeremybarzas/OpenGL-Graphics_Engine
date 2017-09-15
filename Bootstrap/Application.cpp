@@ -1,6 +1,6 @@
 #include "Application.h"
-
-
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
 Application::Application()
 {	
 }
@@ -32,7 +32,10 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 	// loads all of the OpenGL extenstions
 	ogl_LoadFunctions();
-	
+	ImGui_ImplGlfwGL3_Init(m_window, true);
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize.x = width;
+	io.DisplaySize.y = height;
 	// calls the concrete derived class startup() method
 	startup();	
 
@@ -56,13 +59,13 @@ void Application::run(float width, float height, const char * title, bool fullsc
 
 		// clears both the color and depth buffer so the window doesn't fail to update visuals
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		
-		
+		ImGui_ImplGlfwGL3_NewFrame();
 		// calls the concrete derived class update() method
 		update(deltaTime);
 
 		// calls the concrete derived class draw() method
 		draw();
-
+		ImGui::Render();
 		// swaps the buffers of the passed in window
 		glfwSwapBuffers(m_window);
 
