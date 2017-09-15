@@ -5,7 +5,9 @@
 struct Vertex
 {
 	glm::vec4 position;
-	glm::vec4 color;
+	glm::vec4 color;	
+	glm::vec4 normal;
+
 };
 
 class Mesh
@@ -28,6 +30,8 @@ private:
 	unsigned int m_ibo;
 	
 	std::vector<Vertex> m_vertices;
+	std::vector<Vertex> m_color;
+	std::vector<Vertex> m_normals;
 	std::vector<unsigned int> m_indices;
 };
 

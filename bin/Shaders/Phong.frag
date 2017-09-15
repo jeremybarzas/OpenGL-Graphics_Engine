@@ -1,11 +1,9 @@
 #version 410
-
-layout(location=0) in vec4 postion;
-layout(location=1) in vec4 color;
-layout(location=2) in vec4 normal;
-layout(location=3) in vec4 UV;
-
+out vec4 FragColor;
+in vec4 vPosition;
+in vec4 vNormal;
+in vec4 vColor;
 void main()
 {
-
+    FragColor = vNormal;
 }
