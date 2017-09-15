@@ -39,43 +39,75 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
-	//m_shader->defaultLoad();
+	//m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
+	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
+	m_shader->defaultLoad();
 	
 	// attach shaders and link program
 	m_shader->attach();
 
+	/*========== Mesh Startup ==========*/
+
 	/*========== Generate Sphere Information ==========*/	
-	float radius;
-	unsigned np, nm;
-	radius = 5.f;
-	np = 12;
-	nm = 16;	
+	//float radius;
+	//unsigned np, nm;
+	//radius = 5.f;
+	//np = 12;
+	//nm = 16;	
 
-	// generate vertex info for a half circle
-	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
+	//// generate vertex info for a half circle
+	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
 
-	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
+	//// rotate half circle around to generate entire sphere verts
+	//std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
 
-	// generate indices for triangle strip
-	std::vector<unsigned int> sphereIndices = genIndices(nm, np);	
+	//// generate indices for triangle strip
+	//std::vector<unsigned int> sphereIndices = genIndices(nm, np);	
 
-	// convert spherePoints into a std::vector<Vertex>
-	std::vector<Vertex> verts;
-	for (auto p : spherePoints)
+	//// convert spherePoints into a std::vector<Vertex>
+	//std::vector<Vertex> verts;
+	//for (auto p : spherePoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	verts.push_back(vert);
+	//}
+
+	// initialize with sphere vertex and index information
+	//m_mesh->initialize(verts, sphereIndices);	
+
+	/*========== Generate Plane Information ==========*/
+	std::vector<glm::vec4> planePoints;
+	std::vector<unsigned int> planeIndices;
+	unsigned int width, length;
+	width = 5;
+	length = 5;
+
+	// bottom left
+	planePoints.push_back(glm::vec4(0, 0, 0, 0));
+
+	// bottom right
+	planePoints.push_back(glm::vec4(width, 0, 0, 0));
+
+	// top left
+	planePoints.push_back(glm::vec4(0, 0, length, 0));
+
+	// top right
+	planePoints.push_back(glm::vec4(width, 0, length, 0));
+
+	std::vector<Vertex> planeVerts;
+	for (auto p : planePoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-		verts.push_back(vert);
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1)};
+		planeVerts.push_back(vert);
 	}
-		
-	/*========== Mesh Startup ==========*/	
-	// pass verts and indices into mesh->initalize() function
-	m_mesh->initialize(verts, sphereIndices);
 
-	// generate, bind, and buffer the vao, vbo, and ibo then cleanup
-	m_mesh->create_buffers();
+	for (int i = 0; i < planePoints.size(); i++)
+	{
+		planeIndices.push_back(i);
+	}
+	
+	// initialize with plane vertex and index information
+	m_mesh->initialize(planeVerts, planeIndices);	
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -158,7 +190,7 @@ void RenderGeometryApp::draw()
 	glPrimitiveRestartIndex(0xFFFF);
 
 	// draws the buffered data of the currently bound VAO
-	glDrawElements(GL_TRIANGLE_STRIP, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
 
 	// disable the primitive restart 
 	glDisable(GL_PRIMITIVE_RESTART);

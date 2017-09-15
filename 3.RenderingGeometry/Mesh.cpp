@@ -76,6 +76,8 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 
 	// assign the index count
 	this->m_index_count = m_indices.size();
+
+	this->create_buffers();
 }
 
 void Mesh::bind()
