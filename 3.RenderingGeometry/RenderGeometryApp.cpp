@@ -136,8 +136,9 @@ void RenderGeometryApp::update(float deltaTime)
 
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
-		//std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
+		//std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";		
 	}
+
 	m_camera->update(deltaTime);
 }
 
