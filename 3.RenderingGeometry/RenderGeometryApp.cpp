@@ -112,96 +112,96 @@ void RenderGeometryApp::startup()
 	//m_mesh->initialize(planeVerts, planeIndices);
 
 	/*========== Generate Cube Information ==========*/
-	std::vector<glm::vec4> cubePoints;
-	std::vector<unsigned int> cubeIndices;
-	unsigned int width, length, size;
-	width = 5;
-	length = 5;
-	size = 5;
+	//std::vector<glm::vec4> cubePoints;
+	//std::vector<unsigned int> cubeIndices;
+	//unsigned int width, length, size;
+	//width = 5;
+	//length = 5;
+	//size = 5;
 
-	/*===== Bottom Points =====*/
-	// near left
-	cubePoints.push_back(glm::vec4(0, 0, 0, 1));
+	///*===== Bottom Points =====*/
+	//// near left
+	//cubePoints.push_back(glm::vec4(0, 0, 0, 1));
 
-	// near right
-	cubePoints.push_back(glm::vec4(width, 0, 0, 1));
+	//// near right
+	//cubePoints.push_back(glm::vec4(width, 0, 0, 1));
 
-	// far left
-	cubePoints.push_back(glm::vec4(0, 0, length, 1));
+	//// far left
+	//cubePoints.push_back(glm::vec4(0, 0, length, 1));
 
-	// far right
-	cubePoints.push_back(glm::vec4(width, 0, length, 1));
+	//// far right
+	//cubePoints.push_back(glm::vec4(width, 0, length, 1));
 
-	/*===== Top Points =====*/
-	// near left
-	cubePoints.push_back(glm::vec4(0, size, 0, 1));
+	///*===== Top Points =====*/
+	//// near left
+	//cubePoints.push_back(glm::vec4(0, size, 0, 1));
 
-	// near right
-	cubePoints.push_back(glm::vec4(width, size, 0, 1));
+	//// near right
+	//cubePoints.push_back(glm::vec4(width, size, 0, 1));
 
-	// far left
-	cubePoints.push_back(glm::vec4(0, size, length, 1));
+	//// far left
+	//cubePoints.push_back(glm::vec4(0, size, length, 1));
 
-	// far right
-	cubePoints.push_back(glm::vec4(width, size, length, 1));
+	//// far right
+	//cubePoints.push_back(glm::vec4(width, size, length, 1));
 
-	std::vector<Vertex> cubeVerts;
-	for (auto p : cubePoints)
-	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-		cubeVerts.push_back(vert);
-	}
+	//std::vector<Vertex> cubeVerts;
+	//for (auto p : cubePoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	cubeVerts.push_back(vert);
+	//}
 
-	// bottom face
-	cubeIndices.push_back(0);
-	cubeIndices.push_back(1);
-	cubeIndices.push_back(2);
-	cubeIndices.push_back(3);
-	cubeIndices.push_back(0xFFFF);
+	//// bottom face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(0xFFFF);
 
-	// top face
-	cubeIndices.push_back(4);
-	cubeIndices.push_back(5);
-	cubeIndices.push_back(6);
-	cubeIndices.push_back(7);
-	cubeIndices.push_back(0xFFFF);
+	//// top face
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
 
-	// front face
-	cubeIndices.push_back(0);
-	cubeIndices.push_back(1);
-	cubeIndices.push_back(4);
-	cubeIndices.push_back(5);
-	cubeIndices.push_back(0xFFFF);
+	//// front face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(0xFFFF);
 
-	// back face
-	cubeIndices.push_back(2);
-	cubeIndices.push_back(3);
-	cubeIndices.push_back(6);
-	cubeIndices.push_back(7);
-	cubeIndices.push_back(0xFFFF);
+	//// back face
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
 
-	// right face
-	cubeIndices.push_back(1);
-	cubeIndices.push_back(3);
-	cubeIndices.push_back(5);
-	cubeIndices.push_back(7);
-	cubeIndices.push_back(0xFFFF);
+	//// right face
+	//cubeIndices.push_back(1);
+	//cubeIndices.push_back(3);
+	//cubeIndices.push_back(5);
+	//cubeIndices.push_back(7);
+	//cubeIndices.push_back(0xFFFF);
 
-	// left face
-	cubeIndices.push_back(0);
-	cubeIndices.push_back(2);
-	cubeIndices.push_back(4);
-	cubeIndices.push_back(6);
-	cubeIndices.push_back(0xFFFF);
+	//// left face
+	//cubeIndices.push_back(0);
+	//cubeIndices.push_back(2);
+	//cubeIndices.push_back(4);
+	//cubeIndices.push_back(6);
+	//cubeIndices.push_back(0xFFFF);
 
-	// initialize with plane vertex and index information
-	m_mesh->initialize(cubeVerts, cubeIndices);
+	//// initialize with plane vertex and index information
+	//m_mesh->initialize(cubeVerts, cubeIndices);
 
 	/*========== Generate Sphere Information (setup for triangles)==========*/	
-	/*unsigned int segments = 12;
+	unsigned int segments = 12;
 	unsigned int rings = 16;
 
-	genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);*/
+	genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -292,7 +292,7 @@ void RenderGeometryApp::draw()
 	glPrimitiveRestartIndex(0xFFFF);
 
 	// draws the buffered data of the currently bound VAO
-	glDrawElements(GL_TRIANGLE_STRIP, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
 
 	// disable the primitive restart 
 	glDisable(GL_PRIMITIVE_RESTART);
