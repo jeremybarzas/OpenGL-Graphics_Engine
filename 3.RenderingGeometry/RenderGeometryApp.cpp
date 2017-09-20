@@ -50,31 +50,31 @@ void RenderGeometryApp::startup()
 	/*========== Mesh Startup ==========*/
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	//float radius;
-	//unsigned np, nm;
-	//radius = 5.f;
-	//np = 12;
-	//nm = 16;	
+	float radius;
+	unsigned np, nm;
+	radius = 5.f;
+	np = 12;
+	nm = 16;	
 
-	//// generate vertex info for a half circle
-	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
+	// generate vertex info for a half circle
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
 
-	//// rotate half circle around to generate entire sphere verts
-	//std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
+	// rotate half circle around to generate entire sphere verts
+	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
 
-	//// generate indices for triangle strip
-	//std::vector<unsigned int> sphereIndices = genIndicesTriStrip(nm, np);	
+	// generate indices for triangle strip
+	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(nm, np);	
 
-	//// convert spherePoints into a std::vector<Vertex>
-	//std::vector<Vertex> verts;
-	//for (auto p : spherePoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	verts.push_back(vert);
-	//}
+	// convert spherePoints into a std::vector<Vertex>
+	std::vector<Vertex> verts;
+	for (auto p : spherePoints)
+	{
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		verts.push_back(vert);
+	}
 
-	//// initialize with sphere vertex and index information
-	//m_mesh->initialize(verts, sphereIndices);	
+	// initialize with sphere vertex and index information
+	m_mesh->initialize(verts, sphereIndices);	
 
 	///*========== Generate Plane Information ==========*/
 	//std::vector<glm::vec4> planePoints;
@@ -198,10 +198,10 @@ void RenderGeometryApp::startup()
 	//m_mesh->initialize(cubeVerts, cubeIndices);
 
 	/*========== Generate Sphere Information (setup for triangles)==========*/	
-	unsigned int segments = 12;
+	/*unsigned int segments = 12;
 	unsigned int rings = 16;
 
-	genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
+	genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);*/
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -257,9 +257,7 @@ void RenderGeometryApp::update(float deltaTime)
 
 		prevMouseX = currMouseX;
 		PrevMouseY = currMouseY;
-		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";		
-		
-		//m_camera->m_transform->rotate(deltaX, YAXIS);
+		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
 	}
 
 	m_camera->update(deltaTime);
@@ -292,7 +290,7 @@ void RenderGeometryApp::draw()
 	glPrimitiveRestartIndex(0xFFFF);
 
 	// draws the buffered data of the currently bound VAO
-	glDrawElements(GL_TRIANGLES, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLE_STRIP, m_mesh->m_index_count, GL_UNSIGNED_INT, 0);
 
 	// disable the primitive restart 
 	glDisable(GL_PRIMITIVE_RESTART);
