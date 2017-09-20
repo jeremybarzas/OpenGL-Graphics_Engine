@@ -40,8 +40,8 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	m_shader->load("./Shaders/Phong.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/AmbientLighting.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->defaultLoad();
 	
 	// attach shaders and link program
@@ -500,4 +500,3 @@ void RenderGeometryApp::genSphereTriangles(unsigned int segments, unsigned int r
 	delete[] indices;
 	delete[] vertices;
 }
-
