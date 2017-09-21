@@ -44,25 +44,25 @@ void RenderGeometryApp::startup()
 
 	/*========== Vertex Shader Load ==========*/
 	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
-	
+
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);	
-	
+	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
+
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
 
 	/*========== Mesh Startup ==========*/
 
-	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
+	/*========== Generate Sphere Information (setup for triangle strips)==========*/
 	float radius;
 	unsigned np, nm;
 	radius = 5.f;
-	np = 12;
-	nm = 16;	
+	np = 24;
+	nm = 32;
 
 	// generate vertex info for a half circle
 	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
@@ -71,7 +71,7 @@ void RenderGeometryApp::startup()
 	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
 
 	// generate indices for triangle strip
-	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(nm, np);	
+	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(nm, np);
 
 	// convert spherePoints into a std::vector<Vertex>
 	std::vector<Vertex> verts;
@@ -82,7 +82,7 @@ void RenderGeometryApp::startup()
 	}
 
 	// initialize with sphere vertex and index information
-	m_mesh->initialize(verts, sphereIndices);	
+	m_mesh->initialize(verts, sphereIndices);
 
 	///*========== Generate Plane Information ==========*/
 	//std::vector<glm::vec4> planePoints;
@@ -205,7 +205,7 @@ void RenderGeometryApp::startup()
 	//// initialize with plane vertex and index information
 	//m_mesh->initialize(cubeVerts, cubeIndices);
 
-	/*========== Generate Sphere Information (setup for triangles)==========*/	
+	/*========== Generate Sphere Information (setup for triangles)==========*/
 	/*unsigned int segments = 12;
 	unsigned int rings = 16;
 
@@ -270,12 +270,12 @@ void RenderGeometryApp::update(float deltaTime)
 
 	m_camera->update(deltaTime);
 }
-
+float specularPower = 1;
 void RenderGeometryApp::draw()
-{	
+{
 	// start imgui
-	ImGui::Begin("DIS DO NUTTIN");	
-
+	ImGui::Begin("DIS DO NUTTIN");
+	ImGui::SliderFloat("spec power", &specularPower, 0, 512);
 	// end imgui
 	ImGui::End();
 
@@ -284,13 +284,14 @@ void RenderGeometryApp::draw()
 
 	// create and assign uniform	
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
-	
-	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
-	
-	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 
-	// bind vertex array object
-	m_mesh->bind();	
+	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
+
+	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
+	glUniform1f(m_shader->getUniform("specularPower"), specularPower);
+
+		// bind vertex array object
+		m_mesh->bind();
 
 	// set to draw wireframe
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -355,7 +356,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 
 	// loop per meridian
 	for (int i = 0; i <= numOfMeridians; i++)
-	{		
+	{
 		// calculate slice
 		float slice = (PI * 2.0f) / numOfMeridians;
 
