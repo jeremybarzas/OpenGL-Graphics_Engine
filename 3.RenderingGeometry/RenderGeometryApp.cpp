@@ -48,8 +48,8 @@ void RenderGeometryApp::startup()
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -275,7 +275,7 @@ void RenderGeometryApp::draw()
 {
 	// start imgui
 	ImGui::Begin("DIS DO NUTTIN");
-	ImGui::SliderFloat("spec power", &specularPower, 0, 512);
+	ImGui::SliderFloat("spec power", &specularPower, 0, 128);
 	// end imgui
 	ImGui::End();
 

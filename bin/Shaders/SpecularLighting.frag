@@ -11,21 +11,23 @@ uniform vec4 cameraPosition;
 
 void main()
 {
-	vec4 lightDirection = vec4(1, 1, 0, 1);	
-	vec4 lightColor = vec4(1, 1, 1, 1);	
+	vec3 L = vec3(1, -1, 0);
 
-	vec4 reflectedRay = reflect(lightDirection, vNormal);		
+	vec3 N = normalize(vNormal.xyz);
 
-	vec4 V = normalize(cameraPosition - vPosition);
+	vec3 R = reflect(normalize(L), N);
+
+	vec3 V = normalize(cameraPosition.xyz - vPosition.xyz);	
 	
-	float RdotV = dot(reflectedRay, V);	
+	float RdotV = dot(R, V);
 	
-	float influence = max(RdotV, 0); 
-	
-	
+	float influence = max(RdotV, 0);
 
 	float attenuation = pow(influence, specularPower);
 	
-	vec4 specular = vColor * attenuation * lightColor;
+	vec4 Is = vec4(1,1,1,1);	
+	vec4 Ks = vec4(1,1,1,1);
+
+	vec4 specular = Ks * attenuation * Is;
     FragColor = specular;
 }
