@@ -11,8 +11,6 @@ void main()
 	vec3 L = normalize(vec3(1, 1, 0));
 	vec3 N = normalize(vNormal.xyz);	
 	float LdotN = dot(L, N);
-	
-	//float influence = max(LdotN, 0);
 
 	vec4 Kd = vColor;
 	vec4 Id = vec4(1, 1, 1, 1);	
