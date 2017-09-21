@@ -40,10 +40,18 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	m_shader->load("./Shaders/AmbientLighting.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->defaultLoad();
+
+	/*========== Vertex Shader Load ==========*/
+	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
 	
+	/*========== Fragment Shader Load ==========*/
+	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);	
+	
+	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
 
@@ -276,6 +284,10 @@ void RenderGeometryApp::draw()
 
 	// create and assign uniform	
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
+	
+	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
+	
+	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 
 	// bind vertex array object
 	m_mesh->bind();	
