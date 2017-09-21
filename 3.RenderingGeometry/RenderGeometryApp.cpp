@@ -275,7 +275,7 @@ void RenderGeometryApp::draw()
 {
 	// start imgui
 	ImGui::Begin("DIS DO NUTTIN");
-	ImGui::SliderFloat("spec power", &specularPower, 0, 128);
+	ImGui::SliderFloat("spec power", &specularPower, 1, 128);
 	// end imgui
 	ImGui::End();
 

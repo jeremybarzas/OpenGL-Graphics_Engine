@@ -8,9 +8,15 @@ in vec4 vColor;
 
 void main()
 {
-	vec4 lightDirection = vec4(1, 1, 0, 1);	
-	vec4 lightColor = vec4(0.75, .75, 0.60, 1);
-	float LdotN = dot(lightDirection, vNormal);
-	vec4 diffuse = vColor * LdotN * lightColor;
+	vec3 L = normalize(vec3(1, 1, 0));
+	vec3 N = normalize(vNormal.xyz);	
+	float LdotN = dot(L, N);
+	
+	//float influence = max(LdotN, 0);
+
+	vec4 Kd = vColor;
+	vec4 Id = vec4(1, 1, 1, 1);	
+
+	vec4 diffuse = Kd * LdotN * Id;
     FragColor = diffuse;
 }

@@ -8,10 +8,14 @@ in vec4 vColor;
 
 void main()
 {
-	vec4 UP = vec4(0, 1, 0, 1);
-	float NdotUP = dot(vNormal, UP);
+	vec3 UP = normalize(vec4(0, 1, 0));
+	vec3 N = normalize(vNormal.xyz);
+	float NdotUP = dot(N, UP);
 	float influence = NdotUP + 0.5 * 0.5;
-	vec4 lightColor = vec4(0.75, .75, 0.60, 1);	
-	vec4 hemisphere = mix(lightColor, vColor, influence);
+
+	vec4 Ka = vColor;	
+	vec4 Ia = vec4(1, 1, 1, 1);	
+	
+	vec4 hemisphere = mix(Ia, vColor, influence);
     FragColor = hemisphere;
 }
