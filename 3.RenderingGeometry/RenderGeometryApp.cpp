@@ -290,8 +290,8 @@ void RenderGeometryApp::draw()
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 	glUniform1f(m_shader->getUniform("specularPower"), specularPower);
 
-		// bind vertex array object
-		m_mesh->bind();
+	// bind vertex array object
+	m_mesh->bind();
 
 	// set to draw wireframe
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
