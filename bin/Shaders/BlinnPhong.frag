@@ -35,6 +35,6 @@ void main()
 	float attenuation = pow(influence, specularPower);
 	vec4 specular = Ks * attenuation * Is;
     
-	vec4 phong = ambient + diffuse + specular;
-	FragColor = phong;
+	vec4 blinnPhong = ambient + diffuse + specular;
+	FragColor = blinnPhong;
 }
