@@ -31,8 +31,8 @@ void main()
 	vec3 V = normalize(cameraPosition.xyz - vPosition.xyz);
 	vec3 H = normalize(-L + V);
 	float HdotN = dot(H, N);	
-	float influenceSpec = max(0, HdotN);
-	float attenuation = pow(influenceSpec, specularPower);
+	float influence = max(0, HdotN);
+	float attenuation = pow(influence, specularPower);
 	vec4 specular = Ks * attenuation * Is;
     
 	vec4 phong = ambient + diffuse + specular;

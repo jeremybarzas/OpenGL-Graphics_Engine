@@ -31,8 +31,8 @@ void main()
 	vec3 R = reflect(L, N);
 	vec3 V = normalize(cameraPosition.xyz - vPosition.xyz);		
 	float RdotV = dot(R, V);	
-	float influenceSpec = max(0, RdotV);
-	float attenuation = pow(influenceSpec, specularPower);
+	float influence = max(0, RdotV);
+	float attenuation = pow(influence, specularPower);
 	vec4 specular = Ks * attenuation * Is;
     
 	vec4 phong = ambient + diffuse + specular;
