@@ -48,8 +48,9 @@ void RenderGeometryApp::startup()
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -271,11 +272,13 @@ void RenderGeometryApp::update(float deltaTime)
 	m_camera->update(deltaTime);
 }
 float specularPower = 1;
+float ambientSurfaceMat[] = { 1, 1, 1, 1};
 void RenderGeometryApp::draw()
 {
 	// start imgui
-	ImGui::Begin("DIS DO NUTTIN");
+	ImGui::Begin("Lighting Controls");
 	ImGui::SliderFloat("spec power", &specularPower, 1, 128);
+	
 	// end imgui
 	ImGui::End();
 
