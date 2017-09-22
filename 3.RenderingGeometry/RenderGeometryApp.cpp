@@ -49,8 +49,9 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program

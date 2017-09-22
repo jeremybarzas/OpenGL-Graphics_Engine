@@ -27,11 +27,11 @@ void main()
 
 	// specular
 	vec4 Ks = vec4(1);
-	vec4 Is = vec4(1);
-	vec3 R = reflect(L, N);
-	vec3 V = normalize(cameraPosition.xyz - vPosition.xyz);		
-	float RdotV = dot(R, V);	
-	float influenceSpec = max(0, RdotV);
+	vec4 Is = vec4(1);	
+	vec3 V = normalize(cameraPosition.xyz - vPosition.xyz);
+	vec3 H = normalize(-L + V);
+	float HdotN = dot(H, N);	
+	float influenceSpec = max(0, HdotN);
 	float attenuation = pow(influenceSpec, specularPower);
 	vec4 specular = Ks * attenuation * Is;
     
