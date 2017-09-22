@@ -46,5 +46,5 @@ void main()
 	FragColor = blinnPhong;
 
 	vec4 meshColor = vec4(sphereColorR, sphereColorG, sphereColorB, 1);
-	FragColor += meshColor;
+	FragColor += meshColor * .5;
 }
