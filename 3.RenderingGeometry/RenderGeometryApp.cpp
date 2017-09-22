@@ -273,7 +273,6 @@ void RenderGeometryApp::update(float deltaTime)
 	m_camera->update(deltaTime);
 }
 float specularPower = 1;
-float ambientSurfaceMat[] = { 1, 1, 1, 1};
 void RenderGeometryApp::draw()
 {
 	// start imgui
