@@ -9,6 +9,10 @@ in vec4 vColor;
 uniform float lightDirX;
 uniform float lightDirY;
 uniform float lightDirZ;
+uniform float sphereColorR;
+uniform float sphereColorG;
+uniform float sphereColorB;
+uniform float sphereColorA;
 uniform float specularPower;
 uniform vec4 cameraPosition;
 
@@ -40,5 +44,7 @@ void main()
     
 	vec4 blinnPhong = ambient + diffuse + specular;
 	FragColor = blinnPhong;
-	FragColor += vec4(.5, 0, .5, 1);
+
+	vec4 meshColor = vec4(sphereColorR, sphereColorG, sphereColorB, 1);
+	FragColor += meshColor;
 }

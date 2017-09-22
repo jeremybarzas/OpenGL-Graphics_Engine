@@ -298,6 +298,9 @@ void RenderGeometryApp::update(float deltaTime)
 	m_camera->update(deltaTime);
 }
 
+float sphereColorR = 0;
+float sphereColorG = 0;
+float sphereColorB = 0;
 void RenderGeometryApp::draw()
 {
 	// ImGUI
@@ -308,10 +311,16 @@ void RenderGeometryApp::draw()
 	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
 	ImGui::End();
 
-	ImGui::Begin("Sphere Controls");
+	ImGui::Begin("Sphere Geometry Controls");
 	ImGui::SliderFloat("Radius", &m_radius, 1, 10);
 	ImGui::SliderInt("# of Points", &m_np, 3, 21);
 	ImGui::SliderInt("# of Meridians", &m_nm, 4, 32);
+	ImGui::End();
+
+	ImGui::Begin("Sphere Color Controls");
+	ImGui::SliderFloat("Red Value", &sphereColorR, 0, 1);
+	ImGui::SliderFloat("Green Value", &sphereColorG, 0, 1);
+	ImGui::SliderFloat("Blue Value", &sphereColorB, 0, 1);
 	ImGui::End();
 
 	// use shader program
@@ -327,6 +336,9 @@ void RenderGeometryApp::draw()
 	glUniform1f(m_shader->getUniform("lightDirX"), m_light.lightDirX);
 	glUniform1f(m_shader->getUniform("lightDirY"), m_light.lightDirY);
 	glUniform1f(m_shader->getUniform("lightDirZ"), m_light.lightDirZ);
+	glUniform1f(m_shader->getUniform("sphereColorR"), sphereColorR);
+	glUniform1f(m_shader->getUniform("sphereColorG"), sphereColorG);
+	glUniform1f(m_shader->getUniform("sphereColorB"), sphereColorB);
 
 	// bind vertex array object
 	m_mesh->bind();
