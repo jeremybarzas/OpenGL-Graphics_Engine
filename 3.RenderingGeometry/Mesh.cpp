@@ -19,7 +19,7 @@ void Mesh::create_buffers()
 	glGenBuffers(1, &m_vbo);
 
 	// generate Index Buffer Object
-	glGenBuffers(1, &m_ibo);	
+	glGenBuffers(1, &m_ibo);
 
 	// ========== Bind Objects ==========
 	// bind Vertex Array Object
@@ -62,7 +62,7 @@ void Mesh::create_buffers()
 }
 
 void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& indices)
-{
+{	
 	// populate vertex array with passed values
 	for (auto v : verts)
 		this->m_vertices.push_back(v);
@@ -75,9 +75,7 @@ void Mesh::initialize(std::vector<Vertex>& verts, std::vector<unsigned int>& ind
 		this->m_indices.push_back(i);
 
 	// assign the index count
-	this->m_index_count = m_indices.size();
-
-	this->create_buffers();
+	this->m_index_count = m_indices.size();	
 }
 
 void Mesh::bind()

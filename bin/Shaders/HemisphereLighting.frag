@@ -13,9 +13,9 @@ void main()
 	float NdotUP = dot(N, UP);
 	float influence = NdotUP + 0.5 * 0.5;
 
-	vec4 Ka = vec4(0);	
+	vec4 Ka = vColor;
 	vec4 Ia = vec4(1);	
 	
 	vec4 hemisphere = mix(Ia, Ka, influence);
-    FragColor = hemisphere;
+    FragColor = hemisphere;	
 }

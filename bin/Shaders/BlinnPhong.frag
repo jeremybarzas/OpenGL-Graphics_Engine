@@ -6,12 +6,15 @@ in vec4 vPosition;
 in vec4 vNormal;
 in vec4 vColor;
 
-uniform float specularPower;
 uniform vec4 cameraPosition;
+uniform float lightDirX ;
+uniform float lightDirY;
+uniform float lightDirZ;
+uniform float specularPower;
 
 void main()
 {
-	vec3 L = normalize(vec3(1, -1, 0));
+	vec3 L = normalize(vec3(lightDirX, lightDirY, lightDirZ));
 	vec3 N = normalize(vNormal.xyz);
 
 	// ambient
@@ -35,6 +38,6 @@ void main()
 	float attenuation = pow(influence, specularPower);
 	vec4 specular = Ks * attenuation * Is;
     
-	vec4 blinnPhong = ambient + diffuse + specular;
+	vec4 blinnPhong = (ambient + diffuse + specular);
 	FragColor = blinnPhong;
 }

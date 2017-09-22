@@ -6,6 +6,14 @@
 #include "Shader.h"
 #include <glm\glm.hpp>
 
+struct Light
+{
+	float lightDirX = 1;
+	float lightDirY = -1;
+	float lightDirZ = 0;
+	float specularPower = 64;
+};
+
 
 class RenderGeometryApp : public Application
 {
@@ -26,12 +34,23 @@ public:
 
 	Mesh* m_mesh;
 	Shader* m_shader;
+	Light m_light;
+
+	float m_radius = 1;
+	int m_np = 3;
+	int m_nm = 4;
+
+	float m_prev_radius;
+	int m_prev_np;
+	int m_prev_nm;
 
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	std::vector<unsigned int> genIndicesTriStrip(unsigned int, unsigned int);
 	
 	// generate a sphere using triangles
-	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);	
+	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
+
+	void genSphere();
 };
 

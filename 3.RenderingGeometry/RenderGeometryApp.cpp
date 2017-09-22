@@ -7,6 +7,17 @@
 
 RenderGeometryApp::RenderGeometryApp()
 {
+	// camera object initialization
+	m_camera = new Camera();
+
+	// Mesh object pointer initialization
+	m_mesh = new Mesh();
+
+	// Shader object pointer initialization
+	m_shader = new Shader();
+
+	// Light object 
+	m_light = Light();
 }
 
 RenderGeometryApp::~RenderGeometryApp()
@@ -18,15 +29,6 @@ RenderGeometryApp::~RenderGeometryApp()
 
 void RenderGeometryApp::startup()
 {
-	// camera object initialization
-	m_camera = new Camera();
-
-	// Mesh object pointer initialization
-	m_mesh = new Mesh();
-
-	// Shader object pointer initialization
-	m_shader = new Shader();
-
 	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
 	eye = glm::vec3(5, 5, 5);
@@ -43,15 +45,17 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/AmbientLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/HemisphereLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -60,31 +64,37 @@ void RenderGeometryApp::startup()
 	/*========== Mesh Startup ==========*/
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/
-	float radius;
-	unsigned np, nm;
-	radius = 5.f;
-	np = 24;
-	nm = 32;
+	m_radius = 5;
+	m_np = 24;
+	m_nm = 32;
 
-	// generate vertex info for a half circle
-	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, np);
+	m_prev_radius = m_radius;
+	m_prev_np = m_np;
+	m_prev_nm = m_nm;
 
-	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, nm);
+	genSphere();
 
-	// generate indices for triangle strip
-	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(nm, np);
+	//// generate vertex info for a half circle
+	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
 
-	// convert spherePoints into a std::vector<Vertex>
-	std::vector<Vertex> verts;
-	for (auto p : spherePoints)
-	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-		verts.push_back(vert);
-	}
+	//// rotate half circle around to generate entire sphere verts
+	//std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, m_nm);
 
-	// initialize with sphere vertex and index information
-	m_mesh->initialize(verts, sphereIndices);
+	//// generate indices for triangle strip
+	//std::vector<unsigned int> sphereIndices = genIndicesTriStrip(m_nm, m_np);
+
+	//// convert spherePoints into a std::vector<Vertex>
+	//std::vector<Vertex> verts;
+	//for (auto p : spherePoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	verts.push_back(vert);
+	//}
+
+	//// initialize with sphere vertex and index information
+	//m_mesh->initialize(verts, sphereIndices);
+
+	//m_mesh->create_buffers();
 
 	///*========== Generate Plane Information ==========*/
 	//std::vector<glm::vec4> planePoints;
@@ -215,7 +225,22 @@ void RenderGeometryApp::startup()
 }
 
 void RenderGeometryApp::update(float deltaTime)
-{
+{	
+	if (m_prev_radius != m_radius)
+	{
+		genSphere();
+	}
+
+	if (m_prev_np != m_np)
+	{
+		genSphere();
+	}
+
+	if (m_prev_nm != m_nm)
+	{
+		genSphere();
+	}	
+
 	// camera strafe forward
 	glm::vec4 forward = m_camera->m_transform->getWorld()[2];
 	glm::vec4 right = m_camera->m_transform->getWorld()[0];
@@ -272,14 +297,21 @@ void RenderGeometryApp::update(float deltaTime)
 
 	m_camera->update(deltaTime);
 }
-float specularPower = 1;
+
 void RenderGeometryApp::draw()
 {
-	// start imgui
+	// ImGUI
 	ImGui::Begin("Lighting Controls");
-	ImGui::SliderFloat("spec power", &specularPower, 1, 128);
-	
-	// end imgui
+	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
+	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
+	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
+	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
+	ImGui::End();
+
+	ImGui::Begin("Sphere Controls");
+	ImGui::SliderFloat("Radius", &m_radius, 1, 10);
+	ImGui::SliderInt("# of Points", &m_np, 3, 48);
+	ImGui::SliderInt("# of Meridians", &m_nm, 4, 64);
 	ImGui::End();
 
 	// use shader program
@@ -291,7 +323,10 @@ void RenderGeometryApp::draw()
 	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
 
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
-	glUniform1f(m_shader->getUniform("specularPower"), specularPower);
+	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
+	glUniform1f(m_shader->getUniform("lightDirX"), m_light.lightDirX);
+	glUniform1f(m_shader->getUniform("lightDirY"), m_light.lightDirY);
+	glUniform1f(m_shader->getUniform("lightDirZ"), m_light.lightDirZ);
 
 	// bind vertex array object
 	m_mesh->bind();
@@ -515,4 +550,38 @@ void RenderGeometryApp::genSphereTriangles(unsigned int segments, unsigned int r
 
 	delete[] indices;
 	delete[] vertices;
+}
+
+void RenderGeometryApp::genSphere()
+{
+	glDeleteBuffers(1, &m_mesh->m_vbo);
+	glDeleteBuffers(1, &m_mesh->m_ibo);
+	glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+	delete m_mesh;
+	m_mesh = new Mesh();
+
+	// generate vertex info for a half circle
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
+
+	// rotate half circle around to generate entire sphere verts
+	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, m_nm);
+
+	// generate indices for triangle strip
+	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(m_nm, m_np);
+
+	// convert spherePoints into a std::vector<Vertex>
+	std::vector<Vertex> verts;
+	for (auto p : spherePoints)
+	{
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		verts.push_back(vert);
+	}
+
+	// initialize with sphere vertex and index information
+	m_mesh->initialize(verts, sphereIndices);
+
+	m_mesh->create_buffers();
+
+	m_prev_radius = m_radius;
 }
