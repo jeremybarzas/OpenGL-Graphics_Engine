@@ -40,5 +40,5 @@ void main()
     
 	vec4 blinnPhong = ambient + diffuse + specular;
 	FragColor = blinnPhong;
-	//FragColor += vColor;
+	FragColor += vec4(.5, 0, .5, 1);
 }

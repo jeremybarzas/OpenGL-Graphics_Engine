@@ -45,8 +45,8 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	//m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
@@ -65,8 +65,8 @@ void RenderGeometryApp::startup()
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/
 	m_radius = 5;
-	m_np = 24;
-	m_nm = 32;
+	m_np = 9;
+	m_nm = 12;
 
 	m_prev_radius = m_radius;
 	m_prev_np = m_np;
@@ -310,8 +310,8 @@ void RenderGeometryApp::draw()
 
 	ImGui::Begin("Sphere Controls");
 	ImGui::SliderFloat("Radius", &m_radius, 1, 10);
-	ImGui::SliderInt("# of Points", &m_np, 3, 48);
-	ImGui::SliderInt("# of Meridians", &m_nm, 4, 64);
+	ImGui::SliderInt("# of Points", &m_np, 3, 21);
+	ImGui::SliderInt("# of Meridians", &m_nm, 4, 32);
 	ImGui::End();
 
 	// use shader program
