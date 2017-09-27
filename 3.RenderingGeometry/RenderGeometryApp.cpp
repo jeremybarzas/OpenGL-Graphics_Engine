@@ -137,6 +137,7 @@ void RenderGeometryApp::startup()
 		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p), };
 		planeVerts.push_back(vert);
 	}
+	// UV assignments
 	planeVerts[0].uv = { 0, 0 };
 	planeVerts[1].uv = { 1, 0 };
 	planeVerts[2].uv = { 0, 1 };
@@ -356,14 +357,14 @@ void RenderGeometryApp::draw()
 	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 
+	// Texture stuff
+	//int loc = glGetUniformLocation(m_shader->m_program, "projectionViewWorld");
 
-	int loc = glGetUniformLocation(m_shader->m_program, "projectionViewWorld");
+	//glActiveTexture(GL_TEXTURE0); 
+	//glBindTexture(GL_TEXTURE_2D, m_texture);
 
-	glActiveTexture(GL_TEXTURE0); 
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-
-	loc = glGetUniformLocation(m_shader->m_program, "sampler");
-	glUniform1i(loc, 0);
+	//loc = glGetUniformLocation(m_shader->m_program, "sampler");
+	//glUniform1i(loc, 0);
 
 	// bind vertex array object
 	m_mesh->bind();

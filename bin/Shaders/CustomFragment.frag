@@ -48,7 +48,7 @@ void main()
     specular.xyz *= specularStrength;
 
 	vec4 blinnPhong = ambient + diffuse + specular;
-	//FragColor = blinnPhong;
 
 	FragColor = texture(sampler, vUv);	
+	FragColor *= blinnPhong;
 }
