@@ -347,9 +347,6 @@ void RenderGeometryApp::draw()
 	glUniform1f(m_shader->getUniform("specularStrength"), m_light.specularStrength);
 	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
-	glUniform1f(m_shader->getUniform("sphereColorR"), sphereColorR);
-	glUniform1f(m_shader->getUniform("sphereColorG"), sphereColorG);
-	glUniform1f(m_shader->getUniform("sphereColorB"), sphereColorB);
 
 	// bind vertex array object
 	m_mesh->bind();
