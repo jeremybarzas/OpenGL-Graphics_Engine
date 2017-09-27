@@ -4,6 +4,10 @@
 #include <imgui_impl_glfw_gl3.h>
 #define PI 3.14159265359
 
+// texture
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb-master\stb_image.h"
+
 
 RenderGeometryApp::RenderGeometryApp()
 {
@@ -334,7 +338,7 @@ void RenderGeometryApp::draw()
 	// use shader program
 	m_shader->bind();
 
-	// create and assign uniform	
+	// create and assign uniform
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
 	
 	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);

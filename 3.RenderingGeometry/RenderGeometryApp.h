@@ -6,10 +6,6 @@
 #include "Shader.h"
 #include <glm\glm.hpp>
 
-// texture
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb-master\stb_image.h"
-
 struct Light
 {
 	float lightDirX = 1;
