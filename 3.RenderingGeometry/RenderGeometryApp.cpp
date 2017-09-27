@@ -357,15 +357,6 @@ void RenderGeometryApp::draw()
 	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 
-	// Texture stuff
-	/*int loc = glGetUniformLocation(m_shader->m_program, "projectionViewWorld");
-
-	glActiveTexture(GL_TEXTURE0); 
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-
-	loc = glGetUniformLocation(m_shader->m_program, "sampler");
-	glUniform1i(loc, 0);*/
-
 	// bind vertex array object
 	m_mesh->bind();
 
