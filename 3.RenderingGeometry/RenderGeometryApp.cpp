@@ -102,7 +102,7 @@ void RenderGeometryApp::startup()
 
 	///*========== Generate Plane Information ==========*/
 
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0; 
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
 	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 
 	glGenTextures(1, &m_texture);
@@ -134,9 +134,13 @@ void RenderGeometryApp::startup()
 	std::vector<Vertex> planeVerts;
 	for (auto p : planePoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p), };
 		planeVerts.push_back(vert);
 	}
+	planeVerts[0].uv = { 0, 0 };
+	planeVerts[1].uv = { 1, 0 };
+	planeVerts[2].uv = { 0, 1 };
+	planeVerts[3].uv = { 1, 1 };
 
 	planeIndices.push_back(0);
 	planeIndices.push_back(1);
@@ -351,6 +355,15 @@ void RenderGeometryApp::draw()
 	glUniform1f(m_shader->getUniform("specularStrength"), m_light.specularStrength);
 	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
 	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
+
+
+	int loc = glGetUniformLocation(m_shader->m_program, "projectionViewWorld");
+
+	glActiveTexture(GL_TEXTURE0); 
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+
+	loc = glGetUniformLocation(m_shader->m_program, "sampler");
+	glUniform1i(loc, 0);
 
 	// bind vertex array object
 	m_mesh->bind();
