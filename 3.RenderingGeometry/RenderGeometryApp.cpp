@@ -45,8 +45,8 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
-	//m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
+	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
@@ -72,7 +72,7 @@ void RenderGeometryApp::startup()
 	m_prev_np = m_np;
 	m_prev_nm = m_nm;
 
-	genSphere();
+	//genSphere();
 
 	//// generate vertex info for a half circle
 	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
@@ -97,39 +97,53 @@ void RenderGeometryApp::startup()
 	//m_mesh->create_buffers();
 
 	///*========== Generate Plane Information ==========*/
-	//std::vector<glm::vec4> planePoints;
-	//std::vector<unsigned int> planeIndices;
-	//unsigned int width, length;
-	//width = 5;
-	//length = 5;
 
-	//// near left
-	//planePoints.push_back(glm::vec4(0, 0, 0, 1));
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0; 
+	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 
-	//// near right
-	//planePoints.push_back(glm::vec4(width, 0, 0, 1));
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	//// far left
-	//planePoints.push_back(glm::vec4(0, 0, length, 1));
+	stbi_image_free(data);
 
-	//// far right
-	//planePoints.push_back(glm::vec4(width, 0, length, 1));
+	std::vector<glm::vec4> planePoints;
+	std::vector<unsigned int> planeIndices;
+	unsigned int width, length;
+	width = 5;
+	length = 5;
 
-	//std::vector<Vertex> planeVerts;
-	//for (auto p : planePoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	planeVerts.push_back(vert);
-	//}
+	// near left
+	planePoints.push_back(glm::vec4(0, 0, 0, 1));
 
-	//planeIndices.push_back(0);
-	//planeIndices.push_back(1);
-	//planeIndices.push_back(2);
-	//planeIndices.push_back(3);
-	//planeIndices.push_back(0xFFFF);
-	//
-	//// initialize with plane vertex and index information
-	//m_mesh->initialize(planeVerts, planeIndices);
+	// near right
+	planePoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	// far left
+	planePoints.push_back(glm::vec4(0, 0, length, 1));
+
+	// far right
+	planePoints.push_back(glm::vec4(width, 0, length, 1));
+
+	std::vector<Vertex> planeVerts;
+	for (auto p : planePoints)
+	{
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		planeVerts.push_back(vert);
+	}
+
+	planeIndices.push_back(0);
+	planeIndices.push_back(1);
+	planeIndices.push_back(2);
+	planeIndices.push_back(3);
+	planeIndices.push_back(0xFFFF);
+	
+	// initialize with plane vertex and index information
+	m_mesh->initialize(planeVerts, planeIndices);
+
+	m_mesh->create_buffers();
 
 	/*========== Generate Cube Information ==========*/
 	//std::vector<glm::vec4> cubePoints;
@@ -298,17 +312,17 @@ void RenderGeometryApp::update(float deltaTime)
 	m_camera->update(deltaTime);
 }
 
-float sphereColorR = 0;
-float sphereColorG = 0;
-float sphereColorB = 0;
 void RenderGeometryApp::draw()
 {
 	// ImGUI
-	ImGui::Begin("Lighting Controls");
-	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
+	ImGui::Begin("Lighting Controls");	
 	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
 	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
 	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
+	ImGui::SliderFloat("Ambient Strength", &m_light.ambientStrength, 0, 1);
+	ImGui::SliderFloat("Diffuse Strength", &m_light.diffuseStrength, 0, 1);
+	ImGui::SliderFloat("Specular Strength", &m_light.specularStrength, 0, 1);
+	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
 	ImGui::End();
 
 	ImGui::Begin("Sphere Geometry Controls");
@@ -317,25 +331,22 @@ void RenderGeometryApp::draw()
 	ImGui::SliderInt("# of Meridians", &m_nm, 4, 32);
 	ImGui::End();
 
-	ImGui::Begin("Sphere Color Controls");
-	ImGui::SliderFloat("Red Value", &sphereColorR, 0, 1);
-	ImGui::SliderFloat("Green Value", &sphereColorG, 0, 1);
-	ImGui::SliderFloat("Blue Value", &sphereColorB, 0, 1);
-	ImGui::End();
-
 	// use shader program
 	m_shader->bind();
 
 	// create and assign uniform	
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
-
+	
 	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
-
-	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
-	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
+		
 	glUniform1f(m_shader->getUniform("lightDirX"), m_light.lightDirX);
 	glUniform1f(m_shader->getUniform("lightDirY"), m_light.lightDirY);
 	glUniform1f(m_shader->getUniform("lightDirZ"), m_light.lightDirZ);
+	glUniform1f(m_shader->getUniform("ambientStrength"), m_light.ambientStrength);
+	glUniform1f(m_shader->getUniform("diffuseStrength"), m_light.diffuseStrength);
+	glUniform1f(m_shader->getUniform("specularStrength"), m_light.specularStrength);
+	glUniform1f(m_shader->getUniform("specularPower"), m_light.specularPower);
+	glUniform4fv(m_shader->getUniform("cameraPosition"), 1, glm::value_ptr(camPos));
 	glUniform1f(m_shader->getUniform("sphereColorR"), sphereColorR);
 	glUniform1f(m_shader->getUniform("sphereColorG"), sphereColorG);
 	glUniform1f(m_shader->getUniform("sphereColorB"), sphereColorB);
