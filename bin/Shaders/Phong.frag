@@ -6,8 +6,11 @@ in vec4 vPosition;
 in vec4 vNormal;
 in vec4 vColor;
 
-uniform float specularPower;
 uniform vec4 cameraPosition;
+uniform float lightDirX ;
+uniform float lightDirY;
+uniform float lightDirZ;
+uniform float specularPower;
 
 void main()
 {

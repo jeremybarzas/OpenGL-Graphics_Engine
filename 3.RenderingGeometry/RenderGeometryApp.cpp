@@ -66,8 +66,8 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -86,9 +86,11 @@ void RenderGeometryApp::startup()
 	stbi_image_free(data);
 
 	/*========== Geometry Mesh Startup ==========*/
+	std::vector<glm::vec4> meshPoints;
+	std::vector<unsigned int> meshIndices;
+	std::vector<Vertex> meshVerts;
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	// variables to control sphere regeneration at runtime
 	radius = 5;
 	numP = 9;
 	numM = 12;
@@ -96,161 +98,153 @@ void RenderGeometryApp::startup()
 	prevNumP = numP;
 	prevNumM = numM;
 	
-	//// generate vertex info for a half circle
-	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
+	// generate vertex info for a half circle
+	meshPoints = generateHalfCircle(radius, numP);
 
-	//// rotate half circle around to generate entire sphere verts
-	//std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, m_nm);
+	// rotate half circle around to generate entire sphere verts
+	meshPoints = rotatePoints(meshPoints, numM);
 
-	//// generate indices for triangle strip
-	//std::vector<unsigned int> sphereIndices = genIndicesTriStrip(m_nm, m_np);
+	// generate indices for triangle strip
+	meshIndices = genIndicesTriStrip(numM, numP);
 
-	//// convert spherePoints into a std::vector<Vertex>
-	//std::vector<Vertex> verts;
-	//for (auto p : spherePoints)
+	// convert spherePoints into a std::vector<Vertex>	
+	for (auto p : meshPoints)
+	{
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		meshVerts.push_back(vert);
+	}
+
+	////*========== Generate Plane Information ==========*/	
+	//unsigned int width, length;
+	//width = 5;
+	//length = 5;
+
+	//// near left
+	//meshPoints.push_back(glm::vec4(0, 0, 0, 1));
+
+	//// near right
+	//meshPoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	//// far left
+	//meshPoints.push_back(glm::vec4(0, 0, length, 1));
+
+	//// far right
+	//meshPoints.push_back(glm::vec4(width, 0, length, 1));
+	//
+	//for (auto p : meshPoints)
 	//{
 	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	verts.push_back(vert);
+	//	meshVerts.push_back(vert);
 	//}
 
-	//// initialize with sphere vertex and index information
-	//m_mesh->initialize(verts, sphereIndices);
+	//// UV assignments
+	//meshVerts[0].uv = { 0, 0 };
+	//meshVerts[1].uv = { 1, 0 };
+	//meshVerts[2].uv = { 0, 1 };
+	//meshVerts[3].uv = { 1, 1 };
+
+	//meshIndices.push_back(0);
+	//meshIndices.push_back(1);
+	//meshIndices.push_back(2);
+	//meshIndices.push_back(3);
+	//meshIndices.push_back(0xFFFF);
+	//
+	//// initialize with plane vertex and index information
+	//m_mesh->initialize(meshVerts, meshIndices);
 
 	//// create and setup buffers
 	//m_mesh->create_buffers();
 
-	//*========== Generate Plane Information ==========*/
-	std::vector<glm::vec4> planePoints;
-	std::vector<unsigned int> planeIndices;
-	unsigned int width, length;
-	width = 5;
-	length = 5;
-
-	// near left
-	planePoints.push_back(glm::vec4(0, 0, 0, 1));
-
-	// near right
-	planePoints.push_back(glm::vec4(width, 0, 0, 1));
-
-	// far left
-	planePoints.push_back(glm::vec4(0, 0, length, 1));
-
-	// far right
-	planePoints.push_back(glm::vec4(width, 0, length, 1));
-
-	std::vector<Vertex> planeVerts;
-	for (auto p : planePoints)
-	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p), };
-		planeVerts.push_back(vert);
-	}
-
-	// UV assignments
-	planeVerts[0].uv = { 0, 0 };
-	planeVerts[1].uv = { 1, 0 };
-	planeVerts[2].uv = { 0, 1 };
-	planeVerts[3].uv = { 1, 1 };
-
-	planeIndices.push_back(0);
-	planeIndices.push_back(1);
-	planeIndices.push_back(2);
-	planeIndices.push_back(3);
-	planeIndices.push_back(0xFFFF);
-	
-	// initialize with plane vertex and index information
-	m_mesh->initialize(planeVerts, planeIndices);
-
-	// create and setup buffers
-	m_mesh->create_buffers();
-
-	/*========== Generate Cube Information ==========*/
-	//std::vector<glm::vec4> cubePoints;
-	//std::vector<unsigned int> cubeIndices;
+	///*========== Generate Cube Information ==========*/
+	//std::vector<glm::vec4> meshPoints;
+	//std::vector<unsigned int> meshIndices;
 	//unsigned int width, length, size;
 	//width = 5;
 	//length = 5;
 	//size = 5;
 
-	//*===== Bottom Points =====*/
+	////*===== Bottom Points =====*/
 	//// near left
-	//cubePoints.push_back(glm::vec4(0, 0, 0, 1));
+	//meshPoints.push_back(glm::vec4(0, 0, 0, 1));
 
 	//// near right
-	//cubePoints.push_back(glm::vec4(width, 0, 0, 1));
+	//meshPoints.push_back(glm::vec4(width, 0, 0, 1));
 
 	//// far left
-	//cubePoints.push_back(glm::vec4(0, 0, length, 1));
+	//meshPoints.push_back(glm::vec4(0, 0, length, 1));
 
 	//// far right
-	//cubePoints.push_back(glm::vec4(width, 0, length, 1));
+	//meshPoints.push_back(glm::vec4(width, 0, length, 1));
 
-	//*===== Top Points =====*/
+	////*===== Top Points =====*/
 	//// near left
-	//cubePoints.push_back(glm::vec4(0, size, 0, 1));
+	//meshPoints.push_back(glm::vec4(0, size, 0, 1));
 
 	//// near right
-	//cubePoints.push_back(glm::vec4(width, size, 0, 1));
+	//meshPoints.push_back(glm::vec4(width, size, 0, 1));
 
 	//// far left
-	//cubePoints.push_back(glm::vec4(0, size, length, 1));
+	//meshPoints.push_back(glm::vec4(0, size, length, 1));
 
 	//// far right
-	//cubePoints.push_back(glm::vec4(width, size, length, 1));
-
-	//std::vector<Vertex> cubeVerts;
-	//for (auto p : cubePoints)
+	//meshPoints.push_back(glm::vec4(width, size, length, 1));
+	//
+	//// turn points into vertices
+	//for (auto p : meshPoints)
 	//{
 	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	cubeVerts.push_back(vert);
+	//	meshVerts.push_back(vert);
 	//}
 
 	//// bottom face
-	//cubeIndices.push_back(0);
-	//cubeIndices.push_back(1);
-	//cubeIndices.push_back(2);
-	//cubeIndices.push_back(3);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(0);
+	//meshIndices.push_back(1);
+	//meshIndices.push_back(2);
+	//meshIndices.push_back(3);
+	//meshIndices.push_back(0xFFFF);
 
 	//// top face
-	//cubeIndices.push_back(4);
-	//cubeIndices.push_back(5);
-	//cubeIndices.push_back(6);
-	//cubeIndices.push_back(7);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(4);
+	//meshIndices.push_back(5);
+	//meshIndices.push_back(6);
+	//meshIndices.push_back(7);
+	//meshIndices.push_back(0xFFFF);
 
 	//// front face
-	//cubeIndices.push_back(0);
-	//cubeIndices.push_back(1);
-	//cubeIndices.push_back(4);
-	//cubeIndices.push_back(5);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(0);
+	//meshIndices.push_back(1);
+	//meshIndices.push_back(4);
+	//meshIndices.push_back(5);
+	//meshIndices.push_back(0xFFFF);
 
 	//// back face
-	//cubeIndices.push_back(2);
-	//cubeIndices.push_back(3);
-	//cubeIndices.push_back(6);
-	//cubeIndices.push_back(7);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(2);
+	//meshIndices.push_back(3);
+	//meshIndices.push_back(6);
+	//meshIndices.push_back(7);
+	//meshIndices.push_back(0xFFFF);
 
 	//// right face
-	//cubeIndices.push_back(1);
-	//cubeIndices.push_back(3);
-	//cubeIndices.push_back(5);
-	//cubeIndices.push_back(7);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(1);
+	//meshIndices.push_back(3);
+	//meshIndices.push_back(5);
+	//meshIndices.push_back(7);
+	//meshIndices.push_back(0xFFFF);
 
 	//// left face
-	//cubeIndices.push_back(0);
-	//cubeIndices.push_back(2);
-	//cubeIndices.push_back(4);
-	//cubeIndices.push_back(6);
-	//cubeIndices.push_back(0xFFFF);
+	//meshIndices.push_back(0);
+	//meshIndices.push_back(2);
+	//meshIndices.push_back(4);
+	//meshIndices.push_back(6);
+	//meshIndices.push_back(0xFFFF);
 
-	//// initialize with plane vertex and index information
-	//m_mesh->initialize(cubeVerts, cubeIndices);
+	/*========== Initialize mesh and create buffers ==========*/
+
+	// initialize with plane vertex and index information
+	m_mesh->initialize(meshVerts, meshIndices);
 
 	// create and setup buffers
-	//m_mesh->create_buffers();
+	m_mesh->create_buffers();
 
 	/*========== Generate Sphere Information (setup for triangles)==========*/
 	/*unsigned int segments = 12;

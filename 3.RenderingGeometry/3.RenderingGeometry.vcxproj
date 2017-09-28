@@ -131,6 +131,17 @@
     <ClInclude Include="RenderGeometryApp.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\Shaders\BlinnPhong.frag" />
+    <None Include="..\bin\Shaders\CustomFragment.frag" />
+    <None Include="..\bin\Shaders\DefaultFragment.frag" />
+    <None Include="..\bin\Shaders\DefaultVertex.vert" />
+    <None Include="..\bin\Shaders\DiffuseLighting.frag" />
+    <None Include="..\bin\Shaders\HemisphereLighting.frag" />
+    <None Include="..\bin\Shaders\Phong.frag" />
+    <None Include="..\bin\Shaders\SpecularLighting.frag" />
+    <None Include="..\bin\Shaders\TexturedLighting.frag" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

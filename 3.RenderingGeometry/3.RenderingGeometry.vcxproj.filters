@@ -39,4 +39,33 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\Shaders\BlinnPhong.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\CustomFragment.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\DefaultFragment.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\DefaultVertex.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\DiffuseLighting.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\HemisphereLighting.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\Phong.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\SpecularLighting.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\TexturedLighting.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
