@@ -11,7 +11,7 @@ struct Light
 	float lightDirX = 1;
 	float lightDirY = -1;
 	float lightDirZ = 0;	
-	float ambientStrength = 1;
+	float ambientStrength = 0;
 	float diffuseStrength = 1;
 	float specularStrength = 1;
 	float specularPower = 64;

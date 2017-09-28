@@ -7,12 +7,12 @@ in vec4 vNormal;
 in vec4 vColor;
 in vec2 vUv;
 
-uniform float ambientStrength;
-uniform float diffuseStrength;
-uniform float specularStrength;
 uniform float lightDirX;
 uniform float lightDirY;
 uniform float lightDirZ;
+uniform float ambientStrength;
+uniform float diffuseStrength;
+uniform float specularStrength;
 uniform float specularPower;
 uniform vec4 cameraPosition;
 

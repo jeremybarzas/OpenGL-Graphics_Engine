@@ -91,9 +91,9 @@ void RenderGeometryApp::startup()
 	std::vector<Vertex> meshVerts;
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	radius = 5;
-	numP = 9;
-	numM = 12;
+	radius = 2;
+	numP = 3;
+	numM = 4;
 	prevRadius = radius;
 	prevNumP = numP;
 	prevNumM = numM;
@@ -110,11 +110,11 @@ void RenderGeometryApp::startup()
 	// convert spherePoints into a std::vector<Vertex>	
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 
-	////*========== Generate Plane Information ==========*/	
+	//*========== Generate Plane Information ==========*/	
 	//unsigned int width, length;
 	//width = 5;
 	//length = 5;
@@ -439,7 +439,6 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 		// loop per point
 		for (int j = 0; j < points.size(); j++)
 		{
-			glm::cos(25);
 			// calculate each new value of the new vec4
 			float newX = points[j].x * cos(phi) + points[j].z * sin(phi);
 			float newY = points[j].y;
