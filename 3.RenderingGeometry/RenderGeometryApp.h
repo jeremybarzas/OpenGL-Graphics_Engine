@@ -17,7 +17,6 @@ struct Light
 	float specularPower = 64;
 };
 
-
 class RenderGeometryApp : public Application
 {
 public:
@@ -35,19 +34,12 @@ public:
 	glm::vec3 center;
 	glm::vec3 up;	
 
-	Mesh* m_mesh;
 	Shader* m_shader;
+	Mesh* m_mesh;	
 	Light m_light;
 
-	unsigned int m_texture;
-
-	float m_radius = 1;
-	int m_np = 3;
-	int m_nm = 4;
-
-	float m_prev_radius;
-	int m_prev_np;
-	int m_prev_nm;
+	// the texture handle
+	unsigned int m_texture;	
 
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
@@ -56,6 +48,7 @@ public:
 	// generate a sphere using triangles
 	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
 
+	// generate sphere at runtime
 	void genSphere();
 };
 

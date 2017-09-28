@@ -7,8 +7,6 @@ in vec4 vNormal;
 in vec4 vColor;
 in vec2 vUv;
 
-uniform sampler2D sampler;
-
 uniform float ambientStrength;
 uniform float diffuseStrength;
 uniform float specularStrength;
@@ -24,7 +22,7 @@ void main()
 	vec3 N = normalize(vNormal.xyz);
 
 	// ambient
-	vec4 Ka = vec4(0);	
+	vec4 Ka = vec4(1);	
 	vec4 Ia = vec4(1);
 	vec4 ambient = Ka * Ia;
 	ambient.xyz *= ambientStrength;
@@ -49,6 +47,5 @@ void main()
 
 	vec4 blinnPhong = ambient + diffuse + specular;
 
-	FragColor = texture(sampler, vUv);	
-	FragColor *= blinnPhong;
+	FragColor = vColor * blinnPhong;
 }

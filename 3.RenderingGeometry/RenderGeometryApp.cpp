@@ -8,6 +8,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb-master\stb_image.h"
 
+// global sphere variables
+float radius = 1;
+int numP = 3;
+int numM = 4;
+
+float prevRadius = radius;
+int prevNumP = numP;
+int prevNumM = numM;
 
 RenderGeometryApp::RenderGeometryApp()
 {
@@ -49,8 +57,7 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/CustomVertex.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);	
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
@@ -59,25 +66,36 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
 
-	/*========== Mesh Startup ==========*/
+	/*========== Texture Startup ==========*/
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 
-	/*========== Generate Sphere Information (setup for triangle strips)==========*/
-	m_radius = 5;
-	m_np = 9;
-	m_nm = 12;
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	m_prev_radius = m_radius;
-	m_prev_np = m_np;
-	m_prev_nm = m_nm;
+	stbi_image_free(data);
 
-	//genSphere();
+	/*========== Geometry Mesh Startup ==========*/
 
+	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
+	// variables to control sphere regeneration at runtime
+	radius = 5;
+	numP = 9;
+	numM = 12;
+	prevRadius = radius;
+	prevNumP = numP;
+	prevNumM = numM;
+	
 	//// generate vertex info for a half circle
 	//std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
 
@@ -98,21 +116,10 @@ void RenderGeometryApp::startup()
 	//// initialize with sphere vertex and index information
 	//m_mesh->initialize(verts, sphereIndices);
 
+	//// create and setup buffers
 	//m_mesh->create_buffers();
 
-	///*========== Generate Plane Information ==========*/
-
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	stbi_image_free(data);
-
+	//*========== Generate Plane Information ==========*/
 	std::vector<glm::vec4> planePoints;
 	std::vector<unsigned int> planeIndices;
 	unsigned int width, length;
@@ -137,6 +144,7 @@ void RenderGeometryApp::startup()
 		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p), };
 		planeVerts.push_back(vert);
 	}
+
 	// UV assignments
 	planeVerts[0].uv = { 0, 0 };
 	planeVerts[1].uv = { 1, 0 };
@@ -152,6 +160,7 @@ void RenderGeometryApp::startup()
 	// initialize with plane vertex and index information
 	m_mesh->initialize(planeVerts, planeIndices);
 
+	// create and setup buffers
 	m_mesh->create_buffers();
 
 	/*========== Generate Cube Information ==========*/
@@ -162,7 +171,7 @@ void RenderGeometryApp::startup()
 	//length = 5;
 	//size = 5;
 
-	///*===== Bottom Points =====*/
+	//*===== Bottom Points =====*/
 	//// near left
 	//cubePoints.push_back(glm::vec4(0, 0, 0, 1));
 
@@ -175,7 +184,7 @@ void RenderGeometryApp::startup()
 	//// far right
 	//cubePoints.push_back(glm::vec4(width, 0, length, 1));
 
-	///*===== Top Points =====*/
+	//*===== Top Points =====*/
 	//// near left
 	//cubePoints.push_back(glm::vec4(0, size, 0, 1));
 
@@ -240,6 +249,9 @@ void RenderGeometryApp::startup()
 	//// initialize with plane vertex and index information
 	//m_mesh->initialize(cubeVerts, cubeIndices);
 
+	// create and setup buffers
+	//m_mesh->create_buffers();
+
 	/*========== Generate Sphere Information (setup for triangles)==========*/
 	/*unsigned int segments = 12;
 	unsigned int rings = 16;
@@ -249,17 +261,17 @@ void RenderGeometryApp::startup()
 
 void RenderGeometryApp::update(float deltaTime)
 {	
-	if (m_prev_radius != m_radius)
+	if (prevRadius != radius)
 	{
 		genSphere();
 	}
 
-	if (m_prev_np != m_np)
+	if (prevNumP != numP)
 	{
 		genSphere();
 	}
 
-	if (m_prev_nm != m_nm)
+	if (prevNumM != numM)
 	{
 		genSphere();
 	}	
@@ -335,9 +347,9 @@ void RenderGeometryApp::draw()
 	ImGui::End();
 
 	ImGui::Begin("Sphere Geometry Controls");
-	ImGui::SliderFloat("Radius", &m_radius, 1, 10);
-	ImGui::SliderInt("# of Points", &m_np, 3, 21);
-	ImGui::SliderInt("# of Meridians", &m_nm, 4, 32);
+	ImGui::SliderFloat("Radius", &radius, 1, 10);
+	ImGui::SliderInt("# of Points", &numP, 3, 21);
+	ImGui::SliderInt("# of Meridians", &numM, 4, 32);
 	ImGui::End();
 
 	// use shader program
@@ -591,13 +603,13 @@ void RenderGeometryApp::genSphere()
 	m_mesh = new Mesh();
 
 	// generate vertex info for a half circle
-	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(m_radius, m_np);
+	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, numP);
 
 	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, m_nm);
+	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, numM);
 
 	// generate indices for triangle strip
-	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(m_nm, m_np);
+	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(numM, numP);
 
 	// convert spherePoints into a std::vector<Vertex>
 	std::vector<Vertex> verts;
@@ -612,5 +624,7 @@ void RenderGeometryApp::genSphere()
 
 	m_mesh->create_buffers();
 
-	m_prev_radius = m_radius;
+	prevRadius = radius;
+	prevNumP = numP;
+	prevNumM = numM;
 }

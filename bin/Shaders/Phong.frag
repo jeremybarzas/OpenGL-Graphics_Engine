@@ -15,7 +15,7 @@ void main()
 	vec3 N = normalize(vNormal.xyz);
 
 	// ambient
-	vec4 Ka = vec4(0);	
+	vec4 Ka = vec4(1);	
 	vec4 Ia = vec4(1);
 	vec4 ambient = Ka * Ia;
 
