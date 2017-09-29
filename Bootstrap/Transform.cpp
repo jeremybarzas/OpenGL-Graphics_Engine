@@ -1,12 +1,9 @@
 #define GLM_FORCE_SWIZZLE
 #include "Transform.h"
 
-
-
 Transform::Transform() : m_world(1), m_rotation(1), m_scale(1)
 {
 }
-
 
 Transform::~Transform()
 {
