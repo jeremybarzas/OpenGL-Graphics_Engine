@@ -90,70 +90,74 @@ void RenderGeometryApp::startup()
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;
 
-	///*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	//radius = 2;
-	//numP = 3;
-	//numM = 4;
-	//prevRadius = radius;
-	//prevNumP = numP;
-	//prevNumM = numM;
-	//
-	//// generate vertex info for a half circle
-	//meshPoints = generateHalfCircle(radius, numP);
-
-	//// rotate half circle around to generate entire sphere verts
-	//meshPoints = rotatePoints(meshPoints, numM);
-
-	//// generate indices for triangle strip
-	//meshIndices = genIndicesTriStrip(numM, numP);
-
-	//// convert spherePoints into a std::vector<Vertex>	
-	//for (auto p : meshPoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
-	//	meshVerts.push_back(vert);
-	//}
-
-	//*========== Generate Plane Information ==========*/	
-	unsigned int width, length;
-	width = 5;
-	length = 5;
-
-	// near left
-	meshPoints.push_back(glm::vec4(0, 0, 0, 1));
-
-	// near right
-	meshPoints.push_back(glm::vec4(width, 0, 0, 1));
-
-	// far left
-	meshPoints.push_back(glm::vec4(0, 0, length, 1));
-
-	// far right
-	meshPoints.push_back(glm::vec4(width, 0, length, 1));
+	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
+	radius = 5;
+	numP = 9;
+	numM = 12;
+	prevRadius = radius;
+	prevNumP = numP;
+	prevNumM = numM;
 	
+	// generate vertex info for a half circle
+	meshPoints = generateHalfCircle(radius, numP);
+
+	// rotate half circle around to generate entire sphere verts
+	meshPoints = rotatePoints(meshPoints, numM);
+
+	// generate indices for triangle strip
+	meshIndices = genIndicesTriStrip(numM, numP);
+
+	// convert spherePoints into a std::vector<Vertex>	
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 
-	// UV assignments
-	meshVerts[0].uv = { 0, 0 };
-	meshVerts[1].uv = { 1, 0 };
-	meshVerts[2].uv = { 0, 1 };
-	meshVerts[3].uv = { 1, 1 };
+	int vertindex = 0;
+	for (unsigned int i = 0; i < numM; ++i)
+	{
+		for (unsigned int j = 0; j < numP; ++j)
+		{
+			meshVerts[vertindex].uv = glm::vec2(j / (float)numP, i / (float)(numM + 1));
+			vertindex++;
+		}
+	}
 
-	meshIndices.push_back(0);
-	meshIndices.push_back(1);
-	meshIndices.push_back(2);
-	meshIndices.push_back(3);
-	meshIndices.push_back(0xFFFF);
-	
-	// initialize with plane vertex and index information
-	m_mesh->initialize(meshVerts, meshIndices);
+	//*========== Generate Plane Information ==========*/	
+	//unsigned int width, length;
+	//width = 5;
+	//length = 5;
 
-	// create and setup buffers
-	m_mesh->create_buffers();
+	//// near left
+	//meshPoints.push_back(glm::vec4(0, 0, 0, 1));
+
+	//// near right
+	//meshPoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	//// far left
+	//meshPoints.push_back(glm::vec4(0, 0, length, 1));
+
+	//// far right
+	//meshPoints.push_back(glm::vec4(width, 0, length, 1));
+	//
+	//for (auto p : meshPoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+	//	meshVerts.push_back(vert);
+	//}	
+
+	//// UV assignments
+	//meshVerts[0].uv = { 0, 0 };
+	//meshVerts[1].uv = { 1, 0 };
+	//meshVerts[2].uv = { 0, 1 };
+	//meshVerts[3].uv = { 1, 1 };
+
+	//meshIndices.push_back(0);
+	//meshIndices.push_back(1);
+	//meshIndices.push_back(2);
+	//meshIndices.push_back(3);
+	//meshIndices.push_back(0xFFFF);
 
 	///*========== Generate Cube Information ==========*/
 	//std::vector<glm::vec4> meshPoints;
@@ -599,21 +603,30 @@ void RenderGeometryApp::genSphere()
 	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, numP);
 
 	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> spherePoints = rotatePoints(halfCircleVerts, numM);
+	std::vector<glm::vec4> meshPoints = rotatePoints(halfCircleVerts, numM);
 
 	// generate indices for triangle strip
-	std::vector<unsigned int> sphereIndices = genIndicesTriStrip(numM, numP);
+	std::vector<unsigned int> meshIndices = genIndicesTriStrip(numM, numP);
 
 	// convert spherePoints into a std::vector<Vertex>
-	std::vector<Vertex> verts;
-	for (auto p : spherePoints)
+	std::vector<Vertex> meshVerts;
+	for (auto p : meshPoints)
 	{
 		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-		verts.push_back(vert);
+		meshVerts.push_back(vert);
 	}
 
-	// initialize with sphere vertex and index information
-	m_mesh->initialize(verts, sphereIndices);
+	int vertindex = 0;
+	for (unsigned int i = 0; i < numM; ++i)
+	{
+		for (unsigned int j = 0; j < numP; ++j)
+		{
+			meshVerts[vertindex].uv = glm::vec2(j / (float)numP, i / (float)(numM + 1));
+			vertindex++;
+		}
+	}
+	
+	m_mesh->initialize(meshVerts, meshIndices);
 
 	m_mesh->create_buffers();
 
