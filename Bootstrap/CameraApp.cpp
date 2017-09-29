@@ -22,7 +22,7 @@ void CameraApp::startup()
 	eye = glm::vec3(5, 5, 5);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
-	m_camera->setLookat(eye, center, up);
+	m_camera->setLookAt(eye, center, up);
 	m_camera->setPosition(glm::vec3(10, 10, 10));
 
 	// sets the perspective view of the camera

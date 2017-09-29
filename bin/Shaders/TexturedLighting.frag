@@ -51,5 +51,5 @@ void main()
 	vec4 blinnPhong = ambient + diffuse + specular;
 
 	FragColor = texture(sampler, vUv);	
-	FragColor *= blinnPhong;
+	//FragColor *= blinnPhong;
 }

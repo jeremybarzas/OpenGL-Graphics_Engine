@@ -1,4 +1,6 @@
+#define GLM_FORCE_SWIZZLE
 #include "RenderGeometryApp.h"
+
 #include <iostream>
 #include "imgui.h"
 #include <imgui_impl_glfw_gl3.h>
@@ -46,8 +48,8 @@ void RenderGeometryApp::startup()
 	eye = glm::vec3(5, 5, 5);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
-	m_camera->setLookat(eye, center, up);
-	m_camera->setPosition(glm::vec3(10, 10, 10));
+	m_camera->setLookAt(eye, center, up);
+	
 
 	// sets the perspective view of the camera
 	m_camera->setPerspective(PI * 0.25f, 16 / 9.f, 0.1f, 1000.f);
@@ -75,14 +77,16 @@ void RenderGeometryApp::startup()
 
 	/*========== Texture Startup ==========*/
 	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+	//unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 	unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, );
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	stbi_image_free(data);
 
@@ -92,9 +96,9 @@ void RenderGeometryApp::startup()
 	std::vector<Vertex> meshVerts;
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	radius = 5;
-	numP = 9;
-	numM = 12;
+	radius = 2;
+	numP = 10;
+	numM = 10;
 	prevRadius = radius;
 	prevNumP = numP;
 	prevNumM = numM;
@@ -115,13 +119,18 @@ void RenderGeometryApp::startup()
 		meshVerts.push_back(vert);
 	}
 
-	int vertindex = 0;
-	for (unsigned int i = 0; i < numM; ++i)
+	int vertIndex = 0;
+	for (unsigned int i = 0; i <= numM; i++)
 	{
-		for (unsigned int j = 0; j < numP; ++j)
+		for (unsigned int j = 0; j < numP; j++)
 		{
-			meshVerts[vertindex].uv = glm::vec2(j / (float)numP, i / (float)(numM + 1));
-			vertindex++;
+			if (vertIndex == meshVerts.size())
+			{
+				break;
+			}
+
+			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);		
+			vertIndex++;
 		}
 	}
 
@@ -244,7 +253,19 @@ void RenderGeometryApp::startup()
 	//meshIndices.push_back(0xFFFF);
 
 	/*========== Initialize mesh and create buffers ==========*/
+	std::vector<glm::vec2> uvs;
+	for (auto p : meshVerts)
+	{
+		uvs.push_back(p.uv);
+		//std::cout << p.uv.x << " ," << p.uv.y << "\n";
+	}
 
+	std::cout << "\nvertIndex: " << vertIndex << "\n";
+	std::cout << "\nUVs: " << uvs.size() << "\n";
+	std::cout << "Verts: " << meshVerts.size() << "\n";
+	std::cout << "Points: " << meshPoints.size() << "\n";
+	std::cout << "Indices: " << meshIndices.size() << "\n";
+	
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
@@ -252,10 +273,14 @@ void RenderGeometryApp::startup()
 	m_mesh->create_buffers();
 
 	/*========== Generate Sphere Information (setup for triangles)==========*/
-	/*unsigned int segments = 12;
-	unsigned int rings = 16;
+	
+	//// number of rings + 2 is amount of points 
+	//unsigned int rings = 8;
 
-	genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);*/
+	//// number of meridians
+	//unsigned int segments = 10;	
+
+	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -273,62 +298,8 @@ void RenderGeometryApp::update(float deltaTime)
 	if (prevNumM != numM)
 	{
 		genSphere();
-	}	
-
-	// camera strafe forward
-	glm::vec4 forward = m_camera->m_transform->getWorld()[2];
-	glm::vec4 right = m_camera->m_transform->getWorld()[0];
-	glm::vec4 up = m_camera->m_transform->getWorld()[1];
-
-	if (glfwGetKey(m_window, 'W') == GLFW_PRESS)
-	{
-		m_camera->setPosition(-forward * .33);
 	}
-
-	// camera strafe backward
-	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		// apply movement along forward vector scaled by deltatime / multiplier
-		m_camera->setPosition(forward * .33);
-	}
-
-	// camera strafe left
-	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		m_camera->setPosition(-right * .33);
-	}
-
-	// camera strafe right
-	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		m_camera->setPosition(right * .33);
-	}
-
-	// gets mouse input	
-	static bool mouseButtonDown = false;
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
-
-		static double prevMouseX = 0;
-		static double PrevMouseY = 0;
-
-		if (mouseButtonDown == false)
-		{
-			mouseButtonDown = true;
-			glfwGetCursorPos(m_window, &prevMouseX, &PrevMouseY);
-		}
-
-		double currMouseX = 0;
-		double currMouseY = 0;
-		glfwGetCursorPos(m_window, &currMouseX, &currMouseY);
-
-		double deltaX = currMouseX - prevMouseX;
-		double deltaY = currMouseY - PrevMouseY;
-
-		prevMouseX = currMouseX;
-		PrevMouseY = currMouseY;
-		std::cout << "delta mouse:: " << glm::to_string(glm::vec2(deltaX, deltaY)) << "\n";
-	}
-
+ 
 	m_camera->update(deltaTime);
 }
 
@@ -355,9 +326,9 @@ void RenderGeometryApp::draw()
 	m_shader->bind();
 
 	// create and assign uniform
-	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->m_projectionView));
+	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->projectionView));
 	
-	glm::vec4 camPos = glm::vec4(m_camera->m_transform->getPosition(), 1);
+	glm::vec4 camPos = glm::vec4(m_camera->transform.World[3].xyz(), 1);
 		
 	glUniform1f(m_shader->getUniform("lightDirX"), m_light.lightDirX);
 	glUniform1f(m_shader->getUniform("lightDirY"), m_light.lightDirY);
@@ -433,7 +404,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 	std::vector<glm::vec4> wholeSphere;
 
 	// loop per meridian
-	for (int i = 0; i <= numOfMeridians; i++)
+	for (int i = 0; i < numOfMeridians + 1; i++)
 	{
 		// calculate slice
 		float slice = (PI * 2.0f) / numOfMeridians;
@@ -452,7 +423,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 
 			// push new vec4 onto list of points that make up entire sphere
 			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
-		}
+		}		
 	}
 	// return the array of points that make up the entire sphere
 	return wholeSphere;
@@ -475,8 +446,9 @@ std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm,
 		{
 			botLeft = start + j;
 			botRight = botLeft + np;
-			indices.push_back(botLeft);
 			indices.push_back(botRight);
+			indices.push_back(botLeft);
+			
 		}
 		indices.push_back(0xFFFF);
 	}
@@ -617,13 +589,18 @@ void RenderGeometryApp::genSphere()
 		meshVerts.push_back(vert);
 	}
 
-	int vertindex = 0;
-	for (unsigned int i = 0; i < numM; ++i)
+	int vertIndex = 0;
+	for (unsigned int i = 0; i < numM; i++)
 	{
-		for (unsigned int j = 0; j < numP; ++j)
+		for (unsigned int j = 0; j < numP; j++)
 		{
-			meshVerts[vertindex].uv = glm::vec2(j / (float)numP, i / (float)(numM + 1));
-			vertindex++;
+			if (vertIndex == meshVerts.size())
+			{
+				break;
+			}
+
+			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
+			vertIndex++;
 		}
 	}
 	
