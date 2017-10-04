@@ -12,8 +12,8 @@
 
 // global sphere variables
 float radius = 5;
-int numP = 9;
-int numM = 12;
+int numP = 10;
+int numM = 10;
 
 float prevRadius = radius;
 int prevNumP = numP;
@@ -97,8 +97,8 @@ void RenderGeometryApp::startup()
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
 	radius = 2;
-	numP = 10;
-	numM = 10;
+	numP = 512;
+	numM = 256;
 	prevRadius = radius;
 	prevNumP = numP;
 	prevNumM = numM;
@@ -317,9 +317,9 @@ void RenderGeometryApp::draw()
 	ImGui::End();
 
 	ImGui::Begin("Sphere Geometry Controls");
-	ImGui::SliderFloat("Radius", &radius, 1, 10);
-	ImGui::SliderInt("# of Points", &numP, 3, 21);
-	ImGui::SliderInt("# of Meridians", &numM, 4, 32);
+	ImGui::SliderFloat("Radius", &radius, 1, 5);
+	ImGui::SliderInt("# of Points", &numP, 3, 512);
+	ImGui::SliderInt("# of Meridians", &numM, 4, 512);
 	ImGui::End();
 
 	// use shader program
@@ -590,7 +590,7 @@ void RenderGeometryApp::genSphere()
 	}
 
 	int vertIndex = 0;
-	for (unsigned int i = 0; i < numM; i++)
+	for (unsigned int i = 0; i <= numM; i++)
 	{
 		for (unsigned int j = 0; j < numP; j++)
 		{
