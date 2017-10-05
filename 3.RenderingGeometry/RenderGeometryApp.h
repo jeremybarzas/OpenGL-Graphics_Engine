@@ -45,15 +45,15 @@ public:
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	std::vector<unsigned int> genIndicesTriStrip(unsigned int, unsigned int);
 	
-	// generate a sphere using triangles
+	// generate sphere using triangles
 	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
 
-	// generate sphere
+	// generate sphere using triangle strips
 	void genSphere(float radius, int np, int nm);
 
-	// generate plane
+	// generate plane using triangle strips
 	void genPlane(int width, int length);
 
-	// generate cube
+	// generate cube using traingle strips
 	void genCube(int width, int length, int size);
 };
