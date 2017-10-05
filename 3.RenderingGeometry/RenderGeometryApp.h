@@ -51,11 +51,9 @@ public:
 	// generate sphere
 	void genSphere(float radius, int np, int nm);
 
-	//generate plane
+	// generate plane
 	void genPlane(int width, int length);
 
-	//generate cube
+	// generate cube
 	void genCube(int width, int length, int size);
-
 };
-
