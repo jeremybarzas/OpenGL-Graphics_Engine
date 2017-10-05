@@ -67,9 +67,9 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -84,90 +84,113 @@ void RenderGeometryApp::startup()
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, );
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);	
 
 	stbi_image_free(data);
 
 	/*========== Geometry Mesh Startup ==========*/
 	std::vector<glm::vec4> meshPoints;
-	std::vector<unsigned int> meshIndices;
+	std::vector<unsigned int> meshIndices;	
 	std::vector<Vertex> meshVerts;
 
 	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
 	radius = 2;
-	numP = 512;
-	numM = 256;
+	numP = 10;
+	numM = 10;
 	prevRadius = radius;
 	prevNumP = numP;
 	prevNumM = numM;
 	
-	// generate vertex info for a half circle
-	meshPoints = generateHalfCircle(radius, numP);
+	//// generate vertex info for a half circle
+	//meshPoints = generateHalfCircle(radius, numP);
 
-	// rotate half circle around to generate entire sphere verts
-	meshPoints = rotatePoints(meshPoints, numM);
+	//// rotate half circle around to generate entire sphere verts
+	//meshPoints = rotatePoints(meshPoints, numM);
 
-	// generate indices for triangle strip
-	meshIndices = genIndicesTriStrip(numM, numP);
+	//// generate indices for triangle strip
+	//meshIndices = genIndicesTriStrip(numM, numP);
 
-	// convert spherePoints into a std::vector<Vertex>	
+	//// convert spherePoints into a std::vector<Vertex>	
+	//for (auto p : meshPoints)
+	//{
+	//	Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
+	//	meshVerts.push_back(vert);
+	//}
+
+	//int vertIndex = 0;
+	//for (unsigned int i = 0; i <= numM; i++)
+	//{
+	//	for (unsigned int j = 0; j < numP; j++)
+	//	{
+	//		meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
+	//		vertIndex++;
+	//		if (vertIndex == meshVerts.size())
+	//		{
+	//			break;
+	//		}
+	//	}
+	//}
+
+	/*int vertIndex = 0;	
+	for (unsigned int i = 0; i < numM; i++)
+	{
+		for (unsigned int j = 0; j < numP; j++)
+		{			
+			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP), j / (float)numM;
+			if (vertIndex == meshVerts.size())
+			{
+				break;				
+			}
+			else
+				vertIndex++;			
+		}		
+	}*/
+
+	/*for (unsigned int ring = 0; ring < (rings + 2); ++ring) {
+		float r0 = glm::sin(ring * ringAngle);
+		float y0 = glm::cos(ring * ringAngle);
+
+		for (unsigned int segment = 0; segment < (segments + 1); ++segment, ++vertex) {
+			float x0 = r0 * glm::sin(segment * segmentAngle);
+			float z0 = r0 * glm::cos(segment * segmentAngle);
+
+			vertex->texcoord = glm::vec2(segment / (float)segments, ring / (float)(rings + 1));*/
+
+	//*========== Generate Plane Information ==========*/
+	int width = 10;
+	int length = 10;	
+
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < length; j++)
+		{
+			meshPoints.push_back(glm::vec4(i, 0, j, 1));
+		}
+	}
+	
 	for (auto p : meshPoints)
 	{
 		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
-	}
+	}	
 
-	int vertIndex = 0;
-	for (unsigned int i = 0; i <= numM; i++)
+	unsigned int start;
+	unsigned int botLeft;
+	unsigned int botRight;
+
+	for (int i = 0; i < width - 1; i++)
 	{
-		for (unsigned int j = 0; j < numP; j++)
+		start = i * length;
+
+		for (int j = 0; j < length; j++)
 		{
-			if (vertIndex == meshVerts.size())
-			{
-				break;
-			}
-
-			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);		
-			vertIndex++;
+			botLeft = start + j;
+			botRight = botLeft + length;
+			meshIndices.push_back(botLeft);
+			meshIndices.push_back(botRight);
 		}
+		meshIndices.push_back(0xFFFF);
 	}
-
-	//*========== Generate Plane Information ==========*/	
-	//unsigned int width, length;
-	//width = 5;
-	//length = 5;
-
-	//// near left
-	//meshPoints.push_back(glm::vec4(0, 0, 0, 1));
-
-	//// near right
-	//meshPoints.push_back(glm::vec4(width, 0, 0, 1));
-
-	//// far left
-	//meshPoints.push_back(glm::vec4(0, 0, length, 1));
-
-	//// far right
-	//meshPoints.push_back(glm::vec4(width, 0, length, 1));
-	//
-	//for (auto p : meshPoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	meshVerts.push_back(vert);
-	//}	
-
-	//// UV assignments
-	//meshVerts[0].uv = { 0, 0 };
-	//meshVerts[1].uv = { 1, 0 };
-	//meshVerts[2].uv = { 0, 1 };
-	//meshVerts[3].uv = { 1, 1 };
-
-	//meshIndices.push_back(0);
-	//meshIndices.push_back(1);
-	//meshIndices.push_back(2);
-	//meshIndices.push_back(3);
-	//meshIndices.push_back(0xFFFF);
 
 	///*========== Generate Cube Information ==========*/
 	//std::vector<glm::vec4> meshPoints;
@@ -252,20 +275,21 @@ void RenderGeometryApp::startup()
 	//meshIndices.push_back(6);
 	//meshIndices.push_back(0xFFFF);
 
+	
 	/*========== Initialize mesh and create buffers ==========*/
-	std::vector<glm::vec2> uvs;
+	/*std::vector<glm::vec2> uvs;
 	for (auto p : meshVerts)
 	{
 		uvs.push_back(p.uv);
-		//std::cout << p.uv.x << " ," << p.uv.y << "\n";
+		std::cout << p.uv.x << " ," << p.uv.y << "\n";
 	}
 
 	std::cout << "\nvertIndex: " << vertIndex << "\n";
 	std::cout << "\nUVs: " << uvs.size() << "\n";
 	std::cout << "Verts: " << meshVerts.size() << "\n";
 	std::cout << "Points: " << meshPoints.size() << "\n";
-	std::cout << "Indices: " << meshIndices.size() << "\n";
-	
+	std::cout << "Indices: " << meshIndices.size() << "\n";*/
+
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
@@ -275,10 +299,10 @@ void RenderGeometryApp::startup()
 	/*========== Generate Sphere Information (setup for triangles)==========*/
 	
 	//// number of rings + 2 is amount of points 
-	//unsigned int rings = 8;
+	//unsigned int rings = 100;
 
 	//// number of meridians
-	//unsigned int segments = 10;	
+	//unsigned int segments = 100;	
 
 	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
 }
@@ -318,8 +342,8 @@ void RenderGeometryApp::draw()
 
 	ImGui::Begin("Sphere Geometry Controls");
 	ImGui::SliderFloat("Radius", &radius, 1, 5);
-	ImGui::SliderInt("# of Points", &numP, 3, 512);
-	ImGui::SliderInt("# of Meridians", &numM, 4, 512);
+	ImGui::SliderInt("# of Points", &numP, 3, 100);
+	ImGui::SliderInt("# of Meridians", &numM, 4, 100);
 	ImGui::End();
 
 	// use shader program
@@ -343,7 +367,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -445,10 +469,9 @@ std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm,
 		for (int j = 0; j < np; j++)
 		{
 			botLeft = start + j;
-			botRight = botLeft + np;
-			indices.push_back(botRight);
+			botRight = botLeft + np;			
 			indices.push_back(botLeft);
-			
+			indices.push_back(botRight);			
 		}
 		indices.push_back(0xFFFF);
 	}
@@ -594,13 +617,12 @@ void RenderGeometryApp::genSphere()
 	{
 		for (unsigned int j = 0; j < numP; j++)
 		{
+			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
+			vertIndex++;
 			if (vertIndex == meshVerts.size())
 			{
 				break;
 			}
-
-			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
-			vertIndex++;
 		}
 	}
 	
