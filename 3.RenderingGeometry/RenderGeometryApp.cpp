@@ -12,8 +12,8 @@
 
 // global sphere variables
 float radius = 5;
-int numP = 10;
-int numM = 10;
+int numP = 100;
+int numM = 100;
 
 float prevRadius = radius;
 int prevNumP = numP;
@@ -90,19 +90,19 @@ void RenderGeometryApp::startup()
 
 	/*========== Geometry Mesh Startup ==========*/
 
-	// Generate Sphere Information (setup for triangle strips)
-	//genSphere(radius, numP, numM);
-
-	// Generate Plane
-	//genPlane(10, 5);	
-
-	// Generate Cube Information
-	//genCube(5, 5, 5);	
-
-	// Generate Sphere (setup for triangles)
+	// Generate Sphere (Triangles)
 	//unsigned int rings = 100;	
 	//unsigned int segments = 100;
 	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
+
+	// Generate Sphere (Triangle Strips)	
+	//genSphere(radius, numP, numM);
+
+	// Generate Plane
+	//genPlane(10, 10);	
+
+	// Generate Cube Information
+	//genCube(5, 5, 5);	
 }
 
 void RenderGeometryApp::update(float deltaTime)
