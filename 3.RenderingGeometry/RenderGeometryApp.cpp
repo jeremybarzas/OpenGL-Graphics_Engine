@@ -89,221 +89,19 @@ void RenderGeometryApp::startup()
 	stbi_image_free(data);
 
 	/*========== Geometry Mesh Startup ==========*/
-	std::vector<glm::vec4> meshPoints;
-	std::vector<unsigned int> meshIndices;	
-	std::vector<Vertex> meshVerts;
 
-	/*========== Generate Sphere Information (setup for triangle strips)==========*/	
-	radius = 2;
-	numP = 10;
-	numM = 10;
-	prevRadius = radius;
-	prevNumP = numP;
-	prevNumM = numM;
-	
-	//// generate vertex info for a half circle
-	//meshPoints = generateHalfCircle(radius, numP);
+	// Generate Sphere Information (setup for triangle strips)
+	//genSphere(radius, numP, numM);
 
-	//// rotate half circle around to generate entire sphere verts
-	//meshPoints = rotatePoints(meshPoints, numM);
+	// Generate Plane
+	//genPlane(10, 5);	
 
-	//// generate indices for triangle strip
-	//meshIndices = genIndicesTriStrip(numM, numP);
+	// Generate Cube Information
+	//genCube(5, 5, 5);	
 
-	//// convert spherePoints into a std::vector<Vertex>	
-	//for (auto p : meshPoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
-	//	meshVerts.push_back(vert);
-	//}
-
-	//int vertIndex = 0;
-	//for (unsigned int i = 0; i <= numM; i++)
-	//{
-	//	for (unsigned int j = 0; j < numP; j++)
-	//	{
-	//		meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
-	//		vertIndex++;
-	//		if (vertIndex == meshVerts.size())
-	//		{
-	//			break;
-	//		}
-	//	}
-	//}
-
-	/*int vertIndex = 0;	
-	for (unsigned int i = 0; i < numM; i++)
-	{
-		for (unsigned int j = 0; j < numP; j++)
-		{			
-			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP), j / (float)numM;
-			if (vertIndex == meshVerts.size())
-			{
-				break;				
-			}
-			else
-				vertIndex++;			
-		}		
-	}*/
-
-	/*for (unsigned int ring = 0; ring < (rings + 2); ++ring) {
-		float r0 = glm::sin(ring * ringAngle);
-		float y0 = glm::cos(ring * ringAngle);
-
-		for (unsigned int segment = 0; segment < (segments + 1); ++segment, ++vertex) {
-			float x0 = r0 * glm::sin(segment * segmentAngle);
-			float z0 = r0 * glm::cos(segment * segmentAngle);
-
-			vertex->texcoord = glm::vec2(segment / (float)segments, ring / (float)(rings + 1));*/
-
-	//*========== Generate Plane Information ==========*/
-	int width = 10;
-	int length = 10;	
-
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < length; j++)
-		{
-			meshPoints.push_back(glm::vec4(i, 0, j, 1));
-		}
-	}
-	
-	for (auto p : meshPoints)
-	{
-		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
-		meshVerts.push_back(vert);
-	}	
-
-	unsigned int start;
-	unsigned int botLeft;
-	unsigned int botRight;
-
-	for (int i = 0; i < width - 1; i++)
-	{
-		start = i * length;
-
-		for (int j = 0; j < length; j++)
-		{
-			botLeft = start + j;
-			botRight = botLeft + length;
-			meshIndices.push_back(botLeft);
-			meshIndices.push_back(botRight);
-		}
-		meshIndices.push_back(0xFFFF);
-	}
-
-	///*========== Generate Cube Information ==========*/
-	//std::vector<glm::vec4> meshPoints;
-	//std::vector<unsigned int> meshIndices;
-	//unsigned int width, length, size;
-	//width = 5;
-	//length = 5;
-	//size = 5;
-
-	////*===== Bottom Points =====*/
-	//// near left
-	//meshPoints.push_back(glm::vec4(0, 0, 0, 1));
-
-	//// near right
-	//meshPoints.push_back(glm::vec4(width, 0, 0, 1));
-
-	//// far left
-	//meshPoints.push_back(glm::vec4(0, 0, length, 1));
-
-	//// far right
-	//meshPoints.push_back(glm::vec4(width, 0, length, 1));
-
-	////*===== Top Points =====*/
-	//// near left
-	//meshPoints.push_back(glm::vec4(0, size, 0, 1));
-
-	//// near right
-	//meshPoints.push_back(glm::vec4(width, size, 0, 1));
-
-	//// far left
-	//meshPoints.push_back(glm::vec4(0, size, length, 1));
-
-	//// far right
-	//meshPoints.push_back(glm::vec4(width, size, length, 1));
-	//
-	//// turn points into vertices
-	//for (auto p : meshPoints)
-	//{
-	//	Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
-	//	meshVerts.push_back(vert);
-	//}
-
-	//// bottom face
-	//meshIndices.push_back(0);
-	//meshIndices.push_back(1);
-	//meshIndices.push_back(2);
-	//meshIndices.push_back(3);
-	//meshIndices.push_back(0xFFFF);
-
-	//// top face
-	//meshIndices.push_back(4);
-	//meshIndices.push_back(5);
-	//meshIndices.push_back(6);
-	//meshIndices.push_back(7);
-	//meshIndices.push_back(0xFFFF);
-
-	//// front face
-	//meshIndices.push_back(0);
-	//meshIndices.push_back(1);
-	//meshIndices.push_back(4);
-	//meshIndices.push_back(5);
-	//meshIndices.push_back(0xFFFF);
-
-	//// back face
-	//meshIndices.push_back(2);
-	//meshIndices.push_back(3);
-	//meshIndices.push_back(6);
-	//meshIndices.push_back(7);
-	//meshIndices.push_back(0xFFFF);
-
-	//// right face
-	//meshIndices.push_back(1);
-	//meshIndices.push_back(3);
-	//meshIndices.push_back(5);
-	//meshIndices.push_back(7);
-	//meshIndices.push_back(0xFFFF);
-
-	//// left face
-	//meshIndices.push_back(0);
-	//meshIndices.push_back(2);
-	//meshIndices.push_back(4);
-	//meshIndices.push_back(6);
-	//meshIndices.push_back(0xFFFF);
-
-	
-	/*========== Initialize mesh and create buffers ==========*/
-	/*std::vector<glm::vec2> uvs;
-	for (auto p : meshVerts)
-	{
-		uvs.push_back(p.uv);
-		std::cout << p.uv.x << " ," << p.uv.y << "\n";
-	}
-
-	std::cout << "\nvertIndex: " << vertIndex << "\n";
-	std::cout << "\nUVs: " << uvs.size() << "\n";
-	std::cout << "Verts: " << meshVerts.size() << "\n";
-	std::cout << "Points: " << meshPoints.size() << "\n";
-	std::cout << "Indices: " << meshIndices.size() << "\n";*/
-
-	// initialize with plane vertex and index information
-	m_mesh->initialize(meshVerts, meshIndices);
-
-	// create and setup buffers
-	m_mesh->create_buffers();
-
-	/*========== Generate Sphere Information (setup for triangles)==========*/
-	
-	//// number of rings + 2 is amount of points 
-	//unsigned int rings = 100;
-
-	//// number of meridians
-	//unsigned int segments = 100;	
-
+	// Generate Sphere (setup for triangles)
+	//unsigned int rings = 100;	
+	//unsigned int segments = 100;
 	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
 }
 
@@ -311,17 +109,17 @@ void RenderGeometryApp::update(float deltaTime)
 {	
 	if (prevRadius != radius)
 	{
-		genSphere();
+		genSphere(radius, numP, numM);
 	}
 
 	if (prevNumP != numP)
 	{
-		genSphere();
+		genSphere(radius, numP, numM);
 	}
 
 	if (prevNumM != numM)
 	{
-		genSphere();
+		genSphere(radius, numP, numM);
 	}
  
 	m_camera->update(deltaTime);
@@ -586,7 +384,7 @@ void RenderGeometryApp::genSphereTriangles(unsigned int segments, unsigned int r
 	delete[] vertices;
 }
 
-void RenderGeometryApp::genSphere()
+void RenderGeometryApp::genSphere(float radius, int np, int nm)
 {
 	glDeleteBuffers(1, &m_mesh->m_vbo);
 	glDeleteBuffers(1, &m_mesh->m_ibo);
@@ -595,29 +393,33 @@ void RenderGeometryApp::genSphere()
 	delete m_mesh;
 	m_mesh = new Mesh();
 
+	std::vector<glm::vec4> meshPoints;
+	std::vector<unsigned int> meshIndices;
+	std::vector<Vertex> meshVerts;
+
 	// generate vertex info for a half circle
-	std::vector<glm::vec4> halfCircleVerts = generateHalfCircle(radius, numP);
+	meshPoints = generateHalfCircle(radius, np);
 
 	// rotate half circle around to generate entire sphere verts
-	std::vector<glm::vec4> meshPoints = rotatePoints(halfCircleVerts, numM);
+	meshPoints = rotatePoints(meshPoints, nm);
 
 	// generate indices for triangle strip
-	std::vector<unsigned int> meshIndices = genIndicesTriStrip(numM, numP);
+	meshIndices = genIndicesTriStrip(nm, np);
 
-	// convert spherePoints into a std::vector<Vertex>
-	std::vector<Vertex> meshVerts;
+	// convert spherePoints into a std::vector<Vertex>	
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 
+	// setup UVs loop 
 	int vertIndex = 0;
-	for (unsigned int i = 0; i <= numM; i++)
+	for (unsigned int i = 0; i <= nm; i++)
 	{
-		for (unsigned int j = 0; j < numP; j++)
+		for (unsigned int j = 0; j < np; j++)
 		{
-			meshVerts[vertIndex].uv = glm::vec2(i / (float)numP, j / (float)numM);
+			meshVerts[vertIndex].uv = glm::vec2(i / (float)np, j / (float)nm);
 			vertIndex++;
 			if (vertIndex == meshVerts.size())
 			{
@@ -626,11 +428,148 @@ void RenderGeometryApp::genSphere()
 		}
 	}
 	
+	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
+	// create and setup buffers
 	m_mesh->create_buffers();
 
 	prevRadius = radius;
-	prevNumP = numP;
-	prevNumM = numM;
+	prevNumP = np;
+	prevNumM = nm;
+}
+
+void RenderGeometryApp::genPlane(int width, int length)
+{
+	std::vector<glm::vec4> meshPoints;
+	std::vector<unsigned int> meshIndices;
+	std::vector<Vertex> meshVerts;	
+
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < length; j++)
+		{
+			meshPoints.push_back(glm::vec4(i, 0, j, 1));
+		}
+	}
+
+	for (auto p : meshPoints)
+	{
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
+		meshVerts.push_back(vert);
+	}
+
+	unsigned int start;
+	unsigned int botLeft;
+	unsigned int botRight;
+
+	for (int i = 0; i < width - 1; i++)
+	{
+		start = i * length;
+
+		for (int j = 0; j < length; j++)
+		{
+			botLeft = start + j;
+			botRight = botLeft + length;
+			meshIndices.push_back(botLeft);
+			meshIndices.push_back(botRight);
+		}
+		meshIndices.push_back(0xFFFF);
+	}
+
+	// initialize with plane vertex and index information
+	m_mesh->initialize(meshVerts, meshIndices);
+
+	// create and setup buffers
+	m_mesh->create_buffers();
+}
+
+void RenderGeometryApp::genCube(int width, int length, int size)
+{
+	std::vector<glm::vec4> meshPoints;
+	std::vector<unsigned int> meshIndices;
+	std::vector<Vertex> meshVerts;
+
+	/*===== Bottom Points =====*/
+
+	// near left
+	meshPoints.push_back(glm::vec4(0, 0, 0, 1));
+
+	// near right
+	meshPoints.push_back(glm::vec4(width, 0, 0, 1));
+
+	// far left
+	meshPoints.push_back(glm::vec4(0, 0, length, 1));
+
+	// far right
+	meshPoints.push_back(glm::vec4(width, 0, length, 1));
+
+	/*===== Top Points =====*/
+
+	// near left
+	meshPoints.push_back(glm::vec4(0, size, 0, 1));
+
+	// near right
+	meshPoints.push_back(glm::vec4(width, size, 0, 1));
+
+	// far left
+	meshPoints.push_back(glm::vec4(0, size, length, 1));
+
+	// far right
+	meshPoints.push_back(glm::vec4(width, size, length, 1));
+	
+	// turn points into vertices
+	for (auto p : meshPoints)
+	{
+		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		meshVerts.push_back(vert);
+	}
+
+	// bottom face
+	meshIndices.push_back(0);
+	meshIndices.push_back(1);
+	meshIndices.push_back(2);
+	meshIndices.push_back(3);
+	meshIndices.push_back(0xFFFF);
+
+	// top face
+	meshIndices.push_back(4);
+	meshIndices.push_back(5);
+	meshIndices.push_back(6);
+	meshIndices.push_back(7);
+	meshIndices.push_back(0xFFFF);
+
+	// front face
+	meshIndices.push_back(0);
+	meshIndices.push_back(1);
+	meshIndices.push_back(4);
+	meshIndices.push_back(5);
+	meshIndices.push_back(0xFFFF);
+
+	// back face
+	meshIndices.push_back(2);
+	meshIndices.push_back(3);
+	meshIndices.push_back(6);
+	meshIndices.push_back(7);
+	meshIndices.push_back(0xFFFF);
+
+	// right face
+	meshIndices.push_back(1);
+	meshIndices.push_back(3);
+	meshIndices.push_back(5);
+	meshIndices.push_back(7);
+	meshIndices.push_back(0xFFFF);
+
+	// left face
+	meshIndices.push_back(0);
+	meshIndices.push_back(2);
+	meshIndices.push_back(4);
+	meshIndices.push_back(6);
+	meshIndices.push_back(0xFFFF);
+
+	// initialize with plane vertex and index information
+	m_mesh->initialize(meshVerts, meshIndices);
+
+	// create and setup buffers
+	m_mesh->create_buffers();
 }

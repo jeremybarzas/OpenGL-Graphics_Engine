@@ -48,7 +48,14 @@ public:
 	// generate a sphere using triangles
 	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
 
-	// generate sphere at runtime
-	void genSphere();
+	// generate sphere
+	void genSphere(float radius, int np, int nm);
+
+	//generate plane
+	void genPlane(int width, int length);
+
+	//generate cube
+	void genCube(int width, int length, int size);
+
 };
 
