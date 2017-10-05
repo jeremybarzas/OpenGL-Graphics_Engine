@@ -99,7 +99,7 @@ void RenderGeometryApp::startup()
 	//genSphere(radius, numP, numM);
 
 	// Generate Plane
-	//genPlane(10, 10);	
+	genPlane(3, 3);	
 
 	// Generate Cube Information
 	//genCube(5, 5, 5);	
