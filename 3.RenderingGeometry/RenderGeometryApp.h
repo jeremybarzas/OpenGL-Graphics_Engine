@@ -52,8 +52,14 @@ public:
 	void genSphere(float radius, int np, int nm);
 
 	// generate plane using triangle strips
-	void genPlane(int width, int length);
+	void genPlane(int width, int length, int dims);
 
 	// generate cube using traingle strips
 	void genCube(int width, int length, int size);
+
+	/*===== Perlin stuff =====*/
+	unsigned int m_perlinTexture;
+
+	// generate perlin noise
+	float* perlinNoise(int dims);
 };

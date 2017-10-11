@@ -67,5 +67,11 @@
     <None Include="..\bin\Shaders\TexturedLighting.frag">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\bin\Shaders\PerlinFrag.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\Shaders\PerlinVert.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

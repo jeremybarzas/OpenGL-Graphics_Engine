@@ -59,7 +59,8 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);	
+	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/PerlinVert.vert", GL_VERTEX_SHADER);
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
@@ -67,27 +68,30 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/DiffuseLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/SpecularLighting.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
+	m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
 
 	/*========== Texture Startup ==========*/
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	//unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-	unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 
+	/*===== Texture assement =====*/
+	/*int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+	//unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	stbi_image_free(data);*/
 
-	stbi_image_free(data);
-
+	/*===== Perlin stuff =====*/
+	
 	/*========== Geometry Mesh Startup ==========*/
 
 	// Generate Sphere (Triangles)
@@ -99,7 +103,7 @@ void RenderGeometryApp::startup()
 	//genSphere(radius, numP, numM);
 
 	// Generate Plane
-	genPlane(10, 10);	
+	genPlane(64,64,64);	
 
 	// Generate Cube Information
 	//genCube(5, 5, 5);	
@@ -165,7 +169,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -281,12 +285,7 @@ std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm,
 /*==================== Generate Geometry using Triangle Strips ====================*/
 void RenderGeometryApp::genSphere(float radius, int np, int nm)
 {
-	glDeleteBuffers(1, &m_mesh->m_vbo);
-	glDeleteBuffers(1, &m_mesh->m_ibo);
-	glDeleteVertexArrays(1, &m_mesh->m_vao);
-
-	delete m_mesh;
-	m_mesh = new Mesh();
+	
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
@@ -334,12 +333,31 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 	prevNumM = nm;
 }
 
-void RenderGeometryApp::genPlane(int width, int length)
-{
+void RenderGeometryApp::genPlane(int width, int length, int dims)
+{	
+	glDeleteBuffers(1, &m_mesh->m_vbo);
+	glDeleteBuffers(1, &m_mesh->m_ibo);
+	glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+	delete m_mesh;
+	m_mesh = new Mesh();
+	float* perlinData = perlinNoise(dims);
+
+	glGenTextures(1, &m_perlinTexture);
+	glBindTexture(GL_TEXTURE_2D, m_perlinTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, perlinData);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	
+	stbi_image_free(perlinData);
+
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;	
 
+	// populate points
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < length; j++)
@@ -348,12 +366,31 @@ void RenderGeometryApp::genPlane(int width, int length)
 		}
 	}
 
+	// convert points to verts
 	for (auto p : meshPoints)
 	{
 		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
+	
+	// assign UVs
+	int vertIndex = 0;
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < length; j++)
+		{
+			meshVerts[vertIndex].uv = glm::vec2(i / ((float)width-1), j / ((float)length-1));
+			vertIndex++;
+		}
+	}	
 
+	// print debug
+	for (auto v : meshVerts)
+	{
+		std::cout << v.uv.x << ", " << v.uv.y << "\n";
+	}
+
+	// assign vert indices
 	unsigned int start;
 	unsigned int botLeft;
 	unsigned int botRight;
@@ -370,7 +407,7 @@ void RenderGeometryApp::genPlane(int width, int length)
 			meshIndices.push_back(botRight);
 		}
 		meshIndices.push_back(0xFFFF);
-	}
+	}	
 
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
@@ -467,6 +504,22 @@ void RenderGeometryApp::genCube(int width, int length, int size)
 
 	// create and setup buffers
 	m_mesh->create_buffers();
+}
+
+float* RenderGeometryApp::perlinNoise(int dims)
+{
+	float* perlinData = new float[dims * dims];
+	float scale = (1.0f / dims) * 3;
+
+	for (int x = 0; x < dims; ++x) 
+	{ 
+		for (int y = 0; y < dims; ++y) 
+		{ 
+			perlinData[y* dims + x] = glm::perlin(glm::vec2(x, y) * scale) * 0.5f + 0.5f;
+		} 
+	}
+
+	return perlinData;
 }
 
 /*==================== Generate Sphere using Triangles ====================*/

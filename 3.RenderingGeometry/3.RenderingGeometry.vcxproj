@@ -138,6 +138,8 @@
     <None Include="..\bin\Shaders\DefaultVertex.vert" />
     <None Include="..\bin\Shaders\DiffuseLighting.frag" />
     <None Include="..\bin\Shaders\HemisphereLighting.frag" />
+    <None Include="..\bin\Shaders\PerlinFrag.frag" />
+    <None Include="..\bin\Shaders\PerlinVert.vert" />
     <None Include="..\bin\Shaders\Phong.frag" />
     <None Include="..\bin\Shaders\SpecularLighting.frag" />
     <None Include="..\bin\Shaders\TexturedLighting.frag" />
