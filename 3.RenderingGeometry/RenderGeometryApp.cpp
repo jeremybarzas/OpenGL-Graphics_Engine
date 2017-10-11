@@ -76,21 +76,6 @@ void RenderGeometryApp::startup()
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
-
-	/*========== Texture Startup ==========*/
-
-	/*===== Texture assement =====*/
-	/*int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-	//unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	stbi_image_free(data);*/
-
-	/*===== Perlin stuff =====*/
 	
 	/*========== Geometry Mesh Startup ==========*/
 
@@ -103,7 +88,7 @@ void RenderGeometryApp::startup()
 	//genSphere(radius, numP, numM);
 
 	// Generate Plane
-	genPlane(64,64,64);	
+	genPlane(32,32,32);	
 
 	// Generate Cube Information
 	//genCube(5, 5, 5);	
@@ -285,7 +270,21 @@ std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm,
 /*==================== Generate Geometry using Triangle Strips ====================*/
 void RenderGeometryApp::genSphere(float radius, int np, int nm)
 {
-	
+	glDeleteBuffers(1, &m_mesh->m_vbo);
+	glDeleteBuffers(1, &m_mesh->m_ibo);
+	glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+	delete m_mesh;
+	m_mesh = new Mesh();
+
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	stbi_image_free(data);
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
@@ -313,7 +312,7 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 	{
 		for (unsigned int j = 0; j < np; j++)
 		{
-			meshVerts[vertIndex].uv = glm::vec2(i / (float)np, j / (float)nm);
+			meshVerts[vertIndex].uv = glm::vec2(i / ((float)np), j / ((float)nm - 1));
 			vertIndex++;
 			if (vertIndex == meshVerts.size())
 			{
@@ -321,7 +320,11 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 			}
 		}
 	}
-	
+	// print debug
+	for (auto v : meshVerts)
+	{
+		std::cout << v.uv.x << ", " << v.uv.y << "\n";
+	}
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
@@ -341,6 +344,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 
 	delete m_mesh;
 	m_mesh = new Mesh();
+
 	float* perlinData = perlinNoise(dims);
 
 	glGenTextures(1, &m_perlinTexture);
@@ -384,11 +388,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 		}
 	}	
 
-	// print debug
-	for (auto v : meshVerts)
-	{
-		std::cout << v.uv.x << ", " << v.uv.y << "\n";
-	}
+	
 
 	// assign vert indices
 	unsigned int start;
@@ -418,6 +418,22 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 
 void RenderGeometryApp::genCube(int width, int length, int size)
 {
+	glDeleteBuffers(1, &m_mesh->m_vbo);
+	glDeleteBuffers(1, &m_mesh->m_ibo);
+	glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+	delete m_mesh;
+	m_mesh = new Mesh();
+
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	stbi_image_free(data);
+
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;
