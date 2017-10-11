@@ -73,6 +73,9 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 	m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
 
+
+	int dims = 32;
+	float* perlinData = perlinNoise(dims, 6);
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
@@ -88,7 +91,7 @@ void RenderGeometryApp::startup()
 	//genSphere(radius, numP, numM);
 
 	// Generate Plane
-	genPlane(32,32,32);	
+	genPlane(32, 32, dims);
 
 	// Generate Cube Information
 	//genCube(5, 5, 5);	
@@ -345,7 +348,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	delete m_mesh;
 	m_mesh = new Mesh();
 
-	float* perlinData = perlinNoise(dims);
+	float* perlinData = perlinNoise(dims, 6);
 
 	glGenTextures(1, &m_perlinTexture);
 	glBindTexture(GL_TEXTURE_2D, m_perlinTexture);
@@ -387,8 +390,6 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 			vertIndex++;
 		}
 	}	
-
-	
 
 	// assign vert indices
 	unsigned int start;
@@ -522,16 +523,28 @@ void RenderGeometryApp::genCube(int width, int length, int size)
 	m_mesh->create_buffers();
 }
 
-float* RenderGeometryApp::perlinNoise(int dims)
+float* RenderGeometryApp::perlinNoise(int dims, int octs)
 {
 	float* perlinData = new float[dims * dims];
 	float scale = (1.0f / dims) * 3;
+	int octaves = octs;
 
 	for (int x = 0; x < dims; ++x) 
-	{ 
+	{ 		
 		for (int y = 0; y < dims; ++y) 
 		{ 
+			float amplitude = 1.f;
+			float persistence = 0.3f;
+			perlinData[y * dims + x] = 0;
+
 			perlinData[y* dims + x] = glm::perlin(glm::vec2(x, y) * scale) * 0.5f + 0.5f;
+			for (int o = 0; o < octaves; ++o)
+			{
+				float freq = powf(2, (float)o);
+				float perlinSample = glm::perlin(glm::vec2((float)x, (float)y) * scale * freq) * 0.5f + 0.5f;
+				perlinData[y * dims + x] += perlinSample * amplitude;
+				amplitude *= persistence;
+			}
 		} 
 	}
 

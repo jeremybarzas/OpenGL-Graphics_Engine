@@ -7,8 +7,13 @@ out vec2 vUv;
 
 uniform mat4 projectionViewWorld;
 
+uniform sampler2D perlinTexture;
+
 void main() 
 {	
+	vec4 pos = position;
+	pos.y += texture(perlinTexture, uv).r * 5;
+
 	vUv = uv;
-	gl_Position = projectionViewWorld * position;
+	gl_Position = projectionViewWorld * pos;
 }
