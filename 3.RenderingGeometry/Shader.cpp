@@ -47,12 +47,14 @@ void Shader::load(const char * filename, unsigned int type)
 		m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(m_vertexShader, 1, (const char **)&m_vsSource, 0);
 		glCompileShader(m_vertexShader);
+		break;
 
 	case GL_FRAGMENT_SHADER:
 		m_fsSource = data;
 		m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(m_fragmentShader, 1, (const char **)&m_fsSource, 0);
 		glCompileShader(m_fragmentShader);	
+		break;
 	}
 }
 
@@ -85,9 +87,18 @@ void Shader::defaultLoad()
 	m_vsSource = "#version 410\n \
 							layout(location=0) in vec4 position; \
 							layout(location=1) in vec4 color; \
+							layout(location=2) in vec4 normal; \
+							layout(location=3) in vec2 uv; \
+							out vec4 vPosition; \
 							out vec4 vColor; \
+							out vec4 vNormal; \
+							out vec2 vUv; \
 							uniform mat4 projectionViewWorld; \
-							void main() { vColor = color; gl_Position = projectionViewWorld * position; }";
+							void main() { vPosition = position; \
+							vColor = color; \
+							vNormal = normal; \
+							vUv = uv; \
+							gl_Position = projectionViewWorld * position; }";
 
 	m_fsSource = "#version 410\n \
 							in vec4 vColor; \
