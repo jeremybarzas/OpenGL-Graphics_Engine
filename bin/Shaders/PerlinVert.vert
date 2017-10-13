@@ -22,7 +22,7 @@ void main()
 	vNormal = normal;
 
 	vUv = uv;
-		vec3 disp = vNormal.xyz * (vPosition.y + texture(perlinTexture, uv).r);
+	vec3 disp = vNormal.xyz * (vPosition.y + texture(perlinTexture, uv).r);
 	vPosition = vec4(vPosition.xyz + disp, 1);
 
 	gl_Position = projectionViewWorld * vPosition;

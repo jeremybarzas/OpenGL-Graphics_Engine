@@ -17,7 +17,7 @@ uniform float specularPower;
 uniform vec4 cameraPosition;
 
 // texture sampler
-uniform sampler2D perlinTexture;
+uniform sampler2D sampler;
 
 void main()
 {		
@@ -50,6 +50,6 @@ void main()
 
 	vec4 blinnPhong = ambient + diffuse + specular;
 
-	FragColor = texture(perlinTexture, vUv).rrrr;	
+	FragColor = texture(sampler, vUv);	
 	FragColor *= blinnPhong;
 }

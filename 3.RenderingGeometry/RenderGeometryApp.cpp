@@ -15,13 +15,7 @@ float radius = 5;
 int numP = 100;
 int numM = 100;
 
-float _radius = 5;
-int _numP = 100;
-int _numM = 100;
-
-float prevRadius = radius;
-int prevNumP = numP;
-int prevNumM = numM;
+auto option1 = GL_FILL;
 
 RenderGeometryApp::RenderGeometryApp()
 {
@@ -63,8 +57,8 @@ void RenderGeometryApp::startup()
 	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
-	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
-	m_shader->load("./Shaders/PerlinVert.vert", GL_VERTEX_SHADER);
+	m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+	//m_shader->load("./Shaders/PerlinVert.vert", GL_VERTEX_SHADER);
 
 	/*========== Fragment Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
@@ -74,8 +68,9 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/Phong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
 	//m_shader->load("./Shaders/CustomFragment.frag", GL_FRAGMENT_SHADER);
-	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
-	m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
+	
+	m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
+	//m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
@@ -83,22 +78,22 @@ void RenderGeometryApp::startup()
 
 	/*========== Geometry Mesh Startup ==========*/
 
-	// Generate Sphere (Triangle Strips)	
-	//genSphere(radius, numP, numM);
+	//// Generate Sphere (Triangle Strips)	
+	////genSphere(radius, numP, numM);
 
-	// Generate Plane (Triangle Strips)
-	int dims = 32;
-	int width = 32;
-	int length = 32;
-	genPlane(width, length, dims);
+	//// Generate Plane (Triangle Strips)
+	//int dims = 32;
+	//int width = 32;
+	//int length = 32;
+	//genPlane(width, length, dims);
 
-	// Generate Cube Information (Triangle Strips)
-	//genCube(width, length, dims);	
+	//// Generate Cube Information (Triangle Strips)
+	////genCube(width, length, dims);	
 
-	// Generate Sphere (Triangles)
-	//unsigned int rings = 100;	
-	//unsigned int segments = 100;
-	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
+	//// Generate Sphere (Triangles)
+	////unsigned int rings = 100;	
+	////unsigned int segments = 100;
+	////genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -106,11 +101,11 @@ void RenderGeometryApp::update(float deltaTime)
 	m_camera->update(deltaTime);
 }
 
- 
 void RenderGeometryApp::draw()
 {
-	ImGui::Begin("Lighting Controls");
-	// ImGUI		
+	// Lighting Options
+	ImGui::Begin("Lighting Options");
+
 	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
 	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
 	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
@@ -118,22 +113,44 @@ void RenderGeometryApp::draw()
 	ImGui::SliderFloat("Diffuse Strength", &m_light.diffuseStrength, 0, 1);
 	ImGui::SliderFloat("Specular Strength", &m_light.specularStrength, 0, 1);
 	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
-	// ImGUI
+
 	ImGui::End();
+	
+	// Geometry Options
+	ImGui::Begin("Geometry Options");
 
-	ImGui::Begin("Sphere Geometry Controls");
-
-	ImGui::SliderFloat("Radius", &_radius, 1, 5);
-	ImGui::SliderInt("# of Points", &_numP, 3, 100);
-	ImGui::SliderInt("# of Meridians", &_numM, 4, 100);
-
-	if (ImGui::Button("button 1 yea"))
+	if (ImGui::Button("Plane"))
 	{
-		radius = _radius;
-		numP = _numP;
-		numM = _numM;
+		int width = 32;
+		int length = 32;
+		int dims = 32;
+		genPlane(width, length, dims);
+	}
+
+	if (ImGui::Button("Sphere"))
+	{
+		radius = 10;
+		numP = 32;
+		numM = 32;
 		genSphere(radius, numP, numM);
 	}
+
+	ImGui::End();
+
+	// Mesh Options
+	ImGui::Begin("Mesh Options");
+	
+	if (ImGui::Button("Line"))
+	{
+		// set to draw wireframe
+		option1 = GL_LINE;
+	}
+
+	if (ImGui::Button("Fill"))
+	{
+		// set to draw faces
+		option1 = GL_FILL;
+	}	
 
 	ImGui::End();
 
@@ -158,7 +175,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, option1);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -331,10 +348,6 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 
 	// create and setup buffers
 	m_mesh->create_buffers();
-
-	prevRadius = radius;
-	prevNumP = np;
-	prevNumM = nm;
 }
 
 void RenderGeometryApp::genPlane(int width, int length, int dims)
@@ -346,17 +359,17 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	delete m_mesh;
 	m_mesh = new Mesh();
 
-	float* textureData = perlinNoise(dims);
+	//float* textureData = perlinNoise(dims);
 
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, textureData);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glGenTextures(1, &m_texture);
+	//glBindTexture(GL_TEXTURE_2D, m_texture);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, textureData);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	stbi_image_free(textureData);
+	//stbi_image_free(textureData);
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
@@ -374,7 +387,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	// convert points to verts
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(0, 0, 0, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 
@@ -480,7 +493,7 @@ void RenderGeometryApp::genCube(int width, int length, int dims)
 	// turn points into vertices
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(.75, 0, .75, 1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 
