@@ -17,9 +17,13 @@ uniform sampler2D perlinTexture;
 void main() 
 {	
 	vPosition = position;
-	vPosition.y += texture(perlinTexture, uv).r * 5;	
+	
 	vColor = color;
 	vNormal = normal;
+
 	vUv = uv;
+		vec3 disp = vNormal.xyz * (vPosition.y + texture(perlinTexture, uv).r);
+	vPosition = vec4(vPosition.xyz + disp, 1);
+
 	gl_Position = projectionViewWorld * vPosition;
 }

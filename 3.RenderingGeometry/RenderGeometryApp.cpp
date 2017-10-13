@@ -15,6 +15,10 @@ float radius = 5;
 int numP = 100;
 int numM = 100;
 
+float _radius = 5;
+int _numP = 100;
+int _numM = 100;
+
 float prevRadius = radius;
 int prevNumP = numP;
 int prevNumM = numM;
@@ -45,11 +49,11 @@ void RenderGeometryApp::startup()
 {
 	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
-	eye = glm::vec3(10,25,10);
+	eye = glm::vec3(10, 25, 10);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookAt(eye, center, up);
-	
+
 
 	// sets the perspective view of the camera
 	m_camera->setPerspective(PI * 0.25f, 16 / 9.f, 0.1f, 1000.f);
@@ -76,7 +80,7 @@ void RenderGeometryApp::startup()
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
-	
+
 	/*========== Geometry Mesh Startup ==========*/
 
 	// Generate Sphere (Triangle Strips)	
@@ -98,29 +102,15 @@ void RenderGeometryApp::startup()
 }
 
 void RenderGeometryApp::update(float deltaTime)
-{	
-	if (prevRadius != radius)
-	{
-		genSphere(radius, numP, numM);
-	}
-
-	if (prevNumP != numP)
-	{
-		genSphere(radius, numP, numM);
-	}
-
-	if (prevNumM != numM)
-	{
-		genSphere(radius, numP, numM);
-	}
- 
+{
 	m_camera->update(deltaTime);
 }
 
+ 
 void RenderGeometryApp::draw()
 {
-	// ImGUI
-	ImGui::Begin("Lighting Controls");	
+	ImGui::Begin("Lighting Controls");
+	// ImGUI		
 	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
 	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
 	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
@@ -128,12 +118,23 @@ void RenderGeometryApp::draw()
 	ImGui::SliderFloat("Diffuse Strength", &m_light.diffuseStrength, 0, 1);
 	ImGui::SliderFloat("Specular Strength", &m_light.specularStrength, 0, 1);
 	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
+	// ImGUI
 	ImGui::End();
 
 	ImGui::Begin("Sphere Geometry Controls");
-	ImGui::SliderFloat("Radius", &radius, 1, 5);
-	ImGui::SliderInt("# of Points", &numP, 3, 100);
-	ImGui::SliderInt("# of Meridians", &numM, 4, 100);
+
+	ImGui::SliderFloat("Radius", &_radius, 1, 5);
+	ImGui::SliderInt("# of Points", &_numP, 3, 100);
+	ImGui::SliderInt("# of Meridians", &_numM, 4, 100);
+
+	if (ImGui::Button("button 1 yea"))
+	{
+		radius = _radius;
+		numP = _numP;
+		numM = _numM;
+		genSphere(radius, numP, numM);
+	}
+
 	ImGui::End();
 
 	// use shader program
@@ -141,9 +142,9 @@ void RenderGeometryApp::draw()
 
 	// create and assign uniform
 	glUniformMatrix4fv(m_shader->getUniform("projectionViewWorld"), 1, false, glm::value_ptr(m_camera->projectionView));
-	
+
 	glm::vec4 camPos = glm::vec4(m_camera->transform.World[3].xyz(), 1);
-		
+
 	glUniform1f(m_shader->getUniform("lightDirX"), m_light.lightDirX);
 	glUniform1f(m_shader->getUniform("lightDirY"), m_light.lightDirY);
 	glUniform1f(m_shader->getUniform("lightDirZ"), m_light.lightDirZ);
@@ -237,7 +238,7 @@ std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> po
 
 			// push new vec4 onto list of points that make up entire sphere
 			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
-		}		
+		}
 	}
 	// return the array of points that make up the entire sphere
 	return wholeSphere;
@@ -259,9 +260,9 @@ std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm,
 		for (int j = 0; j < np; j++)
 		{
 			botLeft = start + j;
-			botRight = botLeft + np;			
+			botRight = botLeft + np;
 			indices.push_back(botLeft);
-			indices.push_back(botRight);			
+			indices.push_back(botRight);
 		}
 		indices.push_back(0xFFFF);
 	}
@@ -324,10 +325,7 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 		}
 	}
 	// print debug
-	for (auto v : meshVerts)
-	{
-		std::cout << v.uv.x << ", " << v.uv.y << "\n";
-	}
+	
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
@@ -340,7 +338,7 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm)
 }
 
 void RenderGeometryApp::genPlane(int width, int length, int dims)
-{	
+{
 	glDeleteBuffers(1, &m_mesh->m_vbo);
 	glDeleteBuffers(1, &m_mesh->m_ibo);
 	glDeleteVertexArrays(1, &m_mesh->m_vao);
@@ -357,12 +355,12 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	
+
 	stbi_image_free(textureData);
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
-	std::vector<Vertex> meshVerts;	
+	std::vector<Vertex> meshVerts;
 
 	// populate points
 	for (int i = 0; i < width; i++)
@@ -379,17 +377,17 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 		Vertex vert = { p, glm::vec4(0, 0, 0, 1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
-	
+
 	// assign UVs
 	int vertIndex = 0;
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
-			meshVerts[vertIndex].uv = glm::vec2(i / ((float)width-1), j / ((float)length-1));
+			meshVerts[vertIndex].uv = glm::vec2(i / ((float)width - 1), j / ((float)length - 1));
 			vertIndex++;
 		}
-	}	
+	}
 
 	// assign vert indices
 	unsigned int start;
@@ -408,7 +406,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 			meshIndices.push_back(botRight);
 		}
 		meshIndices.push_back(0xFFFF);
-	}	
+	}
 
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
@@ -478,7 +476,7 @@ void RenderGeometryApp::genCube(int width, int length, int dims)
 
 	// far right
 	meshPoints.push_back(glm::vec4(width, dims, length, 1));
-	
+
 	// turn points into vertices
 	for (auto p : meshPoints)
 	{
@@ -541,10 +539,10 @@ float* RenderGeometryApp::perlinNoise(int dims)
 	float scale = (1.0f / dims) * 3;
 	int octaves = 3;
 
-	for (int x = 0; x < dims; ++x) 
-	{ 		
-		for (int y = 0; y < dims; ++y) 
-		{ 
+	for (int x = 0; x < dims; ++x)
+	{
+		for (int y = 0; y < dims; ++y)
+		{
 			float amplitude = 1.f;
 			float persistence = 0.3f;
 			perlinData[y * dims + x] = 0;
@@ -557,7 +555,7 @@ float* RenderGeometryApp::perlinNoise(int dims)
 				perlinData[y * dims + x] += perlinSample * amplitude;
 				amplitude *= persistence;
 			}
-		} 
+		}
 	}
 
 	return perlinData;
