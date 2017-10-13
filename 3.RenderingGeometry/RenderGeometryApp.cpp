@@ -45,7 +45,7 @@ void RenderGeometryApp::startup()
 {
 	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
-	eye = glm::vec3(5, 5, 5);
+	eye = glm::vec3(10,25,10);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookAt(eye, center, up);
@@ -73,28 +73,28 @@ void RenderGeometryApp::startup()
 	//m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 	m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
 
-
-	int dims = 32;
-	float* perlinData = perlinNoise(dims, 6);
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
 	m_shader->attach();
 	
 	/*========== Geometry Mesh Startup ==========*/
 
+	// Generate Sphere (Triangle Strips)	
+	//genSphere(radius, numP, numM);
+
+	// Generate Plane (Triangle Strips)
+	int dims = 32;
+	int width = 32;
+	int length = 32;
+	genPlane(width, length, dims);
+
+	// Generate Cube Information (Triangle Strips)
+	//genCube(width, length, dims);	
+
 	// Generate Sphere (Triangles)
 	//unsigned int rings = 100;	
 	//unsigned int segments = 100;
 	//genSphereTriangles(segments, rings, m_mesh->m_vao, m_mesh->m_vbo, m_mesh->m_ibo, m_mesh->m_index_count);
-
-	// Generate Sphere (Triangle Strips)	
-	//genSphere(radius, numP, numM);
-
-	// Generate Plane
-	genPlane(32, 32, dims);
-
-	// Generate Cube Information
-	//genCube(5, 5, 5);	
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -157,7 +157,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -348,17 +348,17 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	delete m_mesh;
 	m_mesh = new Mesh();
 
-	float* perlinData = perlinNoise(dims, 6);
+	float* textureData = perlinNoise(dims);
 
-	glGenTextures(1, &m_perlinTexture);
-	glBindTexture(GL_TEXTURE_2D, m_perlinTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, perlinData);
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, textureData);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
-	stbi_image_free(perlinData);
+	stbi_image_free(textureData);
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
@@ -376,7 +376,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	// convert points to verts
 	for (auto p : meshPoints)
 	{
-		Vertex vert = { p, glm::vec4(1), glm::normalize(p) };
+		Vertex vert = { p, glm::vec4(0, 0, 0, 1), glm::normalize(p) };
 		meshVerts.push_back(vert);
 	}
 	
@@ -417,7 +417,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims)
 	m_mesh->create_buffers();
 }
 
-void RenderGeometryApp::genCube(int width, int length, int size)
+void RenderGeometryApp::genCube(int width, int length, int dims)
 {
 	glDeleteBuffers(1, &m_mesh->m_vbo);
 	glDeleteBuffers(1, &m_mesh->m_ibo);
@@ -426,14 +426,26 @@ void RenderGeometryApp::genCube(int width, int length, int size)
 	delete m_mesh;
 	m_mesh = new Mesh();
 
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	float* textureData = perlinNoise(width);
+
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, textureData);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	stbi_image_free(textureData);
+
+	/*int imageWidth = 0, imageHeight = 0, imageFormat = 0;
 	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	stbi_image_free(data);
+	stbi_image_free(data);*/
 
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
@@ -456,16 +468,16 @@ void RenderGeometryApp::genCube(int width, int length, int size)
 	/*===== Top Points =====*/
 
 	// near left
-	meshPoints.push_back(glm::vec4(0, size, 0, 1));
+	meshPoints.push_back(glm::vec4(0, dims, 0, 1));
 
 	// near right
-	meshPoints.push_back(glm::vec4(width, size, 0, 1));
+	meshPoints.push_back(glm::vec4(width, dims, 0, 1));
 
 	// far left
-	meshPoints.push_back(glm::vec4(0, size, length, 1));
+	meshPoints.push_back(glm::vec4(0, dims, length, 1));
 
 	// far right
-	meshPoints.push_back(glm::vec4(width, size, length, 1));
+	meshPoints.push_back(glm::vec4(width, dims, length, 1));
 	
 	// turn points into vertices
 	for (auto p : meshPoints)
@@ -523,11 +535,11 @@ void RenderGeometryApp::genCube(int width, int length, int size)
 	m_mesh->create_buffers();
 }
 
-float* RenderGeometryApp::perlinNoise(int dims, int octs)
+float* RenderGeometryApp::perlinNoise(int dims)
 {
 	float* perlinData = new float[dims * dims];
 	float scale = (1.0f / dims) * 3;
-	int octaves = octs;
+	int octaves = 3;
 
 	for (int x = 0; x < dims; ++x) 
 	{ 		

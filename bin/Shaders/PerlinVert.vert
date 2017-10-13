@@ -1,8 +1,13 @@
 #version 410
 
 layout(location=0) in vec4 position;
+layout(location=1) in vec4 color;
+layout(location=2) in vec4 normal;
 layout(location=3) in vec2 uv;
 
+out vec4 vPosition;
+out vec4 vColor;
+out vec4 vNormal;
 out vec2 vUv;
 
 uniform mat4 projectionViewWorld;
@@ -11,9 +16,10 @@ uniform sampler2D perlinTexture;
 
 void main() 
 {	
-	vec4 pos = position;
-	pos.y += texture(perlinTexture, uv).r * 5;
-
+	vPosition = position;
+	vPosition.y += texture(perlinTexture, uv).r * 5;	
+	vColor = color;
+	vNormal = normal;
 	vUv = uv;
-	gl_Position = projectionViewWorld * pos;
+	gl_Position = projectionViewWorld * vPosition;
 }
