@@ -16,6 +16,9 @@ uniform float specularStrength;
 uniform float specularPower;
 uniform vec4 cameraPosition;
 
+// texture sampler
+uniform sampler2D sampler;
+
 void main()
 {		
 	vec3 L = normalize(vec3(lightDirX, lightDirY, lightDirZ));
@@ -47,5 +50,6 @@ void main()
 
 	vec4 blinnPhong = ambient + diffuse + specular;
 
-	FragColor = vColor * blinnPhong;
+	FragColor = texture(sampler, vUv);	
+	FragColor *= blinnPhong;
 }
