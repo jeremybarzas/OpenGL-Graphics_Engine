@@ -3,6 +3,6 @@
 int main()
 {
 	Application* app = new RenderGeometryApp();
-	app->run(1200, 800, "Render Geometry Application", 0);		
+	app->run(1200, 800, "Graphics Assesment Application", 0);		
 	return 0;
 }
