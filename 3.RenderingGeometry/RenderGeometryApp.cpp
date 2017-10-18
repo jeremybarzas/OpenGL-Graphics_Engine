@@ -43,7 +43,7 @@ void RenderGeometryApp::startup()
 {
 	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
-	eye = glm::vec3(50, 15, 50);
+	eye = glm::vec3(50, 20, 50);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookAt(eye, center, up);
