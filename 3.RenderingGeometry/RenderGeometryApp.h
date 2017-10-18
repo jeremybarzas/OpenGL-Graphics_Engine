@@ -38,15 +38,13 @@ public:
 	Mesh* m_mesh;	
 	Light m_light;
 
-	// the texture handle
+	// the texture handles
 	unsigned int m_texture;	
+	unsigned int m_perlinTexture;
 
 	std::vector<glm::vec4> generateHalfCircle(float, unsigned int);
 	std::vector<glm::vec4> rotatePoints(std::vector<glm::vec4>, unsigned int);
 	std::vector<unsigned int> genIndicesTriStrip(unsigned int, unsigned int);
-	
-	// generate sphere using triangles
-	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
 
 	// generate sphere using triangle strips
 	void genSphere(float radius, int np, int nm);
@@ -57,7 +55,6 @@ public:
 	// generate cube using traingle strips
 	void genCube(int width, int length, int dims);
 
-	unsigned int m_perlinTexture;
-	// generate perlin noise
+	// generate perlin noise	
 	float* perlinNoise(int dims);
 };
