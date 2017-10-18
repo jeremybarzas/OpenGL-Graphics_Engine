@@ -15,7 +15,7 @@ float radius = 5;
 int numP = 100;
 int numM = 100;
 
-auto option1 = GL_LINE;
+auto polygonMode = GL_LINE;
 
 RenderGeometryApp::RenderGeometryApp()
 {
@@ -85,19 +85,6 @@ void RenderGeometryApp::update(float deltaTime)
 
 void RenderGeometryApp::draw()
 {
-	// Lighting Options
-	ImGui::Begin("Lighting Options");
-
-	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
-	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
-	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
-	ImGui::SliderFloat("Ambient Strength", &m_light.ambientStrength, 0, 1);
-	ImGui::SliderFloat("Diffuse Strength", &m_light.diffuseStrength, 0, 1);
-	ImGui::SliderFloat("Specular Strength", &m_light.specularStrength, 0, 1);
-	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
-
-	ImGui::End();
-	
 	// Geometry Options
 	ImGui::Begin("Geometry Options");	
 
@@ -270,17 +257,36 @@ void RenderGeometryApp::draw()
 	// Mesh Options
 	ImGui::Begin("Mesh Options");		
 
-	if (ImGui::Button("Line"))
+	if (ImGui::Button("Lines"))
 	{
 		// set to draw wireframe
-		option1 = GL_LINE;		
+		polygonMode = GL_LINE;		
 	}
 
-	if (ImGui::Button("Fill"))
+	if (ImGui::Button("Faces"))
 	{
 		// set to draw faces
-		option1 = GL_FILL;
+		polygonMode = GL_FILL;
 	}
+
+	if (ImGui::Button("Points"))
+	{
+		// set to draw points
+		polygonMode = GL_POINT;
+	}
+
+	ImGui::End();
+
+	// Lighting Options
+	ImGui::Begin("Lighting Options");
+
+	ImGui::SliderFloat("Light Direction X", &m_light.lightDirX, -1, 1);
+	ImGui::SliderFloat("Light Direction Y", &m_light.lightDirY, -1, 1);
+	ImGui::SliderFloat("Light Direction Z", &m_light.lightDirZ, -1, 1);
+	ImGui::SliderFloat("Ambient Strength", &m_light.ambientStrength, 0, 1);
+	ImGui::SliderFloat("Diffuse Strength", &m_light.diffuseStrength, 0, 1);
+	ImGui::SliderFloat("Specular Strength", &m_light.specularStrength, 0, 1);
+	ImGui::SliderFloat("Specular Power", &m_light.specularPower, 1, 200);
 
 	ImGui::End();
 
@@ -305,7 +311,7 @@ void RenderGeometryApp::draw()
 	m_mesh->bind();
 
 	// set to draw wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, option1);
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
 	// enable primitive restart
 	glEnable(GL_PRIMITIVE_RESTART);
