@@ -122,9 +122,6 @@ void RenderGeometryApp::draw()
 		delete m_shader;
 		m_shader = new Shader();
 
-		delete m_shader;
-		m_shader = new Shader();
-
 		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
 		m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 		m_shader->attach();
@@ -153,9 +150,6 @@ void RenderGeometryApp::draw()
 
 		delete m_mesh;
 		m_mesh = new Mesh();
-
-		delete m_shader;
-		m_shader = new Shader();
 
 		delete m_shader;
 		m_shader = new Shader();
