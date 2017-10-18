@@ -44,7 +44,7 @@ void RenderGeometryApp::startup()
 {
 	/*========== Camera Startup ==========*/
 	// sets the view and world transforms of the camera
-	eye = glm::vec3(10, 25, 10);
+	eye = glm::vec3(50, 15, 50);
 	center = glm::vec3(0);
 	up = glm::vec3(0, 1, 0);
 	m_camera->setLookAt(eye, center, up);
@@ -55,7 +55,7 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	//m_shader->defaultLoad();
+	m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
@@ -76,7 +76,7 @@ void RenderGeometryApp::startup()
 	// attach shaders and link program
 	m_shader->attach();
 
-	genPlane(64, 64, 64, textureMode);
+	genPlane(32, 32, 32, textureMode);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -104,9 +104,9 @@ void RenderGeometryApp::draw()
 
 	if (ImGui::Button("Plane Mesh"))
 	{
-		int width = 64;
-		int length = 64;
-		int dims = 64;
+		int width = 32;
+		int length = 32;
+		int dims = 32;
 		genPlane(width, length, dims, textureMode);
 	}
 
@@ -158,7 +158,7 @@ void RenderGeometryApp::draw()
 		m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
 		m_shader->attach();		
 	}
-
+	
 	ImGui::End();
 
 	// Mesh Options
