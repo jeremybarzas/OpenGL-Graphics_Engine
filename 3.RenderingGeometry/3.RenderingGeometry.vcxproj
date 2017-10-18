@@ -73,7 +73,7 @@
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)dep\glfw\lib-vc2015;$(SolutionDir)dep\Bootstrap</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)dep\imgui;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(IncludePath);$(SolutionDir)Bootstrap</IncludePath>
+    <IncludePath>$(SolutionDir)dep\;$(SolutionDir)dep\imgui;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(IncludePath);$(SolutionDir)Bootstrap</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)dep\glfw\lib-vc2015;$(SolutionDir)dep\Bootstrap</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
