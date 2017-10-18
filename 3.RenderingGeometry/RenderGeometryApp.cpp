@@ -16,7 +16,6 @@ int numP = 100;
 int numM = 100;
 
 auto option1 = GL_LINE;
-int textureMode = 0;
 
 RenderGeometryApp::RenderGeometryApp()
 {
@@ -55,7 +54,7 @@ void RenderGeometryApp::startup()
 
 	/*========== Shader Startup ==========*/
 	// create and complie shaders passed by filename	
-	m_shader->defaultLoad();
+	//m_shader->defaultLoad();
 
 	/*========== Vertex Shader Load ==========*/
 	//m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
@@ -74,9 +73,9 @@ void RenderGeometryApp::startup()
 
 	/*========== Attach Loaded Shader ==========*/
 	// attach shaders and link program
-	m_shader->attach();
+	//m_shader->attach();
 
-	genPlane(32, 32, 32, textureMode);
+	//genPlane(32, 32, 32, 0);
 }
 
 void RenderGeometryApp::update(float deltaTime)
@@ -104,28 +103,12 @@ void RenderGeometryApp::draw()
 
 	if (ImGui::Button("Plane Mesh"))
 	{
-		int width = 32;
-		int length = 32;
-		int dims = 32;
-		genPlane(width, length, dims, textureMode);
-	}
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
 
-	if (ImGui::Button("Sphere Mesh"))
-	{
-		radius = 10;
-		numP = 32;
-		numM = 32;
-		genSphere(radius, numP, numM, textureMode);
-	}	
-
-	ImGui::End();
-
-	// Shader Options
-	ImGui::Begin("Shader Options");
-
-	if (ImGui::Button("Default Shader"))
-	{
-		textureMode = 0;
+		delete m_mesh;
+		m_mesh = new Mesh();
 
 		delete m_shader;
 		m_shader = new Shader();
@@ -133,11 +116,24 @@ void RenderGeometryApp::draw()
 		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
 		m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
 		m_shader->attach();
+
+		int width = 32;
+		int length = 32;
+		int dims = 32;
+		genPlane(width, length, dims);
 	}
 
-	if (ImGui::Button("Texture Shader"))
+	if (ImGui::Button("Plane Texture"))
 	{
-		textureMode = 1;
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+		delete m_mesh;
+		m_mesh = new Mesh();
+
+		delete m_shader;
+		m_shader = new Shader();
 
 		delete m_shader;
 		m_shader = new Shader();
@@ -145,21 +141,131 @@ void RenderGeometryApp::draw()
 		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
 		m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
 		m_shader->attach();
+
+		int width = 32;
+		int length = 32;
+		int dims = 32;
+
+		int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+		unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+		glGenTextures(1, &m_texture);
+		glBindTexture(GL_TEXTURE_2D, m_texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		stbi_image_free(data);
+
+		genPlane(width, length, dims);
 	}
 
-	if (ImGui::Button("Perlin Shader"))
+	if (ImGui::Button("Plane Perlin"))
 	{
-		textureMode = 2;
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+		delete m_mesh;
+		m_mesh = new Mesh();
+
+		delete m_shader;
+		m_shader = new Shader();
 
 		delete m_shader;
 		m_shader = new Shader();
 
 		m_shader->load("./Shaders/PerlinVert.vert", GL_VERTEX_SHADER);
 		m_shader->load("./Shaders/PerlinFrag.frag", GL_FRAGMENT_SHADER);
-		m_shader->attach();		
+		m_shader->attach();
+
+		int width = 32;
+		int length = 32;
+		int dims = 32;
+
+		float* perlinData = perlinNoise(dims);
+		glGenTextures(1, &m_perlinTexture);
+		glBindTexture(GL_TEXTURE_2D, m_perlinTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, length, 0, GL_RGB, GL_UNSIGNED_BYTE, perlinData);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		stbi_image_free(perlinData);
+
+		genPlane(width, length, dims);
 	}
-	
-	ImGui::End();
+
+	if (ImGui::Button("Sphere Mesh"))
+	{
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+		delete m_mesh;
+		m_mesh = new Mesh();
+
+		delete m_shader;
+		m_shader = new Shader();
+
+		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+		m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
+		m_shader->attach();
+
+		radius = 10;
+		numP = 32;
+		numM = 32;
+		genSphere(radius, numP, numM);
+	}	
+
+	if (ImGui::Button("Sphere Texture"))
+	{
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+		delete m_mesh;
+		m_mesh = new Mesh();
+
+		delete m_shader;
+		m_shader = new Shader();
+
+		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+		m_shader->load("./Shaders/TexturedLighting.frag", GL_FRAGMENT_SHADER);
+		m_shader->attach();
+
+		radius = 10;
+		numP = 32;
+		numM = 32;
+
+		int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+		unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
+		glGenTextures(1, &m_texture);
+		glBindTexture(GL_TEXTURE_2D, m_texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		stbi_image_free(data);
+
+		genSphere(radius, numP, numM);
+	}
+
+	if (ImGui::Button("Cube Mesh"))
+	{
+		glDeleteBuffers(1, &m_mesh->m_vbo);
+		glDeleteBuffers(1, &m_mesh->m_ibo);
+		glDeleteVertexArrays(1, &m_mesh->m_vao);
+
+		delete m_mesh;
+		m_mesh = new Mesh();
+
+		delete m_shader;
+		m_shader = new Shader();
+
+		m_shader->load("./Shaders/DefaultVertex.vert", GL_VERTEX_SHADER);
+		m_shader->load("./Shaders/DefaultFragment.frag", GL_FRAGMENT_SHADER);
+		m_shader->attach();
+
+		genCube(10,10,10);
+	}
+
+	ImGui::End();	
 
 	// Mesh Options
 	ImGui::Begin("Mesh Options");		
@@ -174,7 +280,7 @@ void RenderGeometryApp::draw()
 	{
 		// set to draw faces
 		option1 = GL_FILL;
-	}	
+	}
 
 	ImGui::End();
 
@@ -227,123 +333,9 @@ void RenderGeometryApp::shutdown()
 {
 }
 
-std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsigned int points)
-{
-	// will be used the store the points of a half circle
-	std::vector<glm::vec4> halfCircle = std::vector<glm::vec4>(points);
-
-	// loop per point to generate each slice
-	for (int i = 0; i < points; i++)
-	{
-		// calculate slice
-		float slice = PI / (points - 1);
-
-		// calculate theta
-		float theta = i * slice;
-
-		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
-		// but since we are generating triangle strips and need to be rotating this half circle differently,
-		// you would reverse it to orient the half circle vertically.
-		// to be correctly oriented with how we want to draw the triangle strips.		
-		halfCircle[i].x = sin(theta) * radius;
-		halfCircle[i].y = cos(theta) * radius;
-		halfCircle[i].z = 0.0f;
-		halfCircle[i].w = 1.0f;
-	}
-	//return the array of the points that make up the half circle
-	return halfCircle;
-}
-
-std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
-{
-	// will be used to store enitre sphere to be returned
-	std::vector<glm::vec4> wholeSphere;
-
-	// loop per meridian
-	for (int i = 0; i < numOfMeridians + 1; i++)
-	{
-		// calculate slice
-		float slice = (PI * 2.0f) / numOfMeridians;
-
-		// calculate phi
-		float phi = i * slice;
-
-		// loop per point
-		for (int j = 0; j < points.size(); j++)
-		{
-			// calculate each new value of the new vec4
-			float newX = points[j].x * cos(phi) + points[j].z * sin(phi);
-			float newY = points[j].y;
-			float newZ = points[j].z * cos(phi) - points[j].x * sin(phi);;
-			float newW = points[j].w = 1.0f;
-
-			// push new vec4 onto list of points that make up entire sphere
-			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
-		}
-	}
-	// return the array of points that make up the entire sphere
-	return wholeSphere;
-}
-
-std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm, unsigned int np)
-{
-	// create array of unsigned ints to store the index information
-	std::vector<unsigned int> indices;
-
-	unsigned int start;
-	unsigned int botLeft;
-	unsigned int botRight;
-
-	for (int i = 0; i < nm; i++)
-	{
-		start = i * np;
-
-		for (int j = 0; j < np; j++)
-		{
-			botLeft = start + j;
-			botRight = botLeft + np;
-			indices.push_back(botLeft);
-			indices.push_back(botRight);
-		}
-		indices.push_back(0xFFFF);
-	}
-
-	// return array of indices in order to be drawn
-	return indices;
-}
-
 /*==================== Generate Geometry using Triangle Strips ====================*/
-void RenderGeometryApp::genSphere(float radius, int np, int nm, int textureMode)
+void RenderGeometryApp::genSphere(float radius, int np, int nm)
 {
-	glDeleteBuffers(1, &m_mesh->m_vbo);
-	glDeleteBuffers(1, &m_mesh->m_ibo);
-	glDeleteVertexArrays(1, &m_mesh->m_vao);
-
-	delete m_mesh;
-	m_mesh = new Mesh();
-
-	if (textureMode == 1)
-	{
-		int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-		unsigned char* data = stbi_load("./Textures/earth.jpg", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-		glGenTextures(1, &m_texture);
-		glBindTexture(GL_TEXTURE_2D, m_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		stbi_image_free(data);
-	}
-	if (textureMode == 2)
-	{
-		float* perlinData = perlinNoise(nm);
-		glGenTextures(1, &m_texture);
-		glBindTexture(GL_TEXTURE_2D, m_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, np, nm, 0, GL_RGB, GL_UNSIGNED_BYTE, perlinData);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		stbi_image_free(perlinData);
-	}	
-
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;
@@ -378,7 +370,7 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm, int textureMode)
 			}
 		}
 	}
-	
+
 	// initialize with plane vertex and index information
 	m_mesh->initialize(meshVerts, meshIndices);
 
@@ -386,38 +378,8 @@ void RenderGeometryApp::genSphere(float radius, int np, int nm, int textureMode)
 	m_mesh->create_buffers();
 }
 
-void RenderGeometryApp::genPlane(int width, int length, int dims, int textureMode)
+void RenderGeometryApp::genPlane(int width, int length, int dims)
 {
-	glDeleteBuffers(1, &m_mesh->m_vbo);
-	glDeleteBuffers(1, &m_mesh->m_ibo);
-	glDeleteVertexArrays(1, &m_mesh->m_vao);
-
-	delete m_mesh;
-	m_mesh = new Mesh();
-	
-	if (textureMode == 1)
-	{
-		int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-		unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-		glGenTextures(1, &m_texture);
-		glBindTexture(GL_TEXTURE_2D, m_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		stbi_image_free(data);		
-	}
-
-	if (textureMode == 2)
-	{
-		float* perlinData = perlinNoise(dims);
-		glGenTextures(1, &m_perlinTexture);
-		glBindTexture(GL_TEXTURE_2D, m_perlinTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, length, 0, GL_RGB, GL_UNSIGNED_BYTE, perlinData);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		stbi_image_free(perlinData);
-	}
-
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;
@@ -430,7 +392,7 @@ void RenderGeometryApp::genPlane(int width, int length, int dims, int textureMod
 			meshPoints.push_back(glm::vec4(i, 0, j, 1));
 		}
 	}
-	
+
 	// convert points to verts
 	for (auto p : meshPoints)
 	{
@@ -477,34 +439,6 @@ void RenderGeometryApp::genPlane(int width, int length, int dims, int textureMod
 
 void RenderGeometryApp::genCube(int width, int length, int dims)
 {
-	glDeleteBuffers(1, &m_mesh->m_vbo);
-	glDeleteBuffers(1, &m_mesh->m_ibo);
-	glDeleteVertexArrays(1, &m_mesh->m_vao);
-
-	delete m_mesh;
-	m_mesh = new Mesh();
-
-	float* textureData = perlinNoise(width);
-
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, length, 0, GL_RED, GL_FLOAT, textureData);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	stbi_image_free(textureData);
-
-	/*int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load("./Textures/crate.png", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	stbi_image_free(data);*/
-
 	std::vector<glm::vec4> meshPoints;
 	std::vector<unsigned int> meshIndices;
 	std::vector<Vertex> meshVerts;
@@ -593,6 +527,93 @@ void RenderGeometryApp::genCube(int width, int length, int dims)
 	m_mesh->create_buffers();
 }
 
+/*==================== Generate Sphere Vertex Data ====================*/
+std::vector<glm::vec4> RenderGeometryApp::generateHalfCircle(float radius, unsigned int points)
+{
+	// will be used the store the points of a half circle
+	std::vector<glm::vec4> halfCircle = std::vector<glm::vec4>(points);
+
+	// loop per point to generate each slice
+	for (int i = 0; i < points; i++)
+	{
+		// calculate slice
+		float slice = PI / (points - 1);
+
+		// calculate theta
+		float theta = i * slice;
+
+		// x = cos(theta) and y = sin(theta) would give you a horizontal half circle.
+		// but since we are generating triangle strips and need to be rotating this half circle differently,
+		// you would reverse it to orient the half circle vertically.
+		// to be correctly oriented with how we want to draw the triangle strips.		
+		halfCircle[i].x = sin(theta) * radius;
+		halfCircle[i].y = cos(theta) * radius;
+		halfCircle[i].z = 0.0f;
+		halfCircle[i].w = 1.0f;
+	}
+	//return the array of the points that make up the half circle
+	return halfCircle;
+}
+
+std::vector<glm::vec4> RenderGeometryApp::rotatePoints(std::vector<glm::vec4> points, unsigned int numOfMeridians)
+{
+	// will be used to store enitre sphere to be returned
+	std::vector<glm::vec4> wholeSphere;
+
+	// loop per meridian
+	for (int i = 0; i < numOfMeridians + 1; i++)
+	{
+		// calculate slice
+		float slice = (PI * 2.0f) / numOfMeridians;
+
+		// calculate phi
+		float phi = i * slice;
+
+		// loop per point
+		for (int j = 0; j < points.size(); j++)
+		{
+			// calculate each new value of the new vec4
+			float newX = points[j].x * cos(phi) + points[j].z * sin(phi);
+			float newY = points[j].y;
+			float newZ = points[j].z * cos(phi) - points[j].x * sin(phi);;
+			float newW = points[j].w = 1.0f;
+
+			// push new vec4 onto list of points that make up entire sphere
+			wholeSphere.push_back(glm::vec4(newX, newY, newZ, newW));
+		}
+	}
+	// return the array of points that make up the entire sphere
+	return wholeSphere;
+}
+
+std::vector<unsigned int> RenderGeometryApp::genIndicesTriStrip(unsigned int nm, unsigned int np)
+{
+	// create array of unsigned ints to store the index information
+	std::vector<unsigned int> indices;
+
+	unsigned int start;
+	unsigned int botLeft;
+	unsigned int botRight;
+
+	for (int i = 0; i < nm; i++)
+	{
+		start = i * np;
+
+		for (int j = 0; j < np; j++)
+		{
+			botLeft = start + j;
+			botRight = botLeft + np;
+			indices.push_back(botLeft);
+			indices.push_back(botRight);
+		}
+		indices.push_back(0xFFFF);
+	}
+
+	// return array of indices in order to be drawn
+	return indices;
+}
+
+/*==================== Generate Perlin Noise ====================*/
 float* RenderGeometryApp::perlinNoise(int dims)
 {
 	float* perlinData = new float[dims * dims];
@@ -619,109 +640,4 @@ float* RenderGeometryApp::perlinNoise(int dims)
 	}
 
 	return perlinData;
-}
-
-/*==================== Generate Sphere using Triangles ====================*/
-struct Vertex1
-{
-	glm::vec4 position;
-	glm::vec4 color;
-	glm::vec4 normal;
-	glm::vec2 texcoord;
-	glm::vec4 tangent;
-	glm::vec4 bitangent;
-};
-
-void RenderGeometryApp::genSphereTriangles(unsigned int segments, unsigned int rings, unsigned int & vao, unsigned int & vbo, unsigned int &ibo, unsigned int &indexCount)
-{
-	unsigned int vertCount = (segments + 1) * (rings + 2);
-	indexCount = segments * (rings + 1) * 6;
-
-	// using AIEVertex for now, but could be any struct as long as it has the correct elements
-	Vertex1* vertices = new Vertex1[vertCount];
-	unsigned int* indices = new unsigned int[indexCount];
-
-	float ringAngle = glm::pi<float>() / (rings + 1);
-	float segmentAngle = 2.0f * glm::pi<float>() / segments;
-
-	Vertex1* vertex = vertices;
-
-	for (unsigned int ring = 0; ring < (rings + 2); ++ring) {
-		float r0 = glm::sin(ring * ringAngle);
-		float y0 = glm::cos(ring * ringAngle);
-
-		for (unsigned int segment = 0; segment < (segments + 1); ++segment, ++vertex) {
-			float x0 = r0 * glm::sin(segment * segmentAngle);
-			float z0 = r0 * glm::cos(segment * segmentAngle);
-
-			vertex->position = glm::vec4(x0 * 0.5f, y0 * 0.5f, z0 * 0.5f, 1);
-			vertex->normal = glm::vec4(x0, y0, z0, 0);
-
-			vertex->tangent = glm::vec4(glm::sin(segment * segmentAngle + glm::half_pi<float>()), 0, glm::cos(segment * segmentAngle + glm::half_pi<float>()), 0);
-
-			// not a part of the AIEVertex, but this is how w generate bitangents
-			vertex->bitangent = glm::vec4(glm::cross(glm::vec3(vertex->normal), glm::vec3(vertex->tangent)), 0);
-
-			vertex->texcoord = glm::vec2(segment / (float)segments, ring / (float)(rings + 1));
-		}
-	}
-
-	unsigned int index = 0;
-	for (unsigned i = 0; i < (rings + 1); ++i) {
-		for (unsigned j = 0; j < segments; ++j) {
-			indices[index++] = i * (segments + 1) + j;
-			indices[index++] = (i + 1) * (segments + 1) + j;
-			indices[index++] = i * (segments + 1) + (j + 1);
-
-			indices[index++] = (i + 1) * (segments + 1) + (j + 1);
-			indices[index++] = i * (segments + 1) + (j + 1);
-			indices[index++] = (i + 1) * (segments + 1) + j;
-		}
-	}
-
-	// generate buffers
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ibo);
-
-	// generate vertex array object (descriptors)
-	glGenVertexArrays(1, &vao);
-
-	// all changes will apply to this handle
-	glBindVertexArray(vao);
-
-	// set vertex buffer data
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertCount * sizeof(Vertex1), vertices, GL_STATIC_DRAW);
-
-	// index data
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-
-	// position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex1), 0);
-
-	// colors
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex1), (void*)(sizeof(glm::vec4)));
-
-	// normals
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex1), (void*)(sizeof(glm::vec4) * 2));
-
-	// texcoords
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex1), (void*)(sizeof(glm::vec4) * 3));
-
-	// tangents
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex1), (void*)(sizeof(glm::vec4) * 3 + sizeof(glm::vec2)));
-
-	// safety
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	delete[] indices;
-	delete[] vertices;
 }

@@ -49,10 +49,10 @@ public:
 	void genSphereTriangles(unsigned int, unsigned int, unsigned int&, unsigned int&, unsigned int&, unsigned int&);
 
 	// generate sphere using triangle strips
-	void genSphere(float radius, int np, int nm, int textureMode);
+	void genSphere(float radius, int np, int nm);
 
 	// generate plane using triangle strips
-	void genPlane(int width, int length, int dims, int textureMode);
+	void genPlane(int width, int length, int dims);
 
 	// generate cube using traingle strips
 	void genCube(int width, int length, int dims);
